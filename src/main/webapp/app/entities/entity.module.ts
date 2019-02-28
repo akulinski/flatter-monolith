@@ -4,6 +4,26 @@ import { RouterModule } from '@angular/router';
 @NgModule({
     imports: [
         RouterModule.forChild([
+            {
+                path: 'offer',
+                loadChildren: './offer/offer.module#FlatterservermonolithOfferModule'
+            },
+            {
+                path: 'address',
+                loadChildren: './address/address.module#FlatterservermonolithAddressModule'
+            },
+            {
+                path: 'album',
+                loadChildren: './album/album.module#FlatterservermonolithAlbumModule'
+            },
+            {
+                path: 'photo',
+                loadChildren: './photo/photo.module#FlatterservermonolithPhotoModule'
+            },
+            {
+                path: 'offer',
+                loadChildren: './offer/offer.module#FlatterservermonolithOfferModule'
+            }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])
     ],
