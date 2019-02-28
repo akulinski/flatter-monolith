@@ -1,0 +1,35 @@
+{
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "com.flatter.server"
+        },
+        "jhipsterVersion": "5.8.2",
+        "applicationType": "monolith",
+        "baseName": "flatterservermonolith",
+        "packageName": "com.flatter.server",
+        "packageFolder": "com/flatter/server",
+        "serverPort": "8080",
+        "authenticationType": "jwt",
+        "cacheProvider": "ehcache",
+        "enableHibernateCache": true,
+        "websocket": false,
+        "databaseType": "sql",
+        "devDatabaseType": "h2Disk",
+        "prodDatabaseType": "postgresql",
+        "searchEngine": false,
+        "messageBroker": false,
+        "serviceDiscoveryType": "eureka",
+        "buildTool": "maven",
+        "enableSwaggerCodegen": false,
+        "jwtSecretKey": "MmQyMzY0MmRmYjJmN2I3ZGMwZjYwMTU4ZjU5ZjRmMWJmMWVjZTk2M2M5MjM4ZGJkOTE3YjFjNDg3ODg5NmE5YmIyODRhZDE2MjkwYmY1OGNiNmM0NDk0ZjJkNDFlMDNkOGJkYmNlZWU0YTM4MDczOWQ0NmI3MTgzYjVkM2FlZDY=",
+        "clientFramework": "angularX",
+        "useSass": false,
+        "clientPackageManager": "npm",
+        "testFrameworks": [],
+        "jhiPrefix": "jhi",
+        "entitySuffix": "",
+        "dtoSuffix": "DTO",
+        "otherModules": [],
+        "enableTranslation": false
+    }
+}
