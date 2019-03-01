@@ -1,0 +1,55 @@
+
+entity Offer{
+    description TextBlob required,
+    totalCost Double required,
+    roomAmount Integer required,
+    size Double required,
+    type String,
+    constructionYear Integer,
+    isFurnished Boolean
+}
+
+entity Address{
+	city String,
+    zipCode String,
+    street String,
+    flatNumber String
+}
+
+
+entity Album {
+    title String required,
+    description TextBlob,
+    created Instant
+}
+
+entity Photo {
+    title String required,
+    description TextBlob,
+    image ImageBlob required,
+    height Integer,
+    width Integer,
+    taken Instant,
+    uploaded Instant
+}
+
+relationship ManyToOne {
+    Album{user(login)} to User,
+    Photo{album(title)} to Album
+}
+
+relationship ManyToOne{
+	Offer{user(login)} to User
+}
+
+relationship OneToOne{
+	Address to Offer
+}
+
+relationship OneToOne{
+	Album to Offer
+}
+
+paginate Album with pagination
+paginate Photo with infinite-scroll
+paginate Offer with pagination
