@@ -11,6 +11,8 @@ import { IAddress } from 'app/shared/model/address.model';
 import { AddressService } from 'app/entities/address';
 import { IAlbum } from 'app/shared/model/album.model';
 import { AlbumService } from 'app/entities/album';
+import { IMatch } from 'app/shared/model/match.model';
+import { MatchService } from 'app/entities/match';
 
 @Component({
     selector: 'jhi-offer-update',
@@ -26,6 +28,8 @@ export class OfferUpdateComponent implements OnInit {
 
     albums: IAlbum[];
 
+    matches: IMatch[];
+
     constructor(
         protected dataUtils: JhiDataUtils,
         protected jhiAlertService: JhiAlertService,
@@ -33,6 +37,7 @@ export class OfferUpdateComponent implements OnInit {
         protected userService: UserService,
         protected addressService: AddressService,
         protected albumService: AlbumService,
+        protected matchService: MatchService,
         protected activatedRoute: ActivatedRoute
     ) {}
 
@@ -62,6 +67,13 @@ export class OfferUpdateComponent implements OnInit {
                 map((response: HttpResponse<IAlbum[]>) => response.body)
             )
             .subscribe((res: IAlbum[]) => (this.albums = res), (res: HttpErrorResponse) => this.onError(res.message));
+        this.matchService
+            .query()
+            .pipe(
+                filter((mayBeOk: HttpResponse<IMatch[]>) => mayBeOk.ok),
+                map((response: HttpResponse<IMatch[]>) => response.body)
+            )
+            .subscribe((res: IMatch[]) => (this.matches = res), (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     byteSize(field) {
@@ -115,6 +127,10 @@ export class OfferUpdateComponent implements OnInit {
     }
 
     trackAlbumById(index: number, item: IAlbum) {
+        return item.id;
+    }
+
+    trackMatchById(index: number, item: IMatch) {
         return item.id;
     }
 }

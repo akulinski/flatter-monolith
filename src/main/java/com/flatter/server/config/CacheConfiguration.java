@@ -45,6 +45,11 @@ public class CacheConfiguration {
             cm.createCache(com.flatter.server.domain.Address.class.getName(), jcacheConfiguration);
             cm.createCache(com.flatter.server.domain.Album.class.getName(), jcacheConfiguration);
             cm.createCache(com.flatter.server.domain.Photo.class.getName(), jcacheConfiguration);
+            cm.createCache(com.flatter.server.domain.Message.class.getName(), jcacheConfiguration);
+            cm.createCache(com.flatter.server.domain.Conversation.class.getName(), jcacheConfiguration);
+            cm.createCache(com.flatter.server.domain.Conversation.class.getName() + ".messages", jcacheConfiguration);
+            cm.createCache(com.flatter.server.domain.Match.class.getName(), jcacheConfiguration);
+            cm.createCache(com.flatter.server.domain.Questionnaire.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

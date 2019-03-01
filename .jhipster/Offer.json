@@ -39,6 +39,14 @@
             "fieldType": "Integer"
         },
         {
+            "fieldName": "pets",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "smokingInside",
+            "fieldType": "Boolean"
+        },
+        {
             "fieldName": "isFurnished",
             "fieldType": "Boolean"
         }
@@ -63,6 +71,13 @@
             "otherEntityName": "album",
             "otherEntityRelationshipName": "offer",
             "relationshipName": "album",
+            "ownerSide": false
+        },
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "match",
+            "otherEntityRelationshipName": "offer",
+            "relationshipName": "match",
             "ownerSide": false
         }
     ],

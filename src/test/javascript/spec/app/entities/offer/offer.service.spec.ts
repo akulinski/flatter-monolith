@@ -21,7 +21,7 @@ describe('Service Tests', () => {
             service = injector.get(OfferService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Offer(0, 'AAAAAAA', 0, 0, 0, 'AAAAAAA', 0, false);
+            elemDefault = new Offer(0, 'AAAAAAA', 0, 0, 0, 'AAAAAAA', 0, false, false, false);
         });
 
         describe('Service methods', async () => {
@@ -61,6 +61,8 @@ describe('Service Tests', () => {
                         size: 1,
                         type: 'BBBBBB',
                         constructionYear: 1,
+                        pets: true,
+                        smokingInside: true,
                         isFurnished: true
                     },
                     elemDefault
@@ -84,6 +86,8 @@ describe('Service Tests', () => {
                         size: 1,
                         type: 'BBBBBB',
                         constructionYear: 1,
+                        pets: true,
+                        smokingInside: true,
                         isFurnished: true
                     },
                     elemDefault

@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="questionnaire">
+            <h2><span>Questionnaire</span> {{questionnaire.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Pets</span></dt>
+                <dd>
+                    <span>{{questionnaire.pets}}</span>
+                </dd>
+                <dt><span>Smoking Inside</span></dt>
+                <dd>
+                    <span>{{questionnaire.smokingInside}}</span>
+                </dd>
+                <dt><span>Is Furnished</span></dt>
+                <dd>
+                    <span>{{questionnaire.isFurnished}}</span>
+                </dd>
+                <dt><span>Room Amount Min</span></dt>
+                <dd>
+                    <span>{{questionnaire.roomAmountMin}}</span>
+                </dd>
+                <dt><span>Room Amount Max</span></dt>
+                <dd>
+                    <span>{{questionnaire.roomAmountMax}}</span>
+                </dd>
+                <dt><span>Size Min</span></dt>
+                <dd>
+                    <span>{{questionnaire.sizeMin}}</span>
+                </dd>
+                <dt><span>Size Max</span></dt>
+                <dd>
+                    <span>{{questionnaire.sizeMax}}</span>
+                </dd>
+                <dt><span>Construction Year Min</span></dt>
+                <dd>
+                    <span>{{questionnaire.constructionYearMin}}</span>
+                </dd>
+                <dt><span>Construction Year Max</span></dt>
+                <dd>
+                    <span>{{questionnaire.constructionYearMax}}</span>
+                </dd>
+                <dt><span>Type</span></dt>
+                <dd>
+                    <span>{{questionnaire.type}}</span>
+                </dd>
+                <dt><span>Total Cost Min</span></dt>
+                <dd>
+                    <span>{{questionnaire.totalCostMin}}</span>
+                </dd>
+                <dt><span>Total Cost Max</span></dt>
+                <dd>
+                    <span>{{questionnaire.totalCostMax}}</span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{questionnaire.user?.id}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/questionnaire', questionnaire.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

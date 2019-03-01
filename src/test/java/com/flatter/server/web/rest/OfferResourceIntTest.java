@@ -59,6 +59,12 @@ public class OfferResourceIntTest {
     private static final Integer DEFAULT_CONSTRUCTION_YEAR = 1;
     private static final Integer UPDATED_CONSTRUCTION_YEAR = 2;
 
+    private static final Boolean DEFAULT_PETS = false;
+    private static final Boolean UPDATED_PETS = true;
+
+    private static final Boolean DEFAULT_SMOKING_INSIDE = false;
+    private static final Boolean UPDATED_SMOKING_INSIDE = true;
+
     private static final Boolean DEFAULT_IS_FURNISHED = false;
     private static final Boolean UPDATED_IS_FURNISHED = true;
 
@@ -110,6 +116,8 @@ public class OfferResourceIntTest {
             .size(DEFAULT_SIZE)
             .type(DEFAULT_TYPE)
             .constructionYear(DEFAULT_CONSTRUCTION_YEAR)
+            .pets(DEFAULT_PETS)
+            .smokingInside(DEFAULT_SMOKING_INSIDE)
             .isFurnished(DEFAULT_IS_FURNISHED);
         return offer;
     }
@@ -140,6 +148,8 @@ public class OfferResourceIntTest {
         assertThat(testOffer.getSize()).isEqualTo(DEFAULT_SIZE);
         assertThat(testOffer.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testOffer.getConstructionYear()).isEqualTo(DEFAULT_CONSTRUCTION_YEAR);
+        assertThat(testOffer.isPets()).isEqualTo(DEFAULT_PETS);
+        assertThat(testOffer.isSmokingInside()).isEqualTo(DEFAULT_SMOKING_INSIDE);
         assertThat(testOffer.isIsFurnished()).isEqualTo(DEFAULT_IS_FURNISHED);
     }
 
@@ -233,6 +243,8 @@ public class OfferResourceIntTest {
             .andExpect(jsonPath("$.[*].size").value(hasItem(DEFAULT_SIZE.doubleValue())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].constructionYear").value(hasItem(DEFAULT_CONSTRUCTION_YEAR)))
+            .andExpect(jsonPath("$.[*].pets").value(hasItem(DEFAULT_PETS.booleanValue())))
+            .andExpect(jsonPath("$.[*].smokingInside").value(hasItem(DEFAULT_SMOKING_INSIDE.booleanValue())))
             .andExpect(jsonPath("$.[*].isFurnished").value(hasItem(DEFAULT_IS_FURNISHED.booleanValue())));
     }
     
@@ -253,6 +265,8 @@ public class OfferResourceIntTest {
             .andExpect(jsonPath("$.size").value(DEFAULT_SIZE.doubleValue()))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.constructionYear").value(DEFAULT_CONSTRUCTION_YEAR))
+            .andExpect(jsonPath("$.pets").value(DEFAULT_PETS.booleanValue()))
+            .andExpect(jsonPath("$.smokingInside").value(DEFAULT_SMOKING_INSIDE.booleanValue()))
             .andExpect(jsonPath("$.isFurnished").value(DEFAULT_IS_FURNISHED.booleanValue()));
     }
 
@@ -283,6 +297,8 @@ public class OfferResourceIntTest {
             .size(UPDATED_SIZE)
             .type(UPDATED_TYPE)
             .constructionYear(UPDATED_CONSTRUCTION_YEAR)
+            .pets(UPDATED_PETS)
+            .smokingInside(UPDATED_SMOKING_INSIDE)
             .isFurnished(UPDATED_IS_FURNISHED);
 
         restOfferMockMvc.perform(put("/api/offers")
@@ -300,6 +316,8 @@ public class OfferResourceIntTest {
         assertThat(testOffer.getSize()).isEqualTo(UPDATED_SIZE);
         assertThat(testOffer.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testOffer.getConstructionYear()).isEqualTo(UPDATED_CONSTRUCTION_YEAR);
+        assertThat(testOffer.isPets()).isEqualTo(UPDATED_PETS);
+        assertThat(testOffer.isSmokingInside()).isEqualTo(UPDATED_SMOKING_INSIDE);
         assertThat(testOffer.isIsFurnished()).isEqualTo(UPDATED_IS_FURNISHED);
     }
 

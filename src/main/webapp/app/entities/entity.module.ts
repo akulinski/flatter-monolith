@@ -23,6 +23,26 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'offer',
                 loadChildren: './offer/offer.module#FlatterservermonolithOfferModule'
+            },
+            {
+                path: 'message',
+                loadChildren: './message/message.module#FlatterservermonolithMessageModule'
+            },
+            {
+                path: 'conversation',
+                loadChildren: './conversation/conversation.module#FlatterservermonolithConversationModule'
+            },
+            {
+                path: 'offer',
+                loadChildren: './offer/offer.module#FlatterservermonolithOfferModule'
+            },
+            {
+                path: 'match',
+                loadChildren: './match/match.module#FlatterservermonolithMatchModule'
+            },
+            {
+                path: 'questionnaire',
+                loadChildren: './questionnaire/questionnaire.module#FlatterservermonolithQuestionnaireModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

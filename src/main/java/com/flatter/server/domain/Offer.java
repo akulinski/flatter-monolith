@@ -50,6 +50,12 @@ public class Offer implements Serializable {
     @Column(name = "construction_year")
     private Integer constructionYear;
 
+    @Column(name = "pets")
+    private Boolean pets;
+
+    @Column(name = "smoking_inside")
+    private Boolean smokingInside;
+
     @Column(name = "is_furnished")
     private Boolean isFurnished;
 
@@ -64,6 +70,10 @@ public class Offer implements Serializable {
     @OneToOne(mappedBy = "offer")
     @JsonIgnore
     private Album album;
+
+    @OneToOne(mappedBy = "offer")
+    @JsonIgnore
+    private Match match;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -152,6 +162,32 @@ public class Offer implements Serializable {
         this.constructionYear = constructionYear;
     }
 
+    public Boolean isPets() {
+        return pets;
+    }
+
+    public Offer pets(Boolean pets) {
+        this.pets = pets;
+        return this;
+    }
+
+    public void setPets(Boolean pets) {
+        this.pets = pets;
+    }
+
+    public Boolean isSmokingInside() {
+        return smokingInside;
+    }
+
+    public Offer smokingInside(Boolean smokingInside) {
+        this.smokingInside = smokingInside;
+        return this;
+    }
+
+    public void setSmokingInside(Boolean smokingInside) {
+        this.smokingInside = smokingInside;
+    }
+
     public Boolean isIsFurnished() {
         return isFurnished;
     }
@@ -203,6 +239,19 @@ public class Offer implements Serializable {
     public void setAlbum(Album album) {
         this.album = album;
     }
+
+    public Match getMatch() {
+        return match;
+    }
+
+    public Offer match(Match match) {
+        this.match = match;
+        return this;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -235,6 +284,8 @@ public class Offer implements Serializable {
             ", size=" + getSize() +
             ", type='" + getType() + "'" +
             ", constructionYear=" + getConstructionYear() +
+            ", pets='" + isPets() + "'" +
+            ", smokingInside='" + isSmokingInside() + "'" +
             ", isFurnished='" + isIsFurnished() + "'" +
             "}";
     }

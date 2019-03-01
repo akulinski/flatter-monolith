@@ -1,0 +1,80 @@
+<div>
+    <h2 id="page-heading">
+        <span>Questionnaires</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-questionnaire" [routerLink]="['/questionnaire/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Questionnaire
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="questionnaires">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Pets</span></th>
+            <th><span>Smoking Inside</span></th>
+            <th><span>Is Furnished</span></th>
+            <th><span>Room Amount Min</span></th>
+            <th><span>Room Amount Max</span></th>
+            <th><span>Size Min</span></th>
+            <th><span>Size Max</span></th>
+            <th><span>Construction Year Min</span></th>
+            <th><span>Construction Year Max</span></th>
+            <th><span>Type</span></th>
+            <th><span>Total Cost Min</span></th>
+            <th><span>Total Cost Max</span></th>
+            <th><span>User</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let questionnaire of questionnaires ;trackBy: trackId">
+                <td><a [routerLink]="['/questionnaire', questionnaire.id, 'view' ]">{{questionnaire.id}}</a></td>
+                <td>{{questionnaire.pets}}</td>
+                <td>{{questionnaire.smokingInside}}</td>
+                <td>{{questionnaire.isFurnished}}</td>
+                <td>{{questionnaire.roomAmountMin}}</td>
+                <td>{{questionnaire.roomAmountMax}}</td>
+                <td>{{questionnaire.sizeMin}}</td>
+                <td>{{questionnaire.sizeMax}}</td>
+                <td>{{questionnaire.constructionYearMin}}</td>
+                <td>{{questionnaire.constructionYearMax}}</td>
+                <td>{{questionnaire.type}}</td>
+                <td>{{questionnaire.totalCostMin}}</td>
+                <td>{{questionnaire.totalCostMax}}</td>
+                <td>
+                    {{questionnaire.user?.id}}
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/questionnaire', questionnaire.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/questionnaire', questionnaire.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'questionnaire', { outlets: { popup: questionnaire.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

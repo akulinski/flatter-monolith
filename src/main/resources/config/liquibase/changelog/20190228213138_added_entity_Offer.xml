@@ -45,6 +45,14 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="pets" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="smoking_inside" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
             <column name="is_furnished" type="boolean">
                 <constraints nullable="true" />
             </column>

@@ -21,6 +21,8 @@
             <th jhiSortBy="size"><span>Size</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="type"><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="constructionYear"><span>Construction Year</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="pets"><span>Pets</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="smokingInside"><span>Smoking Inside</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="isFurnished"><span>Is Furnished</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="user.login"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -35,6 +37,8 @@
                 <td>{{offer.size}}</td>
                 <td>{{offer.type}}</td>
                 <td>{{offer.constructionYear}}</td>
+                <td>{{offer.pets}}</td>
+                <td>{{offer.smokingInside}}</td>
                 <td>{{offer.isFurnished}}</td>
                 <td>
                     {{offer.user?.login}}

@@ -1,12 +1,45 @@
 
+entity Message{
+	creationDate Instant,
+    content TextBlob required,
+    isSeen Boolean
+}
+
+entity Conversation{
+
+}
+
 entity Offer{
     description TextBlob required,
     totalCost Double required,
     roomAmount Integer required,
     size Double required,
-    type String,
+    type String, //House of Flat
     constructionYear Integer,
+    pets Boolean,
+    smokingInside Boolean,
     isFurnished Boolean
+}
+
+entity Match{
+	isApproved Boolean,
+    creationDate Instant,
+    approvalDate Instant
+}
+
+entity Questionnaire{
+	pets Boolean,
+    smokingInside Boolean,
+    isFurnished Boolean,
+    roomAmountMin Integer,
+    roomAmountMax Integer,
+    sizeMin Double,
+    sizeMax Double,
+    constructionYearMin Integer,
+    constructionYearMax Integer,
+    type String,
+    totalCostMin Double,
+    totalCostMax Double
 }
 
 entity Address{
@@ -48,6 +81,30 @@ relationship OneToOne{
 
 relationship OneToOne{
 	Album to Offer
+}
+
+relationship OneToOne{
+	Questionnaire to User
+}
+
+relationship OneToOne{
+	Match to Offer
+}
+
+relationship OneToOne{
+	Match{user(login)} to User
+}
+
+relationship ManyToOne{
+	Message to Conversation
+}
+
+relationship OneToOne{
+	Conversation{sender(login)} to User
+}
+
+relationship OneToOne{
+	Conversation{reciver(login)} to User
 }
 
 paginate Album with pagination

@@ -103,6 +103,13 @@ public class OfferResource {
                 .filter(offer -> offer.getAlbum() == null)
                 .collect(Collectors.toList()), HttpStatus.OK);
         }
+        if ("match-is-null".equals(filter)) {
+            log.debug("REST request to get all Offers where match is null");
+            return new ResponseEntity<>(StreamSupport
+                .stream(offerRepository.findAll().spliterator(), false)
+                .filter(offer -> offer.getMatch() == null)
+                .collect(Collectors.toList()), HttpStatus.OK);
+        }
         log.debug("REST request to get a page of Offers");
         Page<Offer> page = offerRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/offers");
