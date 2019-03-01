@@ -68,10 +68,16 @@ spring:
     liquibase:
         contexts: dev
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.gmail.com
+        port: 587
+        username: flatter.production@gmail.com  #Replace this field with your Yahoo username.
+        password: FlatterFlatter1!           #Replace this field with your Yahoo password.
+        protocol: smtp
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            starttls.required: true
     messages:
         cache-duration: PT1S # 1 second, see the ISO 8601 standard
     thymeleaf:
@@ -119,7 +125,7 @@ jhipster:
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: flatterservermonolith@localhost
+        from: albert.kulinski@yahoo.com
         base-url: http://127.0.0.1:8080
     metrics:
         logs: # Reports metrics in the logs
