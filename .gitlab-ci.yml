@@ -1,4 +1,4 @@
-image: jhipster/jhipster:v5.8.2
+image: jhipster/jhipster:latest
 
 cache:
     key: "$CI_COMMIT_REF_NAME"
@@ -14,11 +14,6 @@ stages:
 
 
 before_script:
-    - export HEROKU_API_KEY=fe425d65-ba83-4de9-8193-e031a0f29e12
-    - export POSTGRES_IP=db-postgresql-fra1-27926-do-user-4709434-0.db.ondigitalocean.com
-    - export DATABASE=flatter
-    - export POSTGRES_USERNAME=flatterProd
-    - export POSTGRES_PASSWOD=fgns5x6go7szluc3
     - export MAVEN_USER_HOME=`pwd`/.maven
     - ./mvnw com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v10.15.0 -DnpmVersion=6.4.1 -Dmaven.repo.local=$MAVEN_USER_HOME
     - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dmaven.repo.local=$MAVEN_USER_HOME
