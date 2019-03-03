@@ -10,6 +10,7 @@ node {
             sh "chmod -R 777 /var/lib/jenkins/workspace"
 
             stage('check java') {
+                sh "chmod -R 777 /var/lib/jenkins/workspace"
                 sh "java -version"
             }
 
