@@ -7,6 +7,8 @@ node {
 
     gitlabCommitStatus('build') {
         docker.image('jhipster/jhipster:latest').inside('-u jhipster -e MAVEN_OPTS="-Duser.home=./"') {
+            sh "chmod -R 777 /var/lib/jenkins/workspace"
+
             stage('check java') {
                 sh "java -version"
             }
