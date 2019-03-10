@@ -1,17 +1,21 @@
 package com.flatter.server.web.rest;
 import com.flatter.server.domain.Questionnaire;
+import com.flatter.server.domain.User;
 import com.flatter.server.repository.QuestionnaireRepository;
+import com.flatter.server.repository.UserRepository;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +32,12 @@ public class QuestionnaireResource {
 
     private final QuestionnaireRepository questionnaireRepository;
 
-    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository) {
+    private final UserRepository userRepository;
+
+    @Autowired
+    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository) {
         this.questionnaireRepository = questionnaireRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -40,11 +48,14 @@ public class QuestionnaireResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/questionnaires")
-    public ResponseEntity<Questionnaire> createQuestionnaire(@RequestBody Questionnaire questionnaire) throws URISyntaxException {
+    public ResponseEntity<Questionnaire> createQuestionnaire(@RequestBody Questionnaire questionnaire, Principal principal) throws URISyntaxException {
         log.debug("REST request to save Questionnaire : {}", questionnaire);
         if (questionnaire.getId() != null) {
             throw new BadRequestAlertException("A new questionnaire cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        User user = userRepository.findOneByLogin(principal.getName()).orElseThrow(()->new IllegalArgumentException("User not found"));
+        questionnaire.setUser(user);
         Questionnaire result = questionnaireRepository.save(questionnaire);
         return ResponseEntity.created(new URI("/api/questionnaires/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -66,6 +77,7 @@ public class QuestionnaireResource {
         if (questionnaire.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
         Questionnaire result = questionnaireRepository.save(questionnaire);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, questionnaire.getId().toString()))

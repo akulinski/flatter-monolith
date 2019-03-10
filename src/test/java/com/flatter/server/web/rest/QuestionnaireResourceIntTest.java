@@ -4,6 +4,7 @@ import com.flatter.server.FlatterservermonolithApp;
 
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.repository.QuestionnaireRepository;
+import com.flatter.server.repository.UserRepository;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -86,6 +87,9 @@ public class QuestionnaireResourceIntTest {
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
@@ -101,7 +105,7 @@ public class QuestionnaireResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository);
+        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository,userRepository);
         this.restQuestionnaireMockMvc = MockMvcBuilders.standaloneSetup(questionnaireResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
