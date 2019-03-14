@@ -21,6 +21,16 @@ entity Offer{
     isFurnished Boolean
 }
 
+entity Review{
+	rate Double,
+	description String
+}
+
+relationship OneToOne{
+	Review{issuer} to User,
+	Review{receiver} to User
+}
+
 entity Match{
 	isApproved Boolean,
     creationDate Instant,
