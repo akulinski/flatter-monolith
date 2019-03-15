@@ -134,6 +134,5 @@ public class ReviewResource {
         } else {
             return new ResponseEntity<>(new LinkedList<>(), HttpStatus.NOT_FOUND);
         }
-
     }
 }
