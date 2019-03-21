@@ -41,11 +41,11 @@
             [endpointsRequestsMetrics]="metrics.services">
         </jhi-metrics-endpoints-requests>
 
-    <jhi-metrics-cache
-        *ngIf="isObjectExisting(metrics, 'cache')"
+    <jhi-metrics-loginQuestionnaireableCache
+        *ngIf="isObjectExisting(metrics, 'loginQuestionnaireableCache')"
         [updating]="updatingMetrics"
-        [cacheMetrics]="metrics.cache">
-    </jhi-metrics-cache>
+        [cacheMetrics]="metrics.loginQuestionnaireableCache">
+    </jhi-metrics-loginQuestionnaireableCache>
 
     <jhi-metrics-datasource
         *ngIf="isObjectExistingAndNotEmpty(metrics, 'databases')"

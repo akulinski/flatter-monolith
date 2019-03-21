@@ -12,12 +12,12 @@ node_tmp/
 node_modules/
 npm-debug.log.*
 /.awcache/*
-/.cache-loader/*
+/.loginQuestionnaireableCache-loader/*
 
 ######################
 # SASS
 ######################
-.sass-cache/
+.sass-loginQuestionnaireableCache/
 
 ######################
 # Eclipse

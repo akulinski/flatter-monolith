@@ -1,10 +1,12 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.config.Constants;
+import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.security.AuthoritiesConstants;
 import com.flatter.server.service.MailService;
+import com.flatter.server.service.MatchingService;
 import com.flatter.server.service.UserService;
 import com.flatter.server.service.dto.UserDTO;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
@@ -13,9 +15,9 @@ import com.flatter.server.web.rest.errors.LoginAlreadyUsedException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +29,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing users.
@@ -65,11 +69,15 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private final MatchingService matchingService;
+
+    @Autowired
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, MatchingService matchingService) {
 
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.matchingService = matchingService;
     }
 
     /**
@@ -81,7 +89,7 @@ public class UserResource {
      *
      * @param userDTO the user to create
      * @return the ResponseEntity with status 201 (Created) and with body the new user, or with status 400 (Bad Request) if the login or email is already in use
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @throws URISyntaxException       if the Location URI syntax is incorrect
      * @throws BadRequestAlertException 400 (Bad Request) if the login or email is already in use
      */
     @PostMapping("/users")
@@ -100,7 +108,7 @@ public class UserResource {
             User newUser = userService.createUser(userDTO);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
-                .headers(HeaderUtil.createAlert( "A user is created with identifier " + newUser.getLogin(), newUser.getLogin()))
+                .headers(HeaderUtil.createAlert("A user is created with identifier " + newUser.getLogin(), newUser.getLogin()))
                 .body(newUser);
         }
     }
@@ -178,6 +186,22 @@ public class UserResource {
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
-        return ResponseEntity.ok().headers(HeaderUtil.createAlert( "A user is deleted with identifier " + login, login)).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createAlert("A user is deleted with identifier " + login, login)).build();
+    }
+
+    /**
+     * Returns offers targeted to specific user
+     * @param principal
+     * @return
+     * @throws IllegalAccessException
+     */
+    @GetMapping("/users/offers")
+    public ResponseEntity<List<Offer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
+        String username = principal.getName();
+
+        User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
+
+        return new ResponseEntity<>(matchingService.getMockOffers(user), HttpStatus.OK);
+
     }
 }

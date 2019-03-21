@@ -6,6 +6,7 @@ import com.flatter.server.domain.User;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.security.AuthoritiesConstants;
 import com.flatter.server.service.MailService;
+import com.flatter.server.service.MatchingService;
 import com.flatter.server.service.UserService;
 import com.flatter.server.service.dto.UserDTO;
 import com.flatter.server.service.mapper.UserMapper;
@@ -93,6 +94,9 @@ public class UserResourceIntTest {
     private EntityManager em;
 
     @Autowired
+    private MatchingService matchingService;
+
+    @Autowired
     private CacheManager cacheManager;
 
     private MockMvc restUserMockMvc;
@@ -103,7 +107,7 @@ public class UserResourceIntTest {
     public void setup() {
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
-        UserResource userResource = new UserResource(userService, userRepository, mailService);
+        UserResource userResource = new UserResource(userService, userRepository, mailService,matchingService);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
