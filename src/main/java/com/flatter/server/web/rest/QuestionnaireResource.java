@@ -1,4 +1,5 @@
 package com.flatter.server.web.rest;
+
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.QuestionnaireRepository;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -54,8 +54,10 @@ public class QuestionnaireResource {
             throw new BadRequestAlertException("A new questionnaire cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        User user = userRepository.findOneByLogin(principal.getName()).orElseThrow(()->new IllegalArgumentException("User not found"));
-        questionnaire.setUser(user);
+        Optional<User> user = userRepository.findOneByLogin(principal.getName());
+
+        user.ifPresent(questionnaire::setUser);
+
         Questionnaire result = questionnaireRepository.save(questionnaire);
         return ResponseEntity.created(new URI("/api/questionnaires/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

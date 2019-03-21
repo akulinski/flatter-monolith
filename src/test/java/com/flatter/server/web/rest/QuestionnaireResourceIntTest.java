@@ -10,12 +10,14 @@ import com.flatter.server.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -120,6 +123,7 @@ public class QuestionnaireResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
+    @WithMockUser(username = "admin")
     public static Questionnaire createEntity(EntityManager em) {
         Questionnaire questionnaire = new Questionnaire()
             .pets(DEFAULT_PETS)
@@ -144,12 +148,17 @@ public class QuestionnaireResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username = "admin")
     public void createQuestionnaire() throws Exception {
         int databaseSizeBeforeCreate = questionnaireRepository.findAll().size();
+
+        Principal mockPrincipal = Mockito.mock(Principal.class);
+        Mockito.when(mockPrincipal.getName()).thenReturn("admin");
 
         // Create the Questionnaire
         restQuestionnaireMockMvc.perform(post("/api/questionnaires")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .principal(mockPrincipal)
             .content(TestUtil.convertObjectToJsonBytes(questionnaire)))
             .andExpect(status().isCreated());
 

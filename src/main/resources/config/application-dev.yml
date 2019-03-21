@@ -65,6 +65,8 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory
+        hibernate:
+            ddl-auto: update
     liquibase:
         contexts: dev
     mail:
