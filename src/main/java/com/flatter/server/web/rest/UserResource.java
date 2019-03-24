@@ -9,11 +9,13 @@ import com.flatter.server.service.MailService;
 import com.flatter.server.service.MatchingService;
 import com.flatter.server.service.UserService;
 import com.flatter.server.service.dto.UserDTO;
+import com.flatter.server.web.feign.FeignMatchClient;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.errors.EmailAlreadyUsedException;
 import com.flatter.server.web.rest.errors.LoginAlreadyUsedException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
+import domain.QuestionnaireableOffer;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -196,12 +199,12 @@ public class UserResource {
      * @throws IllegalAccessException
      */
     @GetMapping("/users/offers")
-    public ResponseEntity<List<Offer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
+    public ResponseEntity<List<QuestionnaireableOffer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
         String username = principal.getName();
 
         User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
 
-        return new ResponseEntity<>(matchingService.getMockOffers(user), HttpStatus.OK);
+        return new ResponseEntity<>(matchingService.getOffersOfUser(user), HttpStatus.OK);
 
     }
 }

@@ -4,8 +4,13 @@ import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.web.feign.FeignUserClient;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
+import com.flatter.server.web.rest.util.AnnotationExclusionStrategy;
 import com.flatter.server.web.rest.util.HeaderUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +39,13 @@ public class QuestionnaireResource {
 
     private final UserRepository userRepository;
 
+    private final FeignUserClient feignUserClient;
+
     @Autowired
-    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository) {
+    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository, FeignUserClient feignUserClient) {
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
+        this.feignUserClient = feignUserClient;
     }
 
     /**
@@ -59,6 +67,8 @@ public class QuestionnaireResource {
         user.ifPresent(questionnaire::setUser);
 
         Questionnaire result = questionnaireRepository.save(questionnaire);
+
+        feignUserClient.addUser(result);
         return ResponseEntity.created(new URI("/api/questionnaires/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -81,6 +91,7 @@ public class QuestionnaireResource {
         }
 
         Questionnaire result = questionnaireRepository.save(questionnaire);
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, questionnaire.getId().toString()))
             .body(result);
