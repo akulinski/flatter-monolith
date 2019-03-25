@@ -33,7 +33,7 @@ install:
 script:
   - chmod +x mvnw
   - ./mvnw clean test
-  - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
+  - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test'
   - ./mvnw verify -Pprod -DskipTests
 notifications:
   webhooks:
