@@ -31,7 +31,7 @@ before_install:
 install:
   - npm install
 script:
-  - chmod +x mvnw
+  - chmod +x ./mvnw
   - ./mvnw clean test
   - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test'
   - ./mvnw verify -Pprod -DskipTests
