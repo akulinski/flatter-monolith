@@ -122,10 +122,17 @@
 
     <dependencies>
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.github.akulinski</groupId>
             <artifactId>flatter-COMMON</artifactId>
             <version>0.0.1</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.flatter</groupId>
+            <artifactId>flatter-COMMON</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -344,12 +351,15 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-<!--        <dependency>
+
+        <!--        <dependency>
             <groupId>com.flatter</groupId>
             <artifactId>flatter-COMMON</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>-->
+
+
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
