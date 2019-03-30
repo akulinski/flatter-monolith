@@ -35,7 +35,6 @@ script:
   - mv .travis.settings.xml $HOME/.m2/settings.xml
   - chmod +x mvnw
   - ./mvnw clean test
-  - ./mvnw com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
   - ./mvnw verify -Pprod -DskipTests
 notifications:
   webhooks:

@@ -122,18 +122,18 @@
 
     <dependencies>
 
-<!--        <dependency>
+        <dependency>
             <groupId>com.github.akulinski</groupId>
             <artifactId>flatter-COMMON</artifactId>
-            <version>0.0.1</version>
-        </dependency>-->
+            <version>0.0.2-RELASE</version>
+        </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.flatter</groupId>
             <artifactId>flatter-COMMON</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>io.github.jhipster</groupId>
