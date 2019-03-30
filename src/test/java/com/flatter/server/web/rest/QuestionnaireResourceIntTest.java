@@ -5,17 +5,21 @@ import com.flatter.server.FlatterservermonolithApp;
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.web.feign.FeignUserClient;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,7 +35,10 @@ import java.util.List;
 
 import static com.flatter.server.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -101,6 +108,9 @@ public class QuestionnaireResourceIntTest {
     @Autowired
     private Validator validator;
 
+    @Mock
+    private FeignUserClient feignUserClient;
+
     private MockMvc restQuestionnaireMockMvc;
 
     private Questionnaire questionnaire;
@@ -108,7 +118,11 @@ public class QuestionnaireResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository,userRepository);
+
+        feignUserClient = mock(FeignUserClient.class);
+        when(feignUserClient.addUser(ArgumentMatchers.any())).thenReturn(ResponseEntity.ok(""));
+
+        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository,userRepository,feignUserClient);
         this.restQuestionnaireMockMvc = MockMvcBuilders.standaloneSetup(questionnaireResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -152,7 +166,7 @@ public class QuestionnaireResourceIntTest {
     public void createQuestionnaire() throws Exception {
         int databaseSizeBeforeCreate = questionnaireRepository.findAll().size();
 
-        Principal mockPrincipal = Mockito.mock(Principal.class);
+        Principal mockPrincipal = mock(Principal.class);
         Mockito.when(mockPrincipal.getName()).thenReturn("admin");
 
         // Create the Questionnaire
