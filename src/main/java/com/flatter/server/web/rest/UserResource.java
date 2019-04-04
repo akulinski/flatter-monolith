@@ -1,7 +1,6 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.config.Constants;
-import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.security.AuthoritiesConstants;
@@ -9,7 +8,6 @@ import com.flatter.server.service.MailService;
 import com.flatter.server.service.MatchingService;
 import com.flatter.server.service.UserService;
 import com.flatter.server.service.dto.UserDTO;
-import com.flatter.server.web.feign.FeignMatchClient;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.errors.EmailAlreadyUsedException;
 import com.flatter.server.web.rest.errors.LoginAlreadyUsedException;
@@ -32,7 +30,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -194,6 +191,7 @@ public class UserResource {
 
     /**
      * Returns offers targeted to specific user
+     *
      * @param principal
      * @return
      * @throws IllegalAccessException
@@ -205,6 +203,21 @@ public class UserResource {
         User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
 
         return new ResponseEntity<>(matchingService.getOffersOfUser(user), HttpStatus.OK);
+    }
 
+    /**
+     * Returns offers targeted to specific user
+     *
+     * @param principal
+     * @return
+     * @throws IllegalAccessException
+     */
+    @GetMapping("/users/my-profile")
+    public ResponseEntity<User> getMyProfile(Principal principal) throws IllegalAccessException {
+        String username = principal.getName();
+
+        User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

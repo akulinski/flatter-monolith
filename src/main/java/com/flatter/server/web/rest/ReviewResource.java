@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -119,15 +120,13 @@ public class ReviewResource {
     }
 
     /**
-     * GET /reviews/getAllByLogin/:login
-     * Get all reviews where receiver is user with login
+     * GET /reviews/get-all-by-login
+     * Get all reviews of user
      *
-     * @param login login of receiver
-     * @return list of reviews
      */
-    @GetMapping("/reviews/getAllByLogin/{login}")
-    public ResponseEntity<List<Review>> getAllReviewsWhereUserIsReceiver(@PathVariable String login) {
-        Optional<User> user = userRepository.findOneByLogin(login);
+    @GetMapping("/reviews/get-all-by-login")
+    public ResponseEntity<List<Review>> getAllReviewsWhereUserIsReceiver(Principal principal) {
+        Optional<User> user = userRepository.findOneByLogin(principal.getName());
         if (user.isPresent()) {
             List<Review> reviewList = reviewRepository.getAllByReceiver(user.get());
             return new ResponseEntity<>(reviewList, HttpStatus.OK);
