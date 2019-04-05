@@ -38,3 +38,6 @@ services:
     ports:
       - 5080:80
 
+networks:
+    default:
+        driver: bridge
