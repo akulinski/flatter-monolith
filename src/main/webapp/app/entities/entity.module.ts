@@ -47,6 +47,10 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'review',
                 loadChildren: './review/review.module#FlatterservermonolithReviewModule'
+            },
+            {
+                path: 'profile-picture',
+                loadChildren: './profile-picture/profile-picture.module#FlatterservermonolithProfilePictureModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])
