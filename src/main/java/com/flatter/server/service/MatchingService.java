@@ -3,6 +3,8 @@ package com.flatter.server.service;
 import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.OfferRepository;
+import com.flatter.server.web.feign.FeignMatchClient;
+import domain.QuestionnaireableOffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +16,17 @@ import java.util.List;
 @Service
 public class MatchingService {
 
+    private final FeignMatchClient feignMatchClient;
+
     private SecureRandom secureRandom;
 
     private final OfferRepository offerRepository;
 
     @Autowired
-    public MatchingService(OfferRepository offerRepository) {
+    public MatchingService(OfferRepository offerRepository, FeignMatchClient feignMatchClient) {
         this.offerRepository = offerRepository;
         this.secureRandom = new SecureRandom();
+        this.feignMatchClient = feignMatchClient;
     }
 
     public List<Offer> getMockOffers(User user) {
@@ -34,6 +39,10 @@ public class MatchingService {
         }
 
         return returnOffers;
+    }
+
+    public List<QuestionnaireableOffer> getOffersOfUser(User user){
+        return feignMatchClient.getMatchesOfUser(user.getLogin());
     }
 
 }

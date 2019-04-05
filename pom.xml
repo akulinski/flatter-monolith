@@ -9,8 +9,12 @@
     <name>Flatterservermonolith</name>
 
     <repositories>
-        <!-- jhipster-needle-maven-repository -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
+
 
     <pluginRepositories>
         <!-- jhipster-needle-maven-plugin-repository -->
@@ -117,6 +121,20 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.github.akulinski</groupId>
+            <artifactId>flatter-COMMON</artifactId>
+            <version>0.0.2-RELASE</version>
+        </dependency>
+
+<!--        <dependency>
+            <groupId>com.flatter</groupId>
+            <artifactId>flatter-COMMON</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>-->
+
         <dependency>
             <groupId>io.github.jhipster</groupId>
             <artifactId>jhipster-framework</artifactId>
@@ -328,6 +346,26 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-heroku-connector</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!--        <dependency>
+            <groupId>com.flatter</groupId>
+            <artifactId>flatter-COMMON</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>-->
+
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 

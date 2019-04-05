@@ -1,7 +1,6 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.config.Constants;
-import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.security.AuthoritiesConstants;
@@ -14,6 +13,7 @@ import com.flatter.server.web.rest.errors.EmailAlreadyUsedException;
 import com.flatter.server.web.rest.errors.LoginAlreadyUsedException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
+import domain.QuestionnaireableOffer;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -191,17 +191,33 @@ public class UserResource {
 
     /**
      * Returns offers targeted to specific user
+     *
      * @param principal
      * @return
      * @throws IllegalAccessException
      */
     @GetMapping("/users/offers")
-    public ResponseEntity<List<Offer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
+    public ResponseEntity<List<QuestionnaireableOffer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
         String username = principal.getName();
 
         User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
 
-        return new ResponseEntity<>(matchingService.getMockOffers(user), HttpStatus.OK);
+        return new ResponseEntity<>(matchingService.getOffersOfUser(user), HttpStatus.OK);
+    }
 
+    /**
+     * Returns offers targeted to specific user
+     *
+     * @param principal
+     * @return
+     * @throws IllegalAccessException
+     */
+    @GetMapping("/users/my-profile")
+    public ResponseEntity<User> getMyProfile(Principal principal) throws IllegalAccessException {
+        String username = principal.getName();
+
+        User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
