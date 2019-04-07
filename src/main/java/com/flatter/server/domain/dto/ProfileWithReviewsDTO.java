@@ -10,7 +10,7 @@ import java.util.List;
 public class ProfileWithReviewsDTO {
     private User receiver;
     private ProfilePicture profilePicture;
-    List<Pair<Review, ProfilePicture>> pairs;
+    private List<Pair<Review, ProfilePicture>> pairs;
 
     public User getReceiver() {
         return receiver;

@@ -22,6 +22,11 @@ services:
         environment:
             - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=native
             - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_LOCATIONS=file:./central-config/docker-config/
+    zookeeper:
+        extends:
+            file: kafka.yml
+            service: zookeeper
+
 networks:
     default:
         driver: bridge

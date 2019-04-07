@@ -248,7 +248,7 @@ public class UserResource {
         ProfileWithReviewsDTO profileWithReviewsDTO = new ProfileWithReviewsDTO();
 
         profileWithReviewsDTO.setReceiver(user);
-        profileWithReviewsDTO.setProfilePicture(profilePictureRepository.findAllByUser(user).orElseThrow(() -> new IllegalStateException("User not found")));
+        profileWithReviewsDTO.setProfilePicture(profilePictureRepository.findAllByUser(user).orElseThrow(() -> new IllegalStateException("User not found "+username)));
 
         LinkedList<Review> allByReceiver = reviewRepository.getAllByReceiver(user);
         LinkedList<Pair<Review, ProfilePicture>> pairLinkedList = new LinkedList<>();
