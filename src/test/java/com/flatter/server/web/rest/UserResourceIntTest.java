@@ -3,6 +3,8 @@ package com.flatter.server.web.rest;
 import com.flatter.server.FlatterservermonolithApp;
 import com.flatter.server.domain.Authority;
 import com.flatter.server.domain.User;
+import com.flatter.server.repository.ProfilePictureRepository;
+import com.flatter.server.repository.ReviewRepository;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.security.AuthoritiesConstants;
 import com.flatter.server.service.MailService;
@@ -29,11 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -103,11 +108,17 @@ public class UserResourceIntTest {
 
     private User user;
 
+    @Autowired
+    private ProfilePictureRepository profilePictureRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
     @Before
     public void setup() {
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
-        UserResource userResource = new UserResource(userService, userRepository, mailService,matchingService);
+        UserResource userResource = new UserResource(userService, userRepository, mailService, matchingService, profilePictureRepository, reviewRepository);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -118,7 +129,7 @@ public class UserResourceIntTest {
 
     /**
      * Create a User.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */

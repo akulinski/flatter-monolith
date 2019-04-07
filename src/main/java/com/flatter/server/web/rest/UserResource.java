@@ -1,7 +1,12 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.config.Constants;
+import com.flatter.server.domain.ProfilePicture;
+import com.flatter.server.domain.Review;
 import com.flatter.server.domain.User;
+import com.flatter.server.domain.dto.ProfileWithReviewsDTO;
+import com.flatter.server.repository.ProfilePictureRepository;
+import com.flatter.server.repository.ReviewRepository;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.security.AuthoritiesConstants;
 import com.flatter.server.service.MailService;
@@ -15,6 +20,7 @@ import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
 import domain.QuestionnaireableOffer;
 import io.github.jhipster.web.util.ResponseUtil;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,13 +78,19 @@ public class UserResource {
 
     private final MatchingService matchingService;
 
+    private final ProfilePictureRepository profilePictureRepository;
+
+    private final ReviewRepository reviewRepository;
+
     @Autowired
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, MatchingService matchingService) {
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, MatchingService matchingService, ProfilePictureRepository profilePictureRepository, ReviewRepository reviewRepository) {
 
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.matchingService = matchingService;
+        this.profilePictureRepository = profilePictureRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     /**
@@ -206,8 +219,6 @@ public class UserResource {
     }
 
     /**
-     * Returns offers targeted to specific user
-     *
      * @param principal
      * @return
      * @throws IllegalAccessException
@@ -221,5 +232,30 @@ public class UserResource {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    /**
+     * Returns profile with reviews
+     *
+     * @param principal
+     * @return
+     * @throws IllegalAccessException
+     */
+    @GetMapping("/users/my-profile-with-reviews")
+    public ResponseEntity<LinkedList<Pair<Review, ProfilePicture>>> getMyProfileWithReviews(Principal principal) throws IllegalAccessException {
+        String username = principal.getName();
+
+        User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
+
+        ProfileWithReviewsDTO profileWithReviewsDTO = new ProfileWithReviewsDTO();
+
+        profileWithReviewsDTO.setReceiver(user);
+        profileWithReviewsDTO.setProfilePicture(profilePictureRepository.findAllByUser(user).orElseThrow(() -> new IllegalStateException("User not found")));
+
+        LinkedList<Review> allByReceiver = reviewRepository.getAllByReceiver(user);
+        LinkedList<Pair<Review, ProfilePicture>> pairLinkedList = new LinkedList<>();
+
+        allByReceiver.forEach(review -> pairLinkedList.add(new Pair<>(review, profilePictureRepository.findAllByUser(review.getIssuer()).get())));
+
+        return new ResponseEntity<>(pairLinkedList, HttpStatus.OK);
+    }
 
 }

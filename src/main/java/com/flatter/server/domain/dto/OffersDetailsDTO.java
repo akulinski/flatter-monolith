@@ -10,4 +10,20 @@ import java.util.List;
 public class OffersDetailsDTO {
     private Offer offer;
     private List<Photo> photos;
+
+    public Offer getOffer() {
+        return offer;
+    }
+
+    public void setOffer(Offer offer) {
+        this.offer = offer;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+    }
 }
