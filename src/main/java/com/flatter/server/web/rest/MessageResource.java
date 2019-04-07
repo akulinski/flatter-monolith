@@ -5,7 +5,7 @@ import com.flatter.server.domain.Message;
 import com.flatter.server.repository.ConversationRepository;
 import com.flatter.server.repository.MessageRepository;
 import com.flatter.server.repository.UserRepository;
-import com.flatter.server.service.kafka.MessageProducerChannel;
+import com.flatter.server.service.kafka.MessageConsumerChannel;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import domain.MessageDTO;
@@ -31,7 +31,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class MessageResource {
 
-    public static final String NO_USER_FOUND_WITH_NAME = "No user found with name {}";
+    private static final String NO_USER_FOUND_WITH_NAME = "No user found with name {}";
     private final Logger log = LoggerFactory.getLogger(MessageResource.class);
 
     private static final String ENTITY_NAME = "message";
@@ -44,11 +44,11 @@ public class MessageResource {
 
     private final MessageChannel messageChannel;
 
-    public MessageResource(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository, MessageProducerChannel messageProducerChannel) {
+    public MessageResource(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository, MessageConsumerChannel messageProducerChannel) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
-        this.messageChannel = messageProducerChannel.messageChannel();
+        this.messageChannel = messageProducerChannel.anOutput();
     }
 
     /**

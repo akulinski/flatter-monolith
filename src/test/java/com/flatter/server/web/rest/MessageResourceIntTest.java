@@ -6,7 +6,7 @@ import com.flatter.server.domain.Message;
 import com.flatter.server.repository.ConversationRepository;
 import com.flatter.server.repository.MessageRepository;
 import com.flatter.server.repository.UserRepository;
-import com.flatter.server.service.kafka.MessageProducerChannel;
+import com.flatter.server.service.kafka.MessageConsumerChannel;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
@@ -74,7 +73,7 @@ public class MessageResourceIntTest {
     private UserRepository userRepository;
 
     @Autowired
-    private MessageProducerChannel messageProducerChannel;
+    private MessageConsumerChannel messageProducerChannel;
 
     @Autowired
     private EntityManager em;

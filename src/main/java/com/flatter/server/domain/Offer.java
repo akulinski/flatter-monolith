@@ -27,7 +27,7 @@ public class Offer implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    
+
     @Lob
     @Column(name = "description", nullable = false)
     private String description;

@@ -13,3 +13,6 @@ services:
             KAFKA_CREATE_TOPICS: "topic-jhipster:1:1,messages:1:1"
         ports:
             - 9092:9092
+networks:
+    default:
+        driver: bridge
