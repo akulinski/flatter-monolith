@@ -6,8 +6,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -21,7 +19,7 @@ import java.util.Objects;
 public class Message implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -30,7 +28,6 @@ public class Message implements Serializable {
     @Column(name = "creation_date")
     private Instant creationDate;
 
-    
     @Lob
     @Column(name = "content", nullable = false)
     private String content;

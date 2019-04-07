@@ -1,18 +1,26 @@
 package com.flatter.server.web.rest;
+
+import com.flatter.server.domain.Conversation;
 import com.flatter.server.domain.Message;
+import com.flatter.server.repository.ConversationRepository;
 import com.flatter.server.repository.MessageRepository;
+import com.flatter.server.repository.UserRepository;
+import com.flatter.server.service.kafka.MessageProducerChannel;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
+import domain.MessageDTO;
+import domain.events.MessageSentEvent;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -23,14 +31,24 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class MessageResource {
 
+    public static final String NO_USER_FOUND_WITH_NAME = "No user found with name {}";
     private final Logger log = LoggerFactory.getLogger(MessageResource.class);
 
     private static final String ENTITY_NAME = "message";
 
     private final MessageRepository messageRepository;
 
-    public MessageResource(MessageRepository messageRepository) {
+    private final ConversationRepository conversationRepository;
+
+    private final UserRepository userRepository;
+
+    private final MessageChannel messageChannel;
+
+    public MessageResource(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository, MessageProducerChannel messageProducerChannel) {
         this.messageRepository = messageRepository;
+        this.conversationRepository = conversationRepository;
+        this.userRepository = userRepository;
+        this.messageChannel = messageProducerChannel.messageChannel();
     }
 
     /**
@@ -43,13 +61,55 @@ public class MessageResource {
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) throws URISyntaxException {
         log.debug("REST request to save Message : {}", message);
+
         if (message.getId() != null) {
             throw new BadRequestAlertException("A new message cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         Message result = messageRepository.save(message);
         return ResponseEntity.created(new URI("/api/messages/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @PostMapping("/send-message")
+    public ResponseEntity<Message> sendMessage(@RequestBody MessageDTO messageDTO) {
+
+        log.debug("Sending message: FROM {} TO {}", messageDTO.getSender(), messageDTO.getReceiver());
+        Optional<Conversation> conversationOptional = conversationRepository.findAllBySender_LoginAndReciver_Login(messageDTO.getSender(), messageDTO.getReceiver());
+        Message message = getMessageFromDTO(messageDTO);
+
+        if (conversationOptional.isPresent()) {
+            message.setConversation(conversationOptional.get());
+
+        } else {
+            Conversation conversation = getConversationFromDTOAndSetSenders(messageDTO);
+            message.setConversation(conversation);
+        }
+        messageRepository.save(message);
+
+        MessageSentEvent messageSentEvent = new MessageSentEvent();
+        messageSentEvent.setMessageDTO(messageDTO);
+
+        messageChannel.send(MessageBuilder.withPayload(messageSentEvent).build());
+
+        return ResponseEntity.ok(message);
+    }
+
+    private Conversation getConversationFromDTOAndSetSenders(@RequestBody MessageDTO messageDTO) {
+        Conversation conversation = new Conversation();
+        conversation.setSender(userRepository.findOneByLogin(messageDTO.getSender()).orElseThrow(() -> new IllegalArgumentException(String.format(NO_USER_FOUND_WITH_NAME, messageDTO.getSender()))));
+        conversation.setReciver(userRepository.findOneByLogin(messageDTO.getReceiver()).orElseThrow(() -> new IllegalArgumentException(String.format(NO_USER_FOUND_WITH_NAME, messageDTO.getReceiver()))));
+        conversationRepository.save(conversation);
+        return conversation;
+    }
+
+    private Message getMessageFromDTO(@RequestBody MessageDTO messageDTO) {
+        Message message = new Message();
+        message.setContent(messageDTO.getContent());
+        message.setIsSeen(false);
+        message.setCreationDate(messageDTO.getCreationDate());
+        return message;
     }
 
     /**

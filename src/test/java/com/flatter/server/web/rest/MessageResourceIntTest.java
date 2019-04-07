@@ -3,7 +3,10 @@ package com.flatter.server.web.rest;
 import com.flatter.server.FlatterservermonolithApp;
 
 import com.flatter.server.domain.Message;
+import com.flatter.server.repository.ConversationRepository;
 import com.flatter.server.repository.MessageRepository;
+import com.flatter.server.repository.UserRepository;
+import com.flatter.server.service.kafka.MessageProducerChannel;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -65,6 +68,15 @@ public class MessageResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    private ConversationRepository conversationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private MessageProducerChannel messageProducerChannel;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -77,7 +89,7 @@ public class MessageResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final MessageResource messageResource = new MessageResource(messageRepository);
+        final MessageResource messageResource = new MessageResource(messageRepository,conversationRepository,userRepository,messageProducerChannel);
         this.restMessageMockMvc = MockMvcBuilders.standaloneSetup(messageResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

@@ -1,11 +1,10 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.FlatterservermonolithApp;
-
 import com.flatter.server.domain.ProfilePicture;
 import com.flatter.server.repository.ProfilePictureRepository;
+import com.flatter.server.repository.UserRepository;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,6 @@ import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 
 import static com.flatter.server.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,6 +62,9 @@ public class ProfilePictureResourceIntTest {
     private ProfilePictureRepository profilePictureRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -85,7 +86,7 @@ public class ProfilePictureResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ProfilePictureResource profilePictureResource = new ProfilePictureResource(profilePictureRepository);
+        final ProfilePictureResource profilePictureResource = new ProfilePictureResource(profilePictureRepository, userRepository);
         this.restProfilePictureMockMvc = MockMvcBuilders.standaloneSetup(profilePictureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -96,7 +97,7 @@ public class ProfilePictureResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -176,7 +177,7 @@ public class ProfilePictureResourceIntTest {
             .andExpect(jsonPath("$.[*].taken").value(hasItem(DEFAULT_TAKEN.toString())))
             .andExpect(jsonPath("$.[*].uploaded").value(hasItem(DEFAULT_UPLOADED.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getProfilePicture() throws Exception {
