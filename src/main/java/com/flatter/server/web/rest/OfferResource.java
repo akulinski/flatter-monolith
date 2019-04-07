@@ -1,6 +1,9 @@
 package com.flatter.server.web.rest;
+
 import com.flatter.server.domain.Offer;
+import com.flatter.server.domain.dto.OffersDetailsDTO;
 import com.flatter.server.repository.OfferRepository;
+import com.flatter.server.repository.PhotoRepository;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,8 +38,11 @@ public class OfferResource {
 
     private final OfferRepository offerRepository;
 
-    public OfferResource(OfferRepository offerRepository) {
+    private final PhotoRepository photoRepository;
+
+    public OfferResource(OfferRepository offerRepository, PhotoRepository photoRepository) {
         this.offerRepository = offerRepository;
+        this.photoRepository = photoRepository;
     }
 
     /**
@@ -84,7 +89,7 @@ public class OfferResource {
      * GET  /offers : get all the offers.
      *
      * @param pageable the pagination information
-     * @param filter the filter of the request
+     * @param filter   the filter of the request
      * @return the ResponseEntity with status 200 (OK) and the list of offers in body
      */
     @GetMapping("/offers")
@@ -127,6 +132,26 @@ public class OfferResource {
         log.debug("REST request to get Offer : {}", id);
         Optional<Offer> offer = offerRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(offer);
+    }
+
+    /**
+     *  GET /offfers-with-details/:id get the "id" offer.
+     * @param id  the id of the offer to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the offer and all photos, or with status 404 (Not Found)
+     */
+    @GetMapping("/offers-with-details/{id}")
+    public ResponseEntity<OffersDetailsDTO> getOfferWithDetails(@PathVariable Long id) {
+        log.debug("REST request to get Offer : {}", id);
+        Optional<Offer> offer = offerRepository.findById(id);
+
+        OffersDetailsDTO offersDetailsDTO = new OffersDetailsDTO();
+
+        if (offer.isPresent()) {
+            offersDetailsDTO.setOffer(offer.get());
+            offersDetailsDTO.setPhotos(photoRepository.getAllByAlbum(offer.get().getAlbum()));
+        }
+
+        return ResponseEntity.ok(offersDetailsDTO);
     }
 
     /**

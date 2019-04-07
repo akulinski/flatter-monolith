@@ -64,11 +64,9 @@ public class Offer implements Serializable {
     private User user;
 
     @OneToOne(mappedBy = "offer")
-    @JsonIgnore
     private Address address;
 
     @OneToOne(mappedBy = "offer")
-    @JsonIgnore
     private Album album;
 
     @OneToOne(mappedBy = "offer")

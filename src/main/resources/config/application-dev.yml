@@ -33,6 +33,18 @@ spring:
             - swagger
             # Uncomment to activate TLS for the dev profile
             #- tls
+    cloud:
+        stream:
+            kafka:
+                binder:
+                    brokers: localhost
+                    zk-nodes: localhost
+            bindings:
+                messageChannel:
+                    destination: messages
+                    content-type: application/json
+                subscribableChannel:
+                    destination: messages
     devtools:
         restart:
             enabled: true

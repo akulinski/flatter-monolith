@@ -1,6 +1,7 @@
 package com.flatter.server.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -38,6 +39,7 @@ public class Address implements Serializable {
 
     @OneToOne
     @JoinColumn(unique = true)
+    @JsonIgnore
     private Offer offer;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
