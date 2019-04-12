@@ -37,14 +37,21 @@ spring:
         stream:
             kafka:
                 binder:
-                    brokers: 192.168.0.26
-                    zk-nodes: 192.168.0.26
+                    brokers: localhost
+                    zk-nodes: localhost
             bindings:
                 input:
                     destination: messages
                     content-type: application/json
                 outputChannel:
                     destination: messages
+                    content-type: application/json
+
+                input_clustering:
+                    destignation: clusteringjoin
+
+                anoutput_clustering:
+                    destignation: clusteringjoin
                     content-type: application/json
     devtools:
         restart:

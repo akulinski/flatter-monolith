@@ -4,12 +4,14 @@ import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.dto.OffersDetailsDTO;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.PhotoRepository;
+import com.flatter.server.service.JoiningService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -40,9 +42,12 @@ public class OfferResource {
 
     private final PhotoRepository photoRepository;
 
-    public OfferResource(OfferRepository offerRepository, PhotoRepository photoRepository) {
+    private final JoiningService joiningService;
+
+    public OfferResource(OfferRepository offerRepository, PhotoRepository photoRepository, JoiningService joiningService) {
         this.offerRepository = offerRepository;
         this.photoRepository = photoRepository;
+        this.joiningService = joiningService;
     }
 
     /**
@@ -165,5 +170,12 @@ public class OfferResource {
         log.debug("REST request to delete Offer : {}", id);
         offerRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @PostMapping("/post-join-event/{login}")
+    public ResponseEntity<Void> postJoiningEvent(@PathVariable String login){
+        joiningService.postRequestForClusteringData(login);
+
+        return ResponseEntity.ok().build();
     }
 }

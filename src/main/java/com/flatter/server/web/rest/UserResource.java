@@ -20,7 +20,7 @@ import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
 import domain.QuestionnaireableOffer;
 import io.github.jhipster.web.util.ResponseUtil;
-import javafx.util.Pair;
+import org.apache.commons.math3.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,7 +240,7 @@ public class UserResource {
      * @throws IllegalAccessException
      */
     @GetMapping("/users/my-profile-with-reviews")
-    public ResponseEntity<LinkedList<Pair<Review, ProfilePicture>>> getMyProfileWithReviews(Principal principal) throws IllegalAccessException {
+    public ResponseEntity<ProfileWithReviewsDTO> getMyProfileWithReviews(Principal principal) throws IllegalAccessException {
         String username = principal.getName();
 
         User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
@@ -248,14 +248,15 @@ public class UserResource {
         ProfileWithReviewsDTO profileWithReviewsDTO = new ProfileWithReviewsDTO();
 
         profileWithReviewsDTO.setReceiver(user);
-        profileWithReviewsDTO.setProfilePicture(profilePictureRepository.findAllByUser(user).orElseThrow(() -> new IllegalStateException("User not found "+username)));
+        profileWithReviewsDTO.setProfilePicture(profilePictureRepository.findAllByUser(user).orElseThrow(() -> new IllegalStateException("User not found " + username)));
 
         LinkedList<Review> allByReceiver = reviewRepository.getAllByReceiver(user);
         LinkedList<Pair<Review, ProfilePicture>> pairLinkedList = new LinkedList<>();
 
         allByReceiver.forEach(review -> pairLinkedList.add(new Pair<>(review, profilePictureRepository.findAllByUser(review.getIssuer()).get())));
+        profileWithReviewsDTO.setPairs(pairLinkedList);
 
-        return new ResponseEntity<>(pairLinkedList, HttpStatus.OK);
+        return new ResponseEntity<>(profileWithReviewsDTO, HttpStatus.OK);
     }
 
 }

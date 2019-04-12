@@ -7,11 +7,24 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface MessageConsumerChannel {
 
-    String CHANNEL = "input";
 
-    @Input
+    String CHANNEL_INPUT_CLUSTERING = "input_clustering";
+    String CHANNEL_OUTPUT_CLUSTERING = "anoutput_clustering";
+
+
+    String CHANNEL_INPUT = "input";
+    String CHANNEL_OUTPUT = "anoutput";
+
+
+    @Input(CHANNEL_INPUT)
     SubscribableChannel subscribableChannel();
 
-    @Output("outputChannel")
+    @Output(CHANNEL_OUTPUT)
     MessageChannel anOutput();
+
+    @Input(CHANNEL_INPUT_CLUSTERING)
+    SubscribableChannel clusteringChannel();
+
+    @Output(CHANNEL_OUTPUT_CLUSTERING)
+    MessageChannel outputClustering();
 }

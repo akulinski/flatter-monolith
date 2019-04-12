@@ -1,15 +1,18 @@
 package com.flatter.server.domain.dto;
 
-import com.flatter.server.domain.*;
-import javafx.util.Pair;
-import lombok.Data;
+import com.flatter.server.domain.ProfilePicture;
+import com.flatter.server.domain.Review;
+import com.flatter.server.domain.User;
+import org.apache.commons.math3.util.Pair;
 
 import java.util.List;
 
-@Data
 public class ProfileWithReviewsDTO {
+
     private User receiver;
+
     private ProfilePicture profilePicture;
+
     private List<Pair<Review, ProfilePicture>> pairs;
 
     public User getReceiver() {

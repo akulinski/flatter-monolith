@@ -44,11 +44,11 @@ public class MessageResource {
 
     private final MessageChannel messageChannel;
 
-    public MessageResource(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository, MessageConsumerChannel messageProducerChannel) {
+    public MessageResource(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository, MessageConsumerChannel messageConsumerChannel) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
-        this.messageChannel = messageProducerChannel.anOutput();
+        this.messageChannel = messageConsumerChannel.anOutput();
     }
 
     /**

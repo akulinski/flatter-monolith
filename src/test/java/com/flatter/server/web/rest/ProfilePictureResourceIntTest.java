@@ -4,6 +4,7 @@ import com.flatter.server.FlatterservermonolithApp;
 import com.flatter.server.domain.ProfilePicture;
 import com.flatter.server.repository.ProfilePictureRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.service.PictureService;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,12 +82,16 @@ public class ProfilePictureResourceIntTest {
 
     private MockMvc restProfilePictureMockMvc;
 
+    @Autowired
     private ProfilePicture profilePicture;
+
+    @Autowired
+    private PictureService pictureService;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ProfilePictureResource profilePictureResource = new ProfilePictureResource(profilePictureRepository, userRepository);
+        final ProfilePictureResource profilePictureResource = new ProfilePictureResource(profilePictureRepository, userRepository, pictureService);
         this.restProfilePictureMockMvc = MockMvcBuilders.standaloneSetup(profilePictureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

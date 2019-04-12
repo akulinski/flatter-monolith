@@ -5,6 +5,7 @@ import com.flatter.server.FlatterservermonolithApp;
 import com.flatter.server.domain.Offer;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.PhotoRepository;
+import com.flatter.server.service.JoiningService;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -20,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
@@ -94,10 +94,13 @@ public class OfferResourceIntTest {
     @Autowired
     private PhotoRepository photoRepository;
 
+    @Autowired
+    private JoiningService joiningService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final OfferResource offerResource = new OfferResource(offerRepository,photoRepository);
+        final OfferResource offerResource = new OfferResource(offerRepository,photoRepository,joiningService);
         this.restOfferMockMvc = MockMvcBuilders.standaloneSetup(offerResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

@@ -4,6 +4,7 @@ import com.flatter.server.domain.ProfilePicture;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.ProfilePictureRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.service.PictureService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -33,10 +35,12 @@ public class ProfilePictureResource {
     private final ProfilePictureRepository profilePictureRepository;
 
     private final UserRepository userRepository;
+    private final PictureService pictureService;
 
-    public ProfilePictureResource(ProfilePictureRepository profilePictureRepository, UserRepository userRepository) {
+    public ProfilePictureResource(ProfilePictureRepository profilePictureRepository, UserRepository userRepository, PictureService pictureService) {
         this.profilePictureRepository = profilePictureRepository;
         this.userRepository = userRepository;
+        this.pictureService = pictureService;
     }
 
     /**
@@ -47,11 +51,20 @@ public class ProfilePictureResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/profile-pictures")
-    public ResponseEntity<ProfilePicture> createProfilePicture(@Valid @RequestBody ProfilePicture profilePicture) throws URISyntaxException {
+    public ResponseEntity<ProfilePicture> createProfilePicture(@Valid @RequestBody ProfilePicture profilePicture, Principal principal) throws URISyntaxException, IOException {
         log.debug("REST request to save ProfilePicture : {}", profilePicture);
         if (profilePicture.getId() != null) {
             throw new BadRequestAlertException("A new profilePicture cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        profilePicture.setHeight(100);
+        profilePicture.setWidth(120);
+
+        pictureService.scaleDownPicture(profilePicture);
+
+        if (profilePicture.getUser() == null) {
+            profilePicture.setUser(userRepository.findOneByLogin(principal.getName()).orElseThrow(() -> new IllegalStateException(String.format("User %s not found", principal.getName()))));
+        }
+
         ProfilePicture result = profilePictureRepository.save(profilePicture);
         return ResponseEntity.created(new URI("/api/profile-pictures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
