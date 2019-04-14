@@ -37,7 +37,7 @@ public class JoiningService {
 
         statusCache.put(clusteringDataRequest, STATUS.PENDING);
 
-        messageChannel.send(MessageBuilder.withPayload(clusteringDataRequest).build());
+        messageChannel.send(MessageBuilder.withPayload(requester).build());
     }
 
 

@@ -24,7 +24,7 @@ eureka:
         prefer-ip-address: true
     client:
         service-url:
-            defaultZone: https://admin:admin@microserviceregistry.herokuapp.com/eureka/
+            defaultZone: http://admin:admin@localhost:8761/eureka/
 
 spring:
     profiles:

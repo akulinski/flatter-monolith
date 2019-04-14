@@ -6,6 +6,7 @@ import com.flatter.server.domain.Offer;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.PhotoRepository;
 import com.flatter.server.service.JoiningService;
+import com.flatter.server.service.MatchingService;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -95,12 +96,12 @@ public class OfferResourceIntTest {
     private PhotoRepository photoRepository;
 
     @Autowired
-    private JoiningService joiningService;
+    private MatchingService matchingService;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final OfferResource offerResource = new OfferResource(offerRepository,photoRepository,joiningService);
+        final OfferResource offerResource = new OfferResource(offerRepository,photoRepository,matchingService);
         this.restOfferMockMvc = MockMvcBuilders.standaloneSetup(offerResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

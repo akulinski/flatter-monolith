@@ -4,14 +4,13 @@ import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.dto.OffersDetailsDTO;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.PhotoRepository;
-import com.flatter.server.service.JoiningService;
+import com.flatter.server.service.MatchingService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,12 +42,12 @@ public class OfferResource {
 
     private final PhotoRepository photoRepository;
 
-    private final JoiningService joiningService;
+    private final MatchingService matchingService;
 
-    public OfferResource(OfferRepository offerRepository, PhotoRepository photoRepository, JoiningService joiningService) {
+    public OfferResource(OfferRepository offerRepository, PhotoRepository photoRepository, MatchingService matchingService) {
         this.offerRepository = offerRepository;
         this.photoRepository = photoRepository;
-        this.joiningService = joiningService;
+        this.matchingService = matchingService;
     }
 
     /**
@@ -140,8 +140,9 @@ public class OfferResource {
     }
 
     /**
-     *  GET /offfers-with-details/:id get the "id" offer.
-     * @param id  the id of the offer to retrieve
+     * GET /offfers-with-details/:id get the "id" offer.
+     *
+     * @param id the id of the offer to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the offer and all photos, or with status 404 (Not Found)
      */
     @GetMapping("/offers-with-details/{id}")
@@ -172,10 +173,10 @@ public class OfferResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    @PostMapping("/post-join-event/{login}")
-    public ResponseEntity<Void> postJoiningEvent(@PathVariable String login){
-        joiningService.postRequestForClusteringData(login);
+    @GetMapping("/post-join-event")
+    public ResponseEntity<Void> postRequest(Principal principal) {
 
+        matchingService.postJoiningRequest(principal.getName());
         return ResponseEntity.ok().build();
     }
 }

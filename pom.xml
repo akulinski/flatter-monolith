@@ -372,7 +372,7 @@
         <dependency>
             <groupId>com.flatter</groupId>
             <artifactId>flatter-COMMON</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.5</version>
             <scope>compile</scope>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->

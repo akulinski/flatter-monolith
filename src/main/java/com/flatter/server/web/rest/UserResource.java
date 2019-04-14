@@ -1,6 +1,7 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.config.Constants;
+import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.ProfilePicture;
 import com.flatter.server.domain.Review;
 import com.flatter.server.domain.User;
@@ -210,12 +211,12 @@ public class UserResource {
      * @throws IllegalAccessException
      */
     @GetMapping("/users/offers")
-    public ResponseEntity<List<QuestionnaireableOffer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
+    public ResponseEntity<List<Offer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
         String username = principal.getName();
 
         User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
 
-        return new ResponseEntity<>(matchingService.getOffersOfUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(matchingService.getMockOffers(user), HttpStatus.OK);
     }
 
     /**
