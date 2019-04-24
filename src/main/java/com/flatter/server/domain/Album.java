@@ -3,6 +3,7 @@ package com.flatter.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -10,7 +11,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A Album.
@@ -28,7 +31,7 @@ public class Album implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     @Lob
@@ -45,9 +48,13 @@ public class Album implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("albums")
+    @JsonIgnore
     private User user;
 
-
+    @OneToMany(mappedBy = "album")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonProperty
+    private Set<Photo> photos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -121,6 +128,31 @@ public class Album implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Photo> getPhotos() {
+        return photos;
+    }
+
+    public Album onetomanies(Set<Photo> photos) {
+        this.photos = photos;
+        return this;
+    }
+
+    public Album addOnetomany(Photo photo) {
+        this.photos.add(photo);
+        photo.setAlbum(this);
+        return this;
+    }
+
+    public Album removeOnetomany(Photo photo) {
+        this.photos.remove(photo);
+        photo.setAlbum(null);
+        return this;
+    }
+
+    public void setPhotos(Set<Photo> photos) {
+        this.photos = photos;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

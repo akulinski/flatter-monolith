@@ -1,23 +1,29 @@
 package com.flatter.server.web.rest;
+
+import com.flatter.server.domain.Album;
 import com.flatter.server.domain.Photo;
+import com.flatter.server.repository.AlbumRepository;
 import com.flatter.server.repository.PhotoRepository;
+import com.flatter.server.service.PictureService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.util.HeaderUtil;
 import com.flatter.server.web.rest.util.PaginationUtil;
+import domain.PhotoDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +40,14 @@ public class PhotoResource {
 
     private final PhotoRepository photoRepository;
 
-    public PhotoResource(PhotoRepository photoRepository) {
+    private final AlbumRepository albumRepository;
+
+    private final PictureService pictureService;
+
+    public PhotoResource(PhotoRepository photoRepository, AlbumRepository albumRepository, PictureService pictureService) {
         this.photoRepository = photoRepository;
+        this.albumRepository = albumRepository;
+        this.pictureService = pictureService;
     }
 
     /**
@@ -72,12 +84,34 @@ public class PhotoResource {
         if (photo.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
         Photo result = photoRepository.save(photo);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, photo.getId().toString()))
             .body(result);
     }
 
+
+    @PostMapping("/add-photo-by-album-title")
+    public ResponseEntity<Photo> addPhotoByAlbumTitle(PhotoDTO photoDTO) throws IOException {
+        log.debug("REST request to upload photo: {}",photoDTO);
+
+        Album album = albumRepository.findByTitle(photoDTO.getAlbumTitle()).orElseThrow(()->new IllegalStateException("Album not found"));
+
+        Photo photo = new Photo();
+        photo.setAlbum(album);
+        photo.setDescription(photoDTO.getDescription());
+        photo.setHeight(photoDTO.getHeight());
+        photo.setWidth(photoDTO.getWidth());
+        photo.setImageContentType(photoDTO.getImageContentType());
+        photo.setTaken(photoDTO.getTaken());
+        photo.setUploaded(new Date().toInstant());
+        photo.setTitle(photoDTO.getPhotoTitle());
+        photo.setImage(photoDTO.getBytes());
+        pictureService.scaleDownPicture(photo);
+
+        return ResponseEntity.ok(photo);
+    }
     /**
      * GET  /photos : get all the photos.
      *

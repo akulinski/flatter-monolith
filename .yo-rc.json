@@ -32,6 +32,17 @@
     "otherModules": [],
     "enableTranslation": false,
     "herokuAppName": "flatterservermonolith",
-    "herokuDeployType": "jar"
+    "herokuDeployType": "jar",
+    "appsFolders": [
+      "flatter-monolith"
+    ],
+    "directoryPath": "../",
+    "dockerRepositoryName": "akulinski",
+    "dockerPushCommand": "docker push",
+    "kubernetesNamespace": "default",
+    "kubernetesServiceType": "LoadBalancer",
+    "monitoring": "elk",
+    "istio": "no",
+    "istioRoute": false
   }
 }

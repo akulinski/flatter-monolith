@@ -1,11 +1,11 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.FlatterservermonolithApp;
-
 import com.flatter.server.domain.Photo;
+import com.flatter.server.repository.AlbumRepository;
 import com.flatter.server.repository.PhotoRepository;
+import com.flatter.server.service.PictureService;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,6 @@ import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 
 import static com.flatter.server.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,16 +81,22 @@ public class PhotoResourceIntTest {
     private EntityManager em;
 
     @Autowired
+    private AlbumRepository albumRepository;
+
+    @Autowired
     private Validator validator;
 
     private MockMvc restPhotoMockMvc;
 
     private Photo photo;
 
+    @Autowired
+    private PictureService pictureService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PhotoResource photoResource = new PhotoResource(photoRepository);
+        final PhotoResource photoResource = new PhotoResource(photoRepository, albumRepository, pictureService);
         this.restPhotoMockMvc = MockMvcBuilders.standaloneSetup(photoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -102,7 +107,7 @@ public class PhotoResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -206,7 +211,7 @@ public class PhotoResourceIntTest {
             .andExpect(jsonPath("$.[*].taken").value(hasItem(DEFAULT_TAKEN.toString())))
             .andExpect(jsonPath("$.[*].uploaded").value(hasItem(DEFAULT_UPLOADED.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getPhoto() throws Exception {

@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 import { IOffer } from 'app/shared/model/offer.model';
 import { IUser } from 'app/core/user/user.model';
+import { IPhoto } from 'app/shared/model/photo.model';
 
 export interface IAlbum {
     id?: number;
@@ -9,6 +10,7 @@ export interface IAlbum {
     created?: Moment;
     offer?: IOffer;
     user?: IUser;
+    onetomanies?: IPhoto[];
 }
 
 export class Album implements IAlbum {
