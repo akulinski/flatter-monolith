@@ -1,16 +1,21 @@
 package com.flatter.server.web.rest;
+
 import com.flatter.server.domain.Album;
 import com.flatter.server.repository.AlbumRepository;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
-import com.flatter.server.web.rest.util.HeaderUtil;
-import com.flatter.server.web.rest.util.PaginationUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Album.
+ * REST controller for managing {@link com.flatter.server.domain.Album}.
  */
 @RestController
 @RequestMapping("/api")
@@ -32,6 +37,9 @@ public class AlbumResource {
 
     private static final String ENTITY_NAME = "album";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final AlbumRepository albumRepository;
 
     public AlbumResource(AlbumRepository albumRepository) {
@@ -39,11 +47,11 @@ public class AlbumResource {
     }
 
     /**
-     * POST  /albums : Create a new album.
+     * {@code POST  /albums} : Create a new album.
      *
-     * @param album the album to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new album, or with status 400 (Bad Request) if the album has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param album the album to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new album, or with status {@code 400 (Bad Request)} if the album has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/albums")
     public ResponseEntity<Album> createAlbum(@Valid @RequestBody Album album) throws URISyntaxException {
@@ -53,18 +61,18 @@ public class AlbumResource {
         }
         Album result = albumRepository.save(album);
         return ResponseEntity.created(new URI("/api/albums/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /albums : Updates an existing album.
+     * {@code PUT  /albums} : Updates an existing album.
      *
-     * @param album the album to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated album,
-     * or with status 400 (Bad Request) if the album is not valid,
-     * or with status 500 (Internal Server Error) if the album couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param album the album to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated album,
+     * or with status {@code 400 (Bad Request)} if the album is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the album couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/albums")
     public ResponseEntity<Album> updateAlbum(@Valid @RequestBody Album album) throws URISyntaxException {
@@ -74,29 +82,29 @@ public class AlbumResource {
         }
         Album result = albumRepository.save(album);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, album.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, album.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /albums : get all the albums.
+     * {@code GET  /albums} : get all the albums.
      *
-     * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of albums in body
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of albums in body.
      */
     @GetMapping("/albums")
-    public ResponseEntity<List<Album>> getAllAlbums(Pageable pageable) {
+    public ResponseEntity<List<Album>> getAllAlbums(Pageable pageable, @RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder) {
         log.debug("REST request to get a page of Albums");
         Page<Album> page = albumRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/albums");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
-     * GET  /albums/:id : get the "id" album.
+     * {@code GET  /albums/:id} : get the "id" album.
      *
-     * @param id the id of the album to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the album, or with status 404 (Not Found)
+     * @param id the id of the album to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the album, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/albums/{id}")
     public ResponseEntity<Album> getAlbum(@PathVariable Long id) {
@@ -106,15 +114,15 @@ public class AlbumResource {
     }
 
     /**
-     * DELETE  /albums/:id : delete the "id" album.
+     * {@code DELETE  /albums/:id} : delete the "id" album.
      *
-     * @param id the id of the album to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the album to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/albums/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
         log.debug("REST request to delete Album : {}", id);
         albumRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

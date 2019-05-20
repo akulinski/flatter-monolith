@@ -5,10 +5,10 @@ import { FlatterservermonolithAppModule } from './app.module';
 ProdConfig();
 
 if (module['hot']) {
-    module['hot'].accept();
+  module['hot'].accept();
 }
 
 platformBrowserDynamic()
-    .bootstrapModule(FlatterservermonolithAppModule, { preserveWhitespaces: true })
-    .then(success => console.log(`Application started`))
-    .catch(err => console.error(err));
+  .bootstrapModule(FlatterservermonolithAppModule, { preserveWhitespaces: true })
+  .then(success => console.log(`Application started`))
+  .catch(err => console.error(err));

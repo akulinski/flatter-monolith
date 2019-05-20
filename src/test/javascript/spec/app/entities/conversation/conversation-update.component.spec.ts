@@ -1,6 +1,7 @@
 /* tslint:disable max-line-length */
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 
 import { FlatterservermonolithTestModule } from '../../../test.module';
@@ -9,58 +10,53 @@ import { ConversationService } from 'app/entities/conversation/conversation.serv
 import { Conversation } from 'app/shared/model/conversation.model';
 
 describe('Component Tests', () => {
-    describe('Conversation Management Update Component', () => {
-        let comp: ConversationUpdateComponent;
-        let fixture: ComponentFixture<ConversationUpdateComponent>;
-        let service: ConversationService;
+  describe('Conversation Management Update Component', () => {
+    let comp: ConversationUpdateComponent;
+    let fixture: ComponentFixture<ConversationUpdateComponent>;
+    let service: ConversationService;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FlatterservermonolithTestModule],
-                declarations: [ConversationUpdateComponent]
-            })
-                .overrideTemplate(ConversationUpdateComponent, '')
-                .compileComponents();
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [FlatterservermonolithTestModule],
+        declarations: [ConversationUpdateComponent],
+        providers: [FormBuilder]
+      })
+        .overrideTemplate(ConversationUpdateComponent, '')
+        .compileComponents();
 
-            fixture = TestBed.createComponent(ConversationUpdateComponent);
-            comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(ConversationService);
-        });
-
-        describe('save', () => {
-            it(
-                'Should call update service on save for existing entity',
-                fakeAsync(() => {
-                    // GIVEN
-                    const entity = new Conversation(123);
-                    spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
-                    comp.conversation = entity;
-                    // WHEN
-                    comp.save();
-                    tick(); // simulate async
-
-                    // THEN
-                    expect(service.update).toHaveBeenCalledWith(entity);
-                    expect(comp.isSaving).toEqual(false);
-                })
-            );
-
-            it(
-                'Should call create service on save for new entity',
-                fakeAsync(() => {
-                    // GIVEN
-                    const entity = new Conversation();
-                    spyOn(service, 'create').and.returnValue(of(new HttpResponse({ body: entity })));
-                    comp.conversation = entity;
-                    // WHEN
-                    comp.save();
-                    tick(); // simulate async
-
-                    // THEN
-                    expect(service.create).toHaveBeenCalledWith(entity);
-                    expect(comp.isSaving).toEqual(false);
-                })
-            );
-        });
+      fixture = TestBed.createComponent(ConversationUpdateComponent);
+      comp = fixture.componentInstance;
+      service = fixture.debugElement.injector.get(ConversationService);
     });
+
+    describe('save', () => {
+      it('Should call update service on save for existing entity', fakeAsync(() => {
+        // GIVEN
+        const entity = new Conversation(123);
+        spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
+        comp.updateForm(entity);
+        // WHEN
+        comp.save();
+        tick(); // simulate async
+
+        // THEN
+        expect(service.update).toHaveBeenCalledWith(entity);
+        expect(comp.isSaving).toEqual(false);
+      }));
+
+      it('Should call create service on save for new entity', fakeAsync(() => {
+        // GIVEN
+        const entity = new Conversation();
+        spyOn(service, 'create').and.returnValue(of(new HttpResponse({ body: entity })));
+        comp.updateForm(entity);
+        // WHEN
+        comp.save();
+        tick(); // simulate async
+
+        // THEN
+        expect(service.create).toHaveBeenCalledWith(entity);
+        expect(comp.isSaving).toEqual(false);
+      }));
+    });
+  });
 });

@@ -14,80 +14,80 @@ import { IConversation } from 'app/shared/model/conversation.model';
 
 @Injectable({ providedIn: 'root' })
 export class ConversationResolve implements Resolve<IConversation> {
-    constructor(private service: ConversationService) {}
+  constructor(private service: ConversationService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IConversation> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Conversation>) => response.ok),
-                map((conversation: HttpResponse<Conversation>) => conversation.body)
-            );
-        }
-        return of(new Conversation());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IConversation> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Conversation>) => response.ok),
+        map((conversation: HttpResponse<Conversation>) => conversation.body)
+      );
     }
+    return of(new Conversation());
+  }
 }
 
 export const conversationRoute: Routes = [
-    {
-        path: '',
-        component: ConversationComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Conversations'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: ConversationComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Conversations'
     },
-    {
-        path: ':id/view',
-        component: ConversationDetailComponent,
-        resolve: {
-            conversation: ConversationResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Conversations'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: ConversationDetailComponent,
+    resolve: {
+      conversation: ConversationResolve
     },
-    {
-        path: 'new',
-        component: ConversationUpdateComponent,
-        resolve: {
-            conversation: ConversationResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Conversations'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Conversations'
     },
-    {
-        path: ':id/edit',
-        component: ConversationUpdateComponent,
-        resolve: {
-            conversation: ConversationResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Conversations'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: ConversationUpdateComponent,
+    resolve: {
+      conversation: ConversationResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Conversations'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: ConversationUpdateComponent,
+    resolve: {
+      conversation: ConversationResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Conversations'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const conversationPopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: ConversationDeletePopupComponent,
-        resolve: {
-            conversation: ConversationResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Conversations'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: ConversationDeletePopupComponent,
+    resolve: {
+      conversation: ConversationResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Conversations'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

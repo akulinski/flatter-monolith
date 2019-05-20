@@ -1,11 +1,14 @@
 package com.flatter.server.web.rest;
+
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
-import com.flatter.server.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Questionnaire.
+ * REST controller for managing {@link com.flatter.server.domain.Questionnaire}.
  */
 @RestController
 @RequestMapping("/api")
@@ -26,6 +29,9 @@ public class QuestionnaireResource {
 
     private static final String ENTITY_NAME = "questionnaire";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final QuestionnaireRepository questionnaireRepository;
 
     public QuestionnaireResource(QuestionnaireRepository questionnaireRepository) {
@@ -33,11 +39,11 @@ public class QuestionnaireResource {
     }
 
     /**
-     * POST  /questionnaires : Create a new questionnaire.
+     * {@code POST  /questionnaires} : Create a new questionnaire.
      *
-     * @param questionnaire the questionnaire to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new questionnaire, or with status 400 (Bad Request) if the questionnaire has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param questionnaire the questionnaire to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new questionnaire, or with status {@code 400 (Bad Request)} if the questionnaire has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/questionnaires")
     public ResponseEntity<Questionnaire> createQuestionnaire(@RequestBody Questionnaire questionnaire) throws URISyntaxException {
@@ -47,18 +53,18 @@ public class QuestionnaireResource {
         }
         Questionnaire result = questionnaireRepository.save(questionnaire);
         return ResponseEntity.created(new URI("/api/questionnaires/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /questionnaires : Updates an existing questionnaire.
+     * {@code PUT  /questionnaires} : Updates an existing questionnaire.
      *
-     * @param questionnaire the questionnaire to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated questionnaire,
-     * or with status 400 (Bad Request) if the questionnaire is not valid,
-     * or with status 500 (Internal Server Error) if the questionnaire couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param questionnaire the questionnaire to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated questionnaire,
+     * or with status {@code 400 (Bad Request)} if the questionnaire is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the questionnaire couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/questionnaires")
     public ResponseEntity<Questionnaire> updateQuestionnaire(@RequestBody Questionnaire questionnaire) throws URISyntaxException {
@@ -68,14 +74,14 @@ public class QuestionnaireResource {
         }
         Questionnaire result = questionnaireRepository.save(questionnaire);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, questionnaire.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, questionnaire.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /questionnaires : get all the questionnaires.
+     * {@code GET  /questionnaires} : get all the questionnaires.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of questionnaires in body
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of questionnaires in body.
      */
     @GetMapping("/questionnaires")
     public List<Questionnaire> getAllQuestionnaires() {
@@ -84,10 +90,10 @@ public class QuestionnaireResource {
     }
 
     /**
-     * GET  /questionnaires/:id : get the "id" questionnaire.
+     * {@code GET  /questionnaires/:id} : get the "id" questionnaire.
      *
-     * @param id the id of the questionnaire to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the questionnaire, or with status 404 (Not Found)
+     * @param id the id of the questionnaire to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the questionnaire, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/questionnaires/{id}")
     public ResponseEntity<Questionnaire> getQuestionnaire(@PathVariable Long id) {
@@ -97,15 +103,15 @@ public class QuestionnaireResource {
     }
 
     /**
-     * DELETE  /questionnaires/:id : delete the "id" questionnaire.
+     * {@code DELETE  /questionnaires/:id} : delete the "id" questionnaire.
      *
-     * @param id the id of the questionnaire to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the questionnaire to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/questionnaires/{id}")
     public ResponseEntity<Void> deleteQuestionnaire(@PathVariable Long id) {
         log.debug("REST request to delete Questionnaire : {}", id);
         questionnaireRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

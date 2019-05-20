@@ -5,10 +5,11 @@ import java.time.Duration;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
 
-import io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory;
+import org.hibernate.cache.jcache.ConfigSettings;
 import io.github.jhipster.config.JHipsterProperties;
 
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -22,7 +23,6 @@ public class CacheConfiguration {
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
 
     public CacheConfiguration(JHipsterProperties jHipsterProperties) {
-        BeanClassLoaderAwareJCacheRegionFactory.setBeanClassLoader(this.getClass().getClassLoader());
         JHipsterProperties.Cache.Ehcache ehcache =
             jHipsterProperties.getCache().getEhcache();
 
@@ -34,26 +34,39 @@ public class CacheConfiguration {
     }
 
     @Bean
+    public HibernatePropertiesCustomizer hibernatePropertiesCustomizer(javax.cache.CacheManager cacheManager) {
+        return hibernateProperties -> hibernateProperties.put(ConfigSettings.CACHE_MANAGER, cacheManager);
+    }
+
+    @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
-            cm.createCache(com.flatter.server.repository.UserRepository.USERS_BY_LOGIN_CACHE, jcacheConfiguration);
-            cm.createCache(com.flatter.server.repository.UserRepository.USERS_BY_EMAIL_CACHE, jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.User.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Authority.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.User.class.getName() + ".authorities", jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Offer.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Address.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Album.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Album.class.getName() + ".onetomanies", jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Photo.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Message.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Conversation.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Conversation.class.getName() + ".messages", jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Match.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Questionnaire.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.Review.class.getName(), jcacheConfiguration);
-            cm.createCache(com.flatter.server.domain.ProfilePicture.class.getName(), jcacheConfiguration);
+            createCache(cm, com.flatter.server.repository.UserRepository.USERS_BY_LOGIN_CACHE);
+            createCache(cm, com.flatter.server.repository.UserRepository.USERS_BY_EMAIL_CACHE);
+            createCache(cm, com.flatter.server.domain.User.class.getName());
+            createCache(cm, com.flatter.server.domain.Authority.class.getName());
+            createCache(cm, com.flatter.server.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.flatter.server.domain.Offer.class.getName());
+            createCache(cm, com.flatter.server.domain.Address.class.getName());
+            createCache(cm, com.flatter.server.domain.Album.class.getName());
+            createCache(cm, com.flatter.server.domain.Album.class.getName() + ".onetomanies");
+            createCache(cm, com.flatter.server.domain.Photo.class.getName());
+            createCache(cm, com.flatter.server.domain.Message.class.getName());
+            createCache(cm, com.flatter.server.domain.Conversation.class.getName());
+            createCache(cm, com.flatter.server.domain.Conversation.class.getName() + ".messages");
+            createCache(cm, com.flatter.server.domain.Match.class.getName());
+            createCache(cm, com.flatter.server.domain.Questionnaire.class.getName());
+            createCache(cm, com.flatter.server.domain.Review.class.getName());
+            createCache(cm, com.flatter.server.domain.ProfilePicture.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
+    }
+
+    private void createCache(javax.cache.CacheManager cm, String cacheName) {
+        javax.cache.Cache<Object, Object> cache = cm.getCache(cacheName);
+        if (cache != null) {
+            cm.destroyCache(cacheName);
+        }
+        cm.createCache(cacheName, jcacheConfiguration);
     }
 }

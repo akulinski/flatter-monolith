@@ -18,7 +18,7 @@ import java.util.Objects;
 public class Review implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -105,19 +105,15 @@ public class Review implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Review)) {
             return false;
         }
-        Review review = (Review) o;
-        if (review.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), review.getId());
+        return id != null && id.equals(((Review) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

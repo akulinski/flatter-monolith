@@ -8,33 +8,33 @@ import { MessageDetailComponent } from 'app/entities/message/message-detail.comp
 import { Message } from 'app/shared/model/message.model';
 
 describe('Component Tests', () => {
-    describe('Message Management Detail Component', () => {
-        let comp: MessageDetailComponent;
-        let fixture: ComponentFixture<MessageDetailComponent>;
-        const route = ({ data: of({ message: new Message(123) }) } as any) as ActivatedRoute;
+  describe('Message Management Detail Component', () => {
+    let comp: MessageDetailComponent;
+    let fixture: ComponentFixture<MessageDetailComponent>;
+    const route = ({ data: of({ message: new Message(123) }) } as any) as ActivatedRoute;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FlatterservermonolithTestModule],
-                declarations: [MessageDetailComponent],
-                providers: [{ provide: ActivatedRoute, useValue: route }]
-            })
-                .overrideTemplate(MessageDetailComponent, '')
-                .compileComponents();
-            fixture = TestBed.createComponent(MessageDetailComponent);
-            comp = fixture.componentInstance;
-        });
-
-        describe('OnInit', () => {
-            it('Should call load all on init', () => {
-                // GIVEN
-
-                // WHEN
-                comp.ngOnInit();
-
-                // THEN
-                expect(comp.message).toEqual(jasmine.objectContaining({ id: 123 }));
-            });
-        });
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [FlatterservermonolithTestModule],
+        declarations: [MessageDetailComponent],
+        providers: [{ provide: ActivatedRoute, useValue: route }]
+      })
+        .overrideTemplate(MessageDetailComponent, '')
+        .compileComponents();
+      fixture = TestBed.createComponent(MessageDetailComponent);
+      comp = fixture.componentInstance;
     });
+
+    describe('OnInit', () => {
+      it('Should call load all on init', () => {
+        // GIVEN
+
+        // WHEN
+        comp.ngOnInit();
+
+        // THEN
+        expect(comp.message).toEqual(jasmine.objectContaining({ id: 123 }));
+      });
+    });
+  });
 });
