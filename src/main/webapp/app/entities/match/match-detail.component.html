@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="match">
+            <h2><span>Match</span> {{match.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Is Approved</span></dt>
+                <dd>
+                    <span>{{match.isApproved}}</span>
+                </dd>
+                <dt><span>Creation Date</span></dt>
+                <dd>
+                    <span>{{match.creationDate}}</span>
+                </dd>
+                <dt><span>Approval Date</span></dt>
+                <dd>
+                    <span>{{match.approvalDate}}</span>
+                </dd>
+                <dt><span>Offer</span></dt>
+                <dd>
+                    <div *ngIf="match.offer">
+                        <a [routerLink]="['/offer', match.offer?.id, 'view']">{{match.offer?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{match.user?.login}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/match', match.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

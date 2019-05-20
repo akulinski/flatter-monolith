@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="photo">
+            <h2><span>Photo</span> {{photo.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Title</span></dt>
+                <dd>
+                    <span>{{photo.title}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{photo.description}}</span>
+                </dd>
+                <dt><span>Image</span></dt>
+                <dd>
+                    <div *ngIf="photo.image">
+                        <a (click)="openFile(photo.imageContentType, photo.image)">
+                            <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image" style="max-width: 100%;" alt="photo image"/>
+                        </a>
+                        {{photo.imageContentType}}, {{byteSize(photo.image)}}
+                    </div>
+                </dd>
+                <dt><span>Height</span></dt>
+                <dd>
+                    <span>{{photo.height}}</span>
+                </dd>
+                <dt><span>Width</span></dt>
+                <dd>
+                    <span>{{photo.width}}</span>
+                </dd>
+                <dt><span>Taken</span></dt>
+                <dd>
+                    <span>{{photo.taken}}</span>
+                </dd>
+                <dt><span>Uploaded</span></dt>
+                <dd>
+                    <span>{{photo.uploaded}}</span>
+                </dd>
+                <dt><span>Album</span></dt>
+                <dd>
+                    <div *ngIf="photo.album">
+                        <a [routerLink]="['/album', photo.album?.id, 'view']">{{photo.album?.title}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/photo', photo.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

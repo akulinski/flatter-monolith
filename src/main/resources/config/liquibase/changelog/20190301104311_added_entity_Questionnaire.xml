@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Questionnaire.
+    -->
+    <changeSet id="20190301104311-1" author="jhipster">
+        <createTable tableName="questionnaire">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="pets" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="smoking_inside" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="is_furnished" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="room_amount_min" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="room_amount_max" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="size_min" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="size_max" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="construction_year_min" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="construction_year_max" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="total_cost_min" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="total_cost_max" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_questionnaire_user_id" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>

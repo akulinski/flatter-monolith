@@ -1,0 +1,44 @@
+{
+    "name": "Match",
+    "fields": [
+        {
+            "fieldName": "isApproved",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "creationDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "approvalDate",
+            "fieldType": "Instant"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "offer",
+            "otherEntityRelationshipName": "match",
+            "relationshipName": "offer",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "match",
+            "relationshipName": "user",
+            "otherEntityField": "login",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20190301104310",
+    "entityTableName": "match",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,57 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-match-heading">Create or edit a Match</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!match.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="match.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_isApproved">Is Approved</label>
+                    <input type="checkbox" class="form-control" name="isApproved" id="field_isApproved"
+                        [(ngModel)]="match.isApproved" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_creationDate">Creation Date</label>
+                    <div class="d-flex">
+                        <input id="field_creationDate" type="datetime-local" class="form-control" name="creationDate" [(ngModel)]="creationDate" placeholder="YYYY-MM-DD HH:mm"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_approvalDate">Approval Date</label>
+                    <div class="d-flex">
+                        <input id="field_approvalDate" type="datetime-local" class="form-control" name="approvalDate" [(ngModel)]="approvalDate" placeholder="YYYY-MM-DD HH:mm"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_offer">Offer</label>
+                    <select class="form-control" id="field_offer" name="offer" [(ngModel)]="match.offer">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="offerOption.id === match.offer?.id ? match.offer : offerOption" *ngFor="let offerOption of offers; trackBy: trackOfferById">{{offerOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="match.user" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id === match.user?.id ? match.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

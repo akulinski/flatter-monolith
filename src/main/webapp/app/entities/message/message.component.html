@@ -1,0 +1,64 @@
+<div>
+    <h2 id="page-heading">
+        <span>Messages</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-message" [routerLink]="['/message/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Message
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="messages">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Creation Date</span></th>
+            <th><span>Content</span></th>
+            <th><span>Is Seen</span></th>
+            <th><span>Conversation</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let message of messages ;trackBy: trackId">
+                <td><a [routerLink]="['/message', message.id, 'view' ]">{{message.id}}</a></td>
+                <td>{{message.creationDate | date:'medium'}}</td>
+                <td>{{message.content}}</td>
+                <td>{{message.isSeen}}</td>
+                <td>
+                    <div *ngIf="message.conversation">
+                        <a [routerLink]="['../conversation', message.conversation?.id, 'view' ]" >{{message.conversation?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/message', message.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/message', message.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'message', { outlets: { popup: message.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

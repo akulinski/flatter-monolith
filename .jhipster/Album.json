@@ -1,0 +1,56 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "offer",
+            "otherEntityRelationshipName": "album",
+            "relationshipName": "offer",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "album",
+            "relationshipName": "user",
+            "otherEntityField": "login",
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipName": "onetomany",
+            "otherEntityName": "photo",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "album",
+            "otherEntityRelationshipNameUndefined": false
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "created",
+            "fieldType": "Instant"
+        }
+    ],
+    "changelogDate": "20190228213140",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "album",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

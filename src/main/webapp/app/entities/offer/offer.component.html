@@ -1,0 +1,82 @@
+<div>
+    <h2 id="page-heading">
+        <span>Offers</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-offer" [routerLink]="['/offer/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Offer
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="offers">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="totalCost"><span>Total Cost</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="roomAmount"><span>Room Amount</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="size"><span>Size</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="type"><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="constructionYear"><span>Construction Year</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="pets"><span>Pets</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="smokingInside"><span>Smoking Inside</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="isFurnished"><span>Is Furnished</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.login"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let offer of offers ;trackBy: trackId">
+                <td><a [routerLink]="['/offer', offer.id, 'view' ]">{{offer.id}}</a></td>
+                <td>{{offer.description}}</td>
+                <td>{{offer.totalCost}}</td>
+                <td>{{offer.roomAmount}}</td>
+                <td>{{offer.size}}</td>
+                <td>{{offer.type}}</td>
+                <td>{{offer.constructionYear}}</td>
+                <td>{{offer.pets}}</td>
+                <td>{{offer.smokingInside}}</td>
+                <td>{{offer.isFurnished}}</td>
+                <td>
+                    {{offer.user?.login}}
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/offer', offer.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/offer', offer.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'offer', { outlets: { popup: offer.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="offers && offers.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

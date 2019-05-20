@@ -1,0 +1,72 @@
+{
+    "name": "Questionnaire",
+    "fields": [
+        {
+            "fieldName": "pets",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "smokingInside",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "isFurnished",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "roomAmountMin",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "roomAmountMax",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "sizeMin",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "sizeMax",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "constructionYearMin",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "constructionYearMax",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "totalCostMin",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "totalCostMax",
+            "fieldType": "Double"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "questionnaire",
+            "relationshipName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20190301104311",
+    "entityTableName": "questionnaire",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

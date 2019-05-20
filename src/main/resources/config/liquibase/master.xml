@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190228213138_added_entity_Offer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190228213139_added_entity_Address.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190228213140_added_entity_Album.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190228213141_added_entity_Photo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104307_added_entity_Message.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104308_added_entity_Conversation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104310_added_entity_Match.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104311_added_entity_Questionnaire.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190313202105_added_entity_Review.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190405162634_added_entity_ProfilePicture.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20190228213138_added_entity_constraints_Offer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190228213139_added_entity_constraints_Address.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190228213140_added_entity_constraints_Album.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190228213141_added_entity_constraints_Photo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104307_added_entity_constraints_Message.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104308_added_entity_constraints_Conversation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104310_added_entity_constraints_Match.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190301104311_added_entity_constraints_Questionnaire.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190313202105_added_entity_constraints_Review.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190405162634_added_entity_constraints_ProfilePicture.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+</databaseChangeLog>

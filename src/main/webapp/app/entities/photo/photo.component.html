@@ -1,0 +1,77 @@
+<div>
+    <h2 id="page-heading">
+        <span>Photos</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-photo" [routerLink]="['/photo/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Photo
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="photos">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="title"><span>Title</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="image"><span>Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="height"><span>Height</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="width"><span>Width</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="taken"><span>Taken</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="uploaded"><span>Uploaded</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="album.title"><span>Album</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let photo of photos ;trackBy: trackId">
+                <td><a [routerLink]="['/photo', photo.id, 'view' ]">{{photo.id}}</a></td>
+                <td>{{photo.title}}</td>
+                <td>{{photo.description}}</td>
+                <td>
+                    <a *ngIf="photo.image" (click)="openFile(photo.imageContentType, photo.image)">
+                        <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image" style="max-height: 30px;" alt="photo image"/>
+                    </a>
+                    <span *ngIf="photo.image">{{photo.imageContentType}}, {{byteSize(photo.image)}}</span>
+                </td>
+                <td>{{photo.height}}</td>
+                <td>{{photo.width}}</td>
+                <td>{{photo.taken | date:'medium'}}</td>
+                <td>{{photo.uploaded | date:'medium'}}</td>
+                <td>
+                    <div *ngIf="photo.album">
+                        <a [routerLink]="['../album', photo.album?.id, 'view' ]" >{{photo.album?.title}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/photo', photo.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/photo', photo.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'photo', { outlets: { popup: photo.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

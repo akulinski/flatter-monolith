@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="profilePicture">
+            <h2><span>Profile Picture</span> {{profilePicture.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Image</span></dt>
+                <dd>
+                    <div *ngIf="profilePicture.image">
+                        <a (click)="openFile(profilePicture.imageContentType, profilePicture.image)">
+                            <img [src]="'data:' + profilePicture.imageContentType + ';base64,' + profilePicture.image" style="max-width: 100%;" alt="profilePicture image"/>
+                        </a>
+                        {{profilePicture.imageContentType}}, {{byteSize(profilePicture.image)}}
+                    </div>
+                </dd>
+                <dt><span>Height</span></dt>
+                <dd>
+                    <span>{{profilePicture.height}}</span>
+                </dd>
+                <dt><span>Width</span></dt>
+                <dd>
+                    <span>{{profilePicture.width}}</span>
+                </dd>
+                <dt><span>Taken</span></dt>
+                <dd>
+                    <span>{{profilePicture.taken}}</span>
+                </dd>
+                <dt><span>Uploaded</span></dt>
+                <dd>
+                    <span>{{profilePicture.uploaded}}</span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{profilePicture.user?.login}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/profile-picture', profilePicture.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
