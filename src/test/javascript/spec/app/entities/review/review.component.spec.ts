@@ -9,43 +9,43 @@ import { ReviewService } from 'app/entities/review/review.service';
 import { Review } from 'app/shared/model/review.model';
 
 describe('Component Tests', () => {
-    describe('Review Management Component', () => {
-        let comp: ReviewComponent;
-        let fixture: ComponentFixture<ReviewComponent>;
-        let service: ReviewService;
+  describe('Review Management Component', () => {
+    let comp: ReviewComponent;
+    let fixture: ComponentFixture<ReviewComponent>;
+    let service: ReviewService;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FlatterservermonolithTestModule],
-                declarations: [ReviewComponent],
-                providers: []
-            })
-                .overrideTemplate(ReviewComponent, '')
-                .compileComponents();
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [FlatterservermonolithTestModule],
+        declarations: [ReviewComponent],
+        providers: []
+      })
+        .overrideTemplate(ReviewComponent, '')
+        .compileComponents();
 
-            fixture = TestBed.createComponent(ReviewComponent);
-            comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(ReviewService);
-        });
-
-        it('Should call load all on init', () => {
-            // GIVEN
-            const headers = new HttpHeaders().append('link', 'link;link');
-            spyOn(service, 'query').and.returnValue(
-                of(
-                    new HttpResponse({
-                        body: [new Review(123)],
-                        headers
-                    })
-                )
-            );
-
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.query).toHaveBeenCalled();
-            expect(comp.reviews[0]).toEqual(jasmine.objectContaining({ id: 123 }));
-        });
+      fixture = TestBed.createComponent(ReviewComponent);
+      comp = fixture.componentInstance;
+      service = fixture.debugElement.injector.get(ReviewService);
     });
+
+    it('Should call load all on init', () => {
+      // GIVEN
+      const headers = new HttpHeaders().append('link', 'link;link');
+      spyOn(service, 'query').and.returnValue(
+        of(
+          new HttpResponse({
+            body: [new Review(123)],
+            headers
+          })
+        )
+      );
+
+      // WHEN
+      comp.ngOnInit();
+
+      // THEN
+      expect(service.query).toHaveBeenCalled();
+      expect(comp.reviews[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+    });
+  });
 });

@@ -3,7 +3,7 @@
     "promptValues": {
       "packageName": "com.flatter.server"
     },
-    "jhipsterVersion": "5.8.2",
+    "jhipsterVersion": "6.0.1",
     "applicationType": "monolith",
     "baseName": "flatterservermonolith",
     "packageName": "com.flatter.server",
@@ -23,7 +23,7 @@
     "enableSwaggerCodegen": false,
     "jwtSecretKey": "MmQyMzY0MmRmYjJmN2I3ZGMwZjYwMTU4ZjU5ZjRmMWJmMWVjZTk2M2M5MjM4ZGJkOTE3YjFjNDg3ODg5NmE5YmIyODRhZDE2MjkwYmY1OGNiNmM0NDk0ZjJkNDFlMDNkOGJkYmNlZWU0YTM4MDczOWQ0NmI3MTgzYjVkM2FlZDY=",
     "clientFramework": "angularX",
-    "useSass": false,
+    "useSass": true,
     "clientPackageManager": "npm",
     "testFrameworks": [],
     "jhiPrefix": "jhi",
@@ -43,6 +43,7 @@
     "kubernetesServiceType": "LoadBalancer",
     "monitoring": "elk",
     "istio": "no",
-    "istioRoute": false
+    "istioRoute": false,
+    "clientTheme": "none"
   }
 }

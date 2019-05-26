@@ -1,11 +1,14 @@
 package com.flatter.server.web.rest;
+
 import com.flatter.server.domain.Conversation;
 import com.flatter.server.repository.ConversationRepository;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
-import com.flatter.server.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Conversation.
+ * REST controller for managing {@link com.flatter.server.domain.Conversation}.
  */
 @RestController
 @RequestMapping("/api")
@@ -26,6 +29,9 @@ public class ConversationResource {
 
     private static final String ENTITY_NAME = "conversation";
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private final ConversationRepository conversationRepository;
 
     public ConversationResource(ConversationRepository conversationRepository) {
@@ -33,11 +39,11 @@ public class ConversationResource {
     }
 
     /**
-     * POST  /conversations : Create a new conversation.
+     * {@code POST  /conversations} : Create a new conversation.
      *
-     * @param conversation the conversation to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new conversation, or with status 400 (Bad Request) if the conversation has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param conversation the conversation to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new conversation, or with status {@code 400 (Bad Request)} if the conversation has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/conversations")
     public ResponseEntity<Conversation> createConversation(@RequestBody Conversation conversation) throws URISyntaxException {
@@ -47,18 +53,18 @@ public class ConversationResource {
         }
         Conversation result = conversationRepository.save(conversation);
         return ResponseEntity.created(new URI("/api/conversations/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /conversations : Updates an existing conversation.
+     * {@code PUT  /conversations} : Updates an existing conversation.
      *
-     * @param conversation the conversation to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated conversation,
-     * or with status 400 (Bad Request) if the conversation is not valid,
-     * or with status 500 (Internal Server Error) if the conversation couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param conversation the conversation to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated conversation,
+     * or with status {@code 400 (Bad Request)} if the conversation is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the conversation couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/conversations")
     public ResponseEntity<Conversation> updateConversation(@RequestBody Conversation conversation) throws URISyntaxException {
@@ -68,14 +74,14 @@ public class ConversationResource {
         }
         Conversation result = conversationRepository.save(conversation);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, conversation.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, conversation.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /conversations : get all the conversations.
+     * {@code GET  /conversations} : get all the conversations.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of conversations in body
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of conversations in body.
      */
     @GetMapping("/conversations")
     public List<Conversation> getAllConversations() {
@@ -84,10 +90,10 @@ public class ConversationResource {
     }
 
     /**
-     * GET  /conversations/:id : get the "id" conversation.
+     * {@code GET  /conversations/:id} : get the "id" conversation.
      *
-     * @param id the id of the conversation to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the conversation, or with status 404 (Not Found)
+     * @param id the id of the conversation to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the conversation, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/conversations/{id}")
     public ResponseEntity<Conversation> getConversation(@PathVariable Long id) {
@@ -97,15 +103,15 @@ public class ConversationResource {
     }
 
     /**
-     * DELETE  /conversations/:id : delete the "id" conversation.
+     * {@code DELETE  /conversations/:id} : delete the "id" conversation.
      *
-     * @param id the id of the conversation to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the conversation to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/conversations/{id}")
     public ResponseEntity<Void> deleteConversation(@PathVariable Long id) {
         log.debug("REST request to delete Conversation : {}", id);
         conversationRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

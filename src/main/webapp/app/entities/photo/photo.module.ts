@@ -3,21 +3,21 @@ import { RouterModule } from '@angular/router';
 
 import { FlatterservermonolithSharedModule } from 'app/shared';
 import {
-    PhotoComponent,
-    PhotoDetailComponent,
-    PhotoUpdateComponent,
-    PhotoDeletePopupComponent,
-    PhotoDeleteDialogComponent,
-    photoRoute,
-    photoPopupRoute
+  PhotoComponent,
+  PhotoDetailComponent,
+  PhotoUpdateComponent,
+  PhotoDeletePopupComponent,
+  PhotoDeleteDialogComponent,
+  photoRoute,
+  photoPopupRoute
 } from './';
 
 const ENTITY_STATES = [...photoRoute, ...photoPopupRoute];
 
 @NgModule({
-    imports: [FlatterservermonolithSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [PhotoComponent, PhotoDetailComponent, PhotoUpdateComponent, PhotoDeleteDialogComponent, PhotoDeletePopupComponent],
-    entryComponents: [PhotoComponent, PhotoUpdateComponent, PhotoDeleteDialogComponent, PhotoDeletePopupComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [FlatterservermonolithSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  declarations: [PhotoComponent, PhotoDetailComponent, PhotoUpdateComponent, PhotoDeleteDialogComponent, PhotoDeletePopupComponent],
+  entryComponents: [PhotoComponent, PhotoUpdateComponent, PhotoDeleteDialogComponent, PhotoDeletePopupComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class FlatterservermonolithPhotoModule {}

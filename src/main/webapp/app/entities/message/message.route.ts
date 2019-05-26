@@ -14,80 +14,80 @@ import { IMessage } from 'app/shared/model/message.model';
 
 @Injectable({ providedIn: 'root' })
 export class MessageResolve implements Resolve<IMessage> {
-    constructor(private service: MessageService) {}
+  constructor(private service: MessageService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IMessage> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Message>) => response.ok),
-                map((message: HttpResponse<Message>) => message.body)
-            );
-        }
-        return of(new Message());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IMessage> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Message>) => response.ok),
+        map((message: HttpResponse<Message>) => message.body)
+      );
     }
+    return of(new Message());
+  }
 }
 
 export const messageRoute: Routes = [
-    {
-        path: '',
-        component: MessageComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Messages'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: MessageComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Messages'
     },
-    {
-        path: ':id/view',
-        component: MessageDetailComponent,
-        resolve: {
-            message: MessageResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Messages'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: MessageDetailComponent,
+    resolve: {
+      message: MessageResolve
     },
-    {
-        path: 'new',
-        component: MessageUpdateComponent,
-        resolve: {
-            message: MessageResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Messages'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Messages'
     },
-    {
-        path: ':id/edit',
-        component: MessageUpdateComponent,
-        resolve: {
-            message: MessageResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Messages'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: MessageUpdateComponent,
+    resolve: {
+      message: MessageResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Messages'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: MessageUpdateComponent,
+    resolve: {
+      message: MessageResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Messages'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const messagePopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: MessageDeletePopupComponent,
-        resolve: {
-            message: MessageResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Messages'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: MessageDeletePopupComponent,
+    resolve: {
+      message: MessageResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Messages'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

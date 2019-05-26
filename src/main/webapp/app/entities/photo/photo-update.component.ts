@@ -1,102 +1,170 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IPhoto } from 'app/shared/model/photo.model';
+import { IPhoto, Photo } from 'app/shared/model/photo.model';
 import { PhotoService } from './photo.service';
 import { IAlbum } from 'app/shared/model/album.model';
 import { AlbumService } from 'app/entities/album';
 
 @Component({
-    selector: 'jhi-photo-update',
-    templateUrl: './photo-update.component.html'
+  selector: 'jhi-photo-update',
+  templateUrl: './photo-update.component.html'
 })
 export class PhotoUpdateComponent implements OnInit {
-    photo: IPhoto;
-    isSaving: boolean;
+  photo: IPhoto;
+  isSaving: boolean;
 
-    albums: IAlbum[];
-    taken: string;
-    uploaded: string;
+  albums: IAlbum[];
 
-    constructor(
-        protected dataUtils: JhiDataUtils,
-        protected jhiAlertService: JhiAlertService,
-        protected photoService: PhotoService,
-        protected albumService: AlbumService,
-        protected elementRef: ElementRef,
-        protected activatedRoute: ActivatedRoute
-    ) {}
+  editForm = this.fb.group({
+    id: [],
+    title: [null, [Validators.required]],
+    description: [],
+    image: [null, [Validators.required]],
+    imageContentType: [],
+    height: [],
+    width: [],
+    taken: [],
+    uploaded: [],
+    album: []
+  });
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ photo }) => {
-            this.photo = photo;
-            this.taken = this.photo.taken != null ? this.photo.taken.format(DATE_TIME_FORMAT) : null;
-            this.uploaded = this.photo.uploaded != null ? this.photo.uploaded.format(DATE_TIME_FORMAT) : null;
-        });
-        this.albumService
-            .query()
-            .pipe(
-                filter((mayBeOk: HttpResponse<IAlbum[]>) => mayBeOk.ok),
-                map((response: HttpResponse<IAlbum[]>) => response.body)
-            )
-            .subscribe((res: IAlbum[]) => (this.albums = res), (res: HttpErrorResponse) => this.onError(res.message));
-    }
+  constructor(
+    protected dataUtils: JhiDataUtils,
+    protected jhiAlertService: JhiAlertService,
+    protected photoService: PhotoService,
+    protected albumService: AlbumService,
+    protected elementRef: ElementRef,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
-    byteSize(field) {
-        return this.dataUtils.byteSize(field);
-    }
+  ngOnInit() {
+    this.isSaving = false;
+    this.activatedRoute.data.subscribe(({ photo }) => {
+      this.updateForm(photo);
+      this.photo = photo;
+    });
+    this.albumService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IAlbum[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IAlbum[]>) => response.body)
+      )
+      .subscribe((res: IAlbum[]) => (this.albums = res), (res: HttpErrorResponse) => this.onError(res.message));
+  }
 
-    openFile(contentType, field) {
-        return this.dataUtils.openFile(contentType, field);
-    }
+  updateForm(photo: IPhoto) {
+    this.editForm.patchValue({
+      id: photo.id,
+      title: photo.title,
+      description: photo.description,
+      image: photo.image,
+      imageContentType: photo.imageContentType,
+      height: photo.height,
+      width: photo.width,
+      taken: photo.taken != null ? photo.taken.format(DATE_TIME_FORMAT) : null,
+      uploaded: photo.uploaded != null ? photo.uploaded.format(DATE_TIME_FORMAT) : null,
+      album: photo.album
+    });
+  }
 
-    setFileData(event, entity, field, isImage) {
-        this.dataUtils.setFileData(event, entity, field, isImage);
-    }
+  byteSize(field) {
+    return this.dataUtils.byteSize(field);
+  }
 
-    clearInputImage(field: string, fieldContentType: string, idInput: string) {
-        this.dataUtils.clearInputImage(this.photo, this.elementRef, field, fieldContentType, idInput);
-    }
+  openFile(contentType, field) {
+    return this.dataUtils.openFile(contentType, field);
+  }
 
-    previousState() {
-        window.history.back();
-    }
-
-    save() {
-        this.isSaving = true;
-        this.photo.taken = this.taken != null ? moment(this.taken, DATE_TIME_FORMAT) : null;
-        this.photo.uploaded = this.uploaded != null ? moment(this.uploaded, DATE_TIME_FORMAT) : null;
-        if (this.photo.id !== undefined) {
-            this.subscribeToSaveResponse(this.photoService.update(this.photo));
+  setFileData(event, field: string, isImage) {
+    return new Promise((resolve, reject) => {
+      if (event && event.target && event.target.files && event.target.files[0]) {
+        const file = event.target.files[0];
+        if (isImage && !/^image\//.test(file.type)) {
+          reject(`File was expected to be an image but was found to be ${file.type}`);
         } else {
-            this.subscribeToSaveResponse(this.photoService.create(this.photo));
+          const filedContentType: string = field + 'ContentType';
+          this.dataUtils.toBase64(file, base64Data => {
+            this.editForm.patchValue({
+              [field]: base64Data,
+              [filedContentType]: file.type
+            });
+          });
         }
-    }
+      } else {
+        reject(`Base64 data was not set as file could not be extracted from passed parameter: ${event}`);
+      }
+    }).then(
+      () => console.log('blob added'), // sucess
+      this.onError
+    );
+  }
 
-    protected subscribeToSaveResponse(result: Observable<HttpResponse<IPhoto>>) {
-        result.subscribe((res: HttpResponse<IPhoto>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+  clearInputImage(field: string, fieldContentType: string, idInput: string) {
+    this.editForm.patchValue({
+      [field]: null,
+      [fieldContentType]: null
+    });
+    if (this.elementRef && idInput && this.elementRef.nativeElement.querySelector('#' + idInput)) {
+      this.elementRef.nativeElement.querySelector('#' + idInput).value = null;
     }
+  }
 
-    protected onSaveSuccess() {
-        this.isSaving = false;
-        this.previousState();
-    }
+  previousState() {
+    window.history.back();
+  }
 
-    protected onSaveError() {
-        this.isSaving = false;
+  save() {
+    this.isSaving = true;
+    const photo = this.createFromForm();
+    if (photo.id !== undefined) {
+      this.subscribeToSaveResponse(this.photoService.update(photo));
+    } else {
+      this.subscribeToSaveResponse(this.photoService.create(photo));
     }
+  }
 
-    protected onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  private createFromForm(): IPhoto {
+    const entity = {
+      ...new Photo(),
+      id: this.editForm.get(['id']).value,
+      title: this.editForm.get(['title']).value,
+      description: this.editForm.get(['description']).value,
+      imageContentType: this.editForm.get(['imageContentType']).value,
+      image: this.editForm.get(['image']).value,
+      height: this.editForm.get(['height']).value,
+      width: this.editForm.get(['width']).value,
+      taken: this.editForm.get(['taken']).value != null ? moment(this.editForm.get(['taken']).value, DATE_TIME_FORMAT) : undefined,
+      uploaded: this.editForm.get(['uploaded']).value != null ? moment(this.editForm.get(['uploaded']).value, DATE_TIME_FORMAT) : undefined,
+      album: this.editForm.get(['album']).value
+    };
+    return entity;
+  }
 
-    trackAlbumById(index: number, item: IAlbum) {
-        return item.id;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IPhoto>>) {
+    result.subscribe((res: HttpResponse<IPhoto>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+  }
+
+  protected onSaveSuccess() {
+    this.isSaving = false;
+    this.previousState();
+  }
+
+  protected onSaveError() {
+    this.isSaving = false;
+  }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
+
+  trackAlbumById(index: number, item: IAlbum) {
+    return item.id;
+  }
 }

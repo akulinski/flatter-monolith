@@ -106,19 +106,15 @@ public class Message implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Message)) {
             return false;
         }
-        Message message = (Message) o;
-        if (message.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), message.getId());
+        return id != null && id.equals(((Message) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

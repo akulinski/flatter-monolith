@@ -14,80 +14,80 @@ import { IPhoto } from 'app/shared/model/photo.model';
 
 @Injectable({ providedIn: 'root' })
 export class PhotoResolve implements Resolve<IPhoto> {
-    constructor(private service: PhotoService) {}
+  constructor(private service: PhotoService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IPhoto> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Photo>) => response.ok),
-                map((photo: HttpResponse<Photo>) => photo.body)
-            );
-        }
-        return of(new Photo());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IPhoto> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Photo>) => response.ok),
+        map((photo: HttpResponse<Photo>) => photo.body)
+      );
     }
+    return of(new Photo());
+  }
 }
 
 export const photoRoute: Routes = [
-    {
-        path: '',
-        component: PhotoComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Photos'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: PhotoComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Photos'
     },
-    {
-        path: ':id/view',
-        component: PhotoDetailComponent,
-        resolve: {
-            photo: PhotoResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Photos'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: PhotoDetailComponent,
+    resolve: {
+      photo: PhotoResolve
     },
-    {
-        path: 'new',
-        component: PhotoUpdateComponent,
-        resolve: {
-            photo: PhotoResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Photos'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Photos'
     },
-    {
-        path: ':id/edit',
-        component: PhotoUpdateComponent,
-        resolve: {
-            photo: PhotoResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Photos'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: PhotoUpdateComponent,
+    resolve: {
+      photo: PhotoResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Photos'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: PhotoUpdateComponent,
+    resolve: {
+      photo: PhotoResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Photos'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const photoPopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: PhotoDeletePopupComponent,
-        resolve: {
-            photo: PhotoResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Photos'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: PhotoDeletePopupComponent,
+    resolve: {
+      photo: PhotoResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Photos'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

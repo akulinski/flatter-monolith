@@ -14,80 +14,80 @@ import { IReview } from 'app/shared/model/review.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewResolve implements Resolve<IReview> {
-    constructor(private service: ReviewService) {}
+  constructor(private service: ReviewService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IReview> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Review>) => response.ok),
-                map((review: HttpResponse<Review>) => review.body)
-            );
-        }
-        return of(new Review());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IReview> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Review>) => response.ok),
+        map((review: HttpResponse<Review>) => review.body)
+      );
     }
+    return of(new Review());
+  }
 }
 
 export const reviewRoute: Routes = [
-    {
-        path: '',
-        component: ReviewComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Reviews'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: ReviewComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Reviews'
     },
-    {
-        path: ':id/view',
-        component: ReviewDetailComponent,
-        resolve: {
-            review: ReviewResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Reviews'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: ReviewDetailComponent,
+    resolve: {
+      review: ReviewResolve
     },
-    {
-        path: 'new',
-        component: ReviewUpdateComponent,
-        resolve: {
-            review: ReviewResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Reviews'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Reviews'
     },
-    {
-        path: ':id/edit',
-        component: ReviewUpdateComponent,
-        resolve: {
-            review: ReviewResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Reviews'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: ReviewUpdateComponent,
+    resolve: {
+      review: ReviewResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Reviews'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: ReviewUpdateComponent,
+    resolve: {
+      review: ReviewResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Reviews'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const reviewPopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: ReviewDeletePopupComponent,
-        resolve: {
-            review: ReviewResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Reviews'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: ReviewDeletePopupComponent,
+    resolve: {
+      review: ReviewResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Reviews'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

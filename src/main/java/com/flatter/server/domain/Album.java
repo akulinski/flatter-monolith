@@ -53,7 +53,6 @@ public class Album implements Serializable {
 
     @OneToMany(mappedBy = "album")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonProperty
     private Set<Photo> photos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -161,19 +160,15 @@ public class Album implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Album)) {
             return false;
         }
-        Album album = (Album) o;
-        if (album.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), album.getId());
+        return id != null && id.equals(((Album) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

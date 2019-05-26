@@ -9,57 +9,57 @@ import { AccountService } from 'app/core';
 import { ConversationService } from './conversation.service';
 
 @Component({
-    selector: 'jhi-conversation',
-    templateUrl: './conversation.component.html'
+  selector: 'jhi-conversation',
+  templateUrl: './conversation.component.html'
 })
 export class ConversationComponent implements OnInit, OnDestroy {
-    conversations: IConversation[];
-    currentAccount: any;
-    eventSubscriber: Subscription;
+  conversations: IConversation[];
+  currentAccount: any;
+  eventSubscriber: Subscription;
 
-    constructor(
-        protected conversationService: ConversationService,
-        protected jhiAlertService: JhiAlertService,
-        protected eventManager: JhiEventManager,
-        protected accountService: AccountService
-    ) {}
+  constructor(
+    protected conversationService: ConversationService,
+    protected jhiAlertService: JhiAlertService,
+    protected eventManager: JhiEventManager,
+    protected accountService: AccountService
+  ) {}
 
-    loadAll() {
-        this.conversationService
-            .query()
-            .pipe(
-                filter((res: HttpResponse<IConversation[]>) => res.ok),
-                map((res: HttpResponse<IConversation[]>) => res.body)
-            )
-            .subscribe(
-                (res: IConversation[]) => {
-                    this.conversations = res;
-                },
-                (res: HttpErrorResponse) => this.onError(res.message)
-            );
-    }
+  loadAll() {
+    this.conversationService
+      .query()
+      .pipe(
+        filter((res: HttpResponse<IConversation[]>) => res.ok),
+        map((res: HttpResponse<IConversation[]>) => res.body)
+      )
+      .subscribe(
+        (res: IConversation[]) => {
+          this.conversations = res;
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+  }
 
-    ngOnInit() {
-        this.loadAll();
-        this.accountService.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInConversations();
-    }
+  ngOnInit() {
+    this.loadAll();
+    this.accountService.identity().then(account => {
+      this.currentAccount = account;
+    });
+    this.registerChangeInConversations();
+  }
 
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriber);
+  }
 
-    trackId(index: number, item: IConversation) {
-        return item.id;
-    }
+  trackId(index: number, item: IConversation) {
+    return item.id;
+  }
 
-    registerChangeInConversations() {
-        this.eventSubscriber = this.eventManager.subscribe('conversationListModification', response => this.loadAll());
-    }
+  registerChangeInConversations() {
+    this.eventSubscriber = this.eventManager.subscribe('conversationListModification', response => this.loadAll());
+  }
 
-    protected onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
+  protected onError(errorMessage: string) {
+    this.jhiAlertService.error(errorMessage, null, null);
+  }
 }

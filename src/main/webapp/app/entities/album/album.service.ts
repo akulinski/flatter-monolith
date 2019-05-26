@@ -14,61 +14,61 @@ type EntityArrayResponseType = HttpResponse<IAlbum[]>;
 
 @Injectable({ providedIn: 'root' })
 export class AlbumService {
-    public resourceUrl = SERVER_API_URL + 'api/albums';
+  public resourceUrl = SERVER_API_URL + 'api/albums';
 
-    constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) {}
 
-    create(album: IAlbum): Observable<EntityResponseType> {
-        const copy = this.convertDateFromClient(album);
-        return this.http
-            .post<IAlbum>(this.resourceUrl, copy, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  create(album: IAlbum): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(album);
+    return this.http
+      .post<IAlbum>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  update(album: IAlbum): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(album);
+    return this.http
+      .put<IAlbum>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  find(id: number): Observable<EntityResponseType> {
+    return this.http
+      .get<IAlbum>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  query(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<IAlbum[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+  }
+
+  delete(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  protected convertDateFromClient(album: IAlbum): IAlbum {
+    const copy: IAlbum = Object.assign({}, album, {
+      created: album.created != null && album.created.isValid() ? album.created.toJSON() : null
+    });
+    return copy;
+  }
+
+  protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
+    if (res.body) {
+      res.body.created = res.body.created != null ? moment(res.body.created) : null;
     }
+    return res;
+  }
 
-    update(album: IAlbum): Observable<EntityResponseType> {
-        const copy = this.convertDateFromClient(album);
-        return this.http
-            .put<IAlbum>(this.resourceUrl, copy, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach((album: IAlbum) => {
+        album.created = album.created != null ? moment(album.created) : null;
+      });
     }
-
-    find(id: number): Observable<EntityResponseType> {
-        return this.http
-            .get<IAlbum>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
-    }
-
-    query(req?: any): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(req);
-        return this.http
-            .get<IAlbum[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
-    }
-
-    delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
-    }
-
-    protected convertDateFromClient(album: IAlbum): IAlbum {
-        const copy: IAlbum = Object.assign({}, album, {
-            created: album.created != null && album.created.isValid() ? album.created.toJSON() : null
-        });
-        return copy;
-    }
-
-    protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
-        if (res.body) {
-            res.body.created = res.body.created != null ? moment(res.body.created) : null;
-        }
-        return res;
-    }
-
-    protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
-        if (res.body) {
-            res.body.forEach((album: IAlbum) => {
-                album.created = album.created != null ? moment(album.created) : null;
-            });
-        }
-        return res;
-    }
+    return res;
+  }
 }
