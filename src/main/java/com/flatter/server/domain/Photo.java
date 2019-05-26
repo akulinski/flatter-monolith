@@ -1,13 +1,13 @@
 package com.flatter.server.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -21,7 +21,7 @@ import java.util.Objects;
 public class Photo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -35,7 +35,6 @@ public class Photo implements Serializable {
     @Column(name = "description")
     private String description;
 
-    
     @Lob
     @Column(name = "image", nullable = false)
     private byte[] image;
@@ -55,8 +54,8 @@ public class Photo implements Serializable {
     @Column(name = "uploaded")
     private Instant uploaded;
 
-    @ManyToOne
-    @JsonIgnoreProperties("photos")
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "album_id")
     private Album album;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -191,19 +190,15 @@ public class Photo implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Photo)) {
             return false;
         }
-        Photo photo = (Photo) o;
-        if (photo.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), photo.getId());
+        return id != null && id.equals(((Photo) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

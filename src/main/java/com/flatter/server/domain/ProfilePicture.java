@@ -20,7 +20,7 @@ import java.util.Objects;
 public class ProfilePicture implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -156,19 +156,15 @@ public class ProfilePicture implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof ProfilePicture)) {
             return false;
         }
-        ProfilePicture profilePicture = (ProfilePicture) o;
-        if (profilePicture.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), profilePicture.getId());
+        return id != null && id.equals(((ProfilePicture) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

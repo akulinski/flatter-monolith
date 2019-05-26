@@ -5,28 +5,28 @@ import { JhiDataUtils } from 'ng-jhipster';
 import { IAlbum } from 'app/shared/model/album.model';
 
 @Component({
-    selector: 'jhi-album-detail',
-    templateUrl: './album-detail.component.html'
+  selector: 'jhi-album-detail',
+  templateUrl: './album-detail.component.html'
 })
 export class AlbumDetailComponent implements OnInit {
-    album: IAlbum;
+  album: IAlbum;
 
-    constructor(protected dataUtils: JhiDataUtils, protected activatedRoute: ActivatedRoute) {}
+  constructor(protected dataUtils: JhiDataUtils, protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ album }) => {
-            this.album = album;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ album }) => {
+      this.album = album;
+    });
+  }
 
-    byteSize(field) {
-        return this.dataUtils.byteSize(field);
-    }
+  byteSize(field) {
+    return this.dataUtils.byteSize(field);
+  }
 
-    openFile(contentType, field) {
-        return this.dataUtils.openFile(contentType, field);
-    }
-    previousState() {
-        window.history.back();
-    }
+  openFile(contentType, field) {
+    return this.dataUtils.openFile(contentType, field);
+  }
+  previousState() {
+    window.history.back();
+  }
 }

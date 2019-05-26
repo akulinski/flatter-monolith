@@ -21,13 +21,13 @@ import java.util.Objects;
 public class Offer implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    
+
     @Lob
     @Column(name = "description", nullable = false)
     private String description;
@@ -64,11 +64,9 @@ public class Offer implements Serializable {
     private User user;
 
     @OneToOne(mappedBy = "offer")
-    @JsonIgnore
     private Address address;
 
     @OneToOne(mappedBy = "offer")
-    @JsonIgnore
     private Album album;
 
     @OneToOne(mappedBy = "offer")
@@ -259,19 +257,15 @@ public class Offer implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Offer)) {
             return false;
         }
-        Offer offer = (Offer) o;
-        if (offer.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), offer.getId());
+        return id != null && id.equals(((Offer) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

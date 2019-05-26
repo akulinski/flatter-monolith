@@ -22,11 +22,14 @@ public class MatchingService {
 
     private final OfferRepository offerRepository;
 
+    private final JoiningService joiningService;
+
     @Autowired
-    public MatchingService(OfferRepository offerRepository, FeignMatchClient feignMatchClient) {
+    public MatchingService(OfferRepository offerRepository, FeignMatchClient feignMatchClient, JoiningService joiningService) {
         this.offerRepository = offerRepository;
         this.secureRandom = new SecureRandom();
         this.feignMatchClient = feignMatchClient;
+        this.joiningService = joiningService;
     }
 
     public List<Offer> getMockOffers(User user) {
@@ -41,8 +44,12 @@ public class MatchingService {
         return returnOffers;
     }
 
-    public List<QuestionnaireableOffer> getOffersOfUser(User user){
+    public List<QuestionnaireableOffer> getOffersOfUser(User user) {
         return feignMatchClient.getMatchesOfUser(user.getLogin());
+    }
+
+    public void postJoiningRequest(String login) {
+        joiningService.postRequestForClusteringData(login);
     }
 
 }

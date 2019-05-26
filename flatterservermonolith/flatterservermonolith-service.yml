@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flatterservermonolith
+  namespace: default
+  labels:
+    app: flatterservermonolith
+spec:
+  selector:
+    app: flatterservermonolith
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8080

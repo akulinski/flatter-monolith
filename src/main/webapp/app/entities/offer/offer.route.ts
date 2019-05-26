@@ -15,84 +15,84 @@ import { IOffer } from 'app/shared/model/offer.model';
 
 @Injectable({ providedIn: 'root' })
 export class OfferResolve implements Resolve<IOffer> {
-    constructor(private service: OfferService) {}
+  constructor(private service: OfferService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IOffer> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Offer>) => response.ok),
-                map((offer: HttpResponse<Offer>) => offer.body)
-            );
-        }
-        return of(new Offer());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IOffer> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Offer>) => response.ok),
+        map((offer: HttpResponse<Offer>) => offer.body)
+      );
     }
+    return of(new Offer());
+  }
 }
 
 export const offerRoute: Routes = [
-    {
-        path: '',
-        component: OfferComponent,
-        resolve: {
-            pagingParams: JhiResolvePagingParams
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            defaultSort: 'id,asc',
-            pageTitle: 'Offers'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: OfferComponent,
+    resolve: {
+      pagingParams: JhiResolvePagingParams
     },
-    {
-        path: ':id/view',
-        component: OfferDetailComponent,
-        resolve: {
-            offer: OfferResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Offers'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      defaultSort: 'id,asc',
+      pageTitle: 'Offers'
     },
-    {
-        path: 'new',
-        component: OfferUpdateComponent,
-        resolve: {
-            offer: OfferResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Offers'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: OfferDetailComponent,
+    resolve: {
+      offer: OfferResolve
     },
-    {
-        path: ':id/edit',
-        component: OfferUpdateComponent,
-        resolve: {
-            offer: OfferResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Offers'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Offers'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: OfferUpdateComponent,
+    resolve: {
+      offer: OfferResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Offers'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: OfferUpdateComponent,
+    resolve: {
+      offer: OfferResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Offers'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const offerPopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: OfferDeletePopupComponent,
-        resolve: {
-            offer: OfferResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Offers'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: OfferDeletePopupComponent,
+    resolve: {
+      offer: OfferResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Offers'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

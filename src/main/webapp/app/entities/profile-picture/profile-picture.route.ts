@@ -14,80 +14,80 @@ import { IProfilePicture } from 'app/shared/model/profile-picture.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProfilePictureResolve implements Resolve<IProfilePicture> {
-    constructor(private service: ProfilePictureService) {}
+  constructor(private service: ProfilePictureService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IProfilePicture> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<ProfilePicture>) => response.ok),
-                map((profilePicture: HttpResponse<ProfilePicture>) => profilePicture.body)
-            );
-        }
-        return of(new ProfilePicture());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IProfilePicture> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<ProfilePicture>) => response.ok),
+        map((profilePicture: HttpResponse<ProfilePicture>) => profilePicture.body)
+      );
     }
+    return of(new ProfilePicture());
+  }
 }
 
 export const profilePictureRoute: Routes = [
-    {
-        path: '',
-        component: ProfilePictureComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'ProfilePictures'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: ProfilePictureComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'ProfilePictures'
     },
-    {
-        path: ':id/view',
-        component: ProfilePictureDetailComponent,
-        resolve: {
-            profilePicture: ProfilePictureResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'ProfilePictures'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: ProfilePictureDetailComponent,
+    resolve: {
+      profilePicture: ProfilePictureResolve
     },
-    {
-        path: 'new',
-        component: ProfilePictureUpdateComponent,
-        resolve: {
-            profilePicture: ProfilePictureResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'ProfilePictures'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'ProfilePictures'
     },
-    {
-        path: ':id/edit',
-        component: ProfilePictureUpdateComponent,
-        resolve: {
-            profilePicture: ProfilePictureResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'ProfilePictures'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: ProfilePictureUpdateComponent,
+    resolve: {
+      profilePicture: ProfilePictureResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'ProfilePictures'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: ProfilePictureUpdateComponent,
+    resolve: {
+      profilePicture: ProfilePictureResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'ProfilePictures'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const profilePicturePopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: ProfilePictureDeletePopupComponent,
-        resolve: {
-            profilePicture: ProfilePictureResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'ProfilePictures'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: ProfilePictureDeletePopupComponent,
+    resolve: {
+      profilePicture: ProfilePictureResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'ProfilePictures'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

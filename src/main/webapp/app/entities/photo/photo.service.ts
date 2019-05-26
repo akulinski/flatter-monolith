@@ -14,64 +14,64 @@ type EntityArrayResponseType = HttpResponse<IPhoto[]>;
 
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
-    public resourceUrl = SERVER_API_URL + 'api/photos';
+  public resourceUrl = SERVER_API_URL + 'api/photos';
 
-    constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) {}
 
-    create(photo: IPhoto): Observable<EntityResponseType> {
-        const copy = this.convertDateFromClient(photo);
-        return this.http
-            .post<IPhoto>(this.resourceUrl, copy, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  create(photo: IPhoto): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(photo);
+    return this.http
+      .post<IPhoto>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  update(photo: IPhoto): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(photo);
+    return this.http
+      .put<IPhoto>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  find(id: number): Observable<EntityResponseType> {
+    return this.http
+      .get<IPhoto>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  query(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<IPhoto[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+  }
+
+  delete(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  protected convertDateFromClient(photo: IPhoto): IPhoto {
+    const copy: IPhoto = Object.assign({}, photo, {
+      taken: photo.taken != null && photo.taken.isValid() ? photo.taken.toJSON() : null,
+      uploaded: photo.uploaded != null && photo.uploaded.isValid() ? photo.uploaded.toJSON() : null
+    });
+    return copy;
+  }
+
+  protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
+    if (res.body) {
+      res.body.taken = res.body.taken != null ? moment(res.body.taken) : null;
+      res.body.uploaded = res.body.uploaded != null ? moment(res.body.uploaded) : null;
     }
+    return res;
+  }
 
-    update(photo: IPhoto): Observable<EntityResponseType> {
-        const copy = this.convertDateFromClient(photo);
-        return this.http
-            .put<IPhoto>(this.resourceUrl, copy, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach((photo: IPhoto) => {
+        photo.taken = photo.taken != null ? moment(photo.taken) : null;
+        photo.uploaded = photo.uploaded != null ? moment(photo.uploaded) : null;
+      });
     }
-
-    find(id: number): Observable<EntityResponseType> {
-        return this.http
-            .get<IPhoto>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
-    }
-
-    query(req?: any): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(req);
-        return this.http
-            .get<IPhoto[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
-    }
-
-    delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
-    }
-
-    protected convertDateFromClient(photo: IPhoto): IPhoto {
-        const copy: IPhoto = Object.assign({}, photo, {
-            taken: photo.taken != null && photo.taken.isValid() ? photo.taken.toJSON() : null,
-            uploaded: photo.uploaded != null && photo.uploaded.isValid() ? photo.uploaded.toJSON() : null
-        });
-        return copy;
-    }
-
-    protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
-        if (res.body) {
-            res.body.taken = res.body.taken != null ? moment(res.body.taken) : null;
-            res.body.uploaded = res.body.uploaded != null ? moment(res.body.uploaded) : null;
-        }
-        return res;
-    }
-
-    protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
-        if (res.body) {
-            res.body.forEach((photo: IPhoto) => {
-                photo.taken = photo.taken != null ? moment(photo.taken) : null;
-                photo.uploaded = photo.uploaded != null ? moment(photo.uploaded) : null;
-            });
-        }
-        return res;
-    }
+    return res;
+  }
 }
