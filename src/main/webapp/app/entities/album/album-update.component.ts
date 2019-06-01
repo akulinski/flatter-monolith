@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {FormBuilder, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
 import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
-import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IAlbum, Album } from 'app/shared/model/album.model';
-import { AlbumService } from './album.service';
-import { IOffer } from 'app/shared/model/offer.model';
-import { OfferService } from 'app/entities/offer';
-import { IUser, UserService } from 'app/core';
+import {DATE_TIME_FORMAT} from 'app/shared/constants/input.constants';
+import {JhiAlertService, JhiDataUtils} from 'ng-jhipster';
+import {Album, IAlbum} from 'app/shared/model/album.model';
+import {AlbumService} from './album.service';
+import {IOffer} from 'app/shared/model/offer.model';
+import {OfferService} from 'app/entities/offer';
+import {IUser, UserService} from 'app/core';
 
 @Component({
   selector: 'jhi-album-update',
@@ -42,16 +42,17 @@ export class AlbumUpdateComponent implements OnInit {
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.isSaving = false;
-    this.activatedRoute.data.subscribe(({ album }) => {
+    this.activatedRoute.data.subscribe(({album}) => {
       this.updateForm(album);
       this.album = album;
     });
     this.offerService
-      .query({ filter: 'album-is-null' })
+      .query({filter: 'album-is-null'})
       .pipe(
         filter((mayBeOk: HttpResponse<IOffer[]>) => mayBeOk.ok),
         map((response: HttpResponse<IOffer[]>) => response.body)
@@ -134,6 +135,9 @@ export class AlbumUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const album = this.createFromForm();
+    for (let [key, value] of Object.entries(album)) {
+      console.log("Offer: "+key + ':' + value);
+    }
     if (album.id !== undefined) {
       this.subscribeToSaveResponse(this.albumService.update(album));
     } else {
@@ -166,6 +170,7 @@ export class AlbumUpdateComponent implements OnInit {
   protected onSaveError() {
     this.isSaving = false;
   }
+
   protected onError(errorMessage: string) {
     this.jhiAlertService.error(errorMessage, null, null);
   }

@@ -1,21 +1,21 @@
-import { Injectable } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
-import { UserRouteAccessService } from 'app/core';
-import { Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { Album } from 'app/shared/model/album.model';
-import { AlbumService } from './album.service';
-import { AlbumComponent } from './album.component';
-import { AlbumDetailComponent } from './album-detail.component';
-import { AlbumUpdateComponent } from './album-update.component';
-import { AlbumDeletePopupComponent } from './album-delete-dialog.component';
-import { IAlbum } from 'app/shared/model/album.model';
+import {Injectable} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot, Routes} from '@angular/router';
+import {JhiResolvePagingParams} from 'ng-jhipster';
+import {UserRouteAccessService} from 'app/core';
+import {Observable, of} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
+import {Album, IAlbum} from 'app/shared/model/album.model';
+import {AlbumService} from './album.service';
+import {AlbumComponent} from './album.component';
+import {AlbumDetailComponent} from './album-detail.component';
+import {AlbumUpdateComponent} from './album-update.component';
+import {AlbumDeletePopupComponent} from './album-delete-dialog.component';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AlbumResolve implements Resolve<IAlbum> {
-  constructor(private service: AlbumService) {}
+  constructor(private service: AlbumService) {
+  }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IAlbum> {
     const id = route.params['id'] ? route.params['id'] : null;

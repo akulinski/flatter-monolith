@@ -7,10 +7,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Offer.
@@ -60,13 +58,13 @@ public class Offer implements Serializable {
     private Boolean isFurnished;
 
     @ManyToOne
-    @JsonIgnoreProperties("offers")
+    @JsonIgnoreProperties(value = {"offers"})
     private User user;
 
     @OneToOne(mappedBy = "offer")
     private Address address;
 
-    @OneToOne(mappedBy = "offer")
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
     private Album album;
 
     @OneToOne(mappedBy = "offer")

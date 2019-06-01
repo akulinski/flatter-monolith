@@ -218,12 +218,8 @@ public class UserResource {
      * @throws IllegalAccessException
      */
     @GetMapping("/users/offers")
-    public ResponseEntity<List<Offer>> getOffersForUsers(Principal principal) throws IllegalAccessException {
-        String username = principal.getName();
-
-        User user = userRepository.findOneByLogin(username).orElseThrow(IllegalAccessException::new);
-
-        return new ResponseEntity<>(matchingService.getMockOffers(user), HttpStatus.OK);
+    public ResponseEntity<List<Offer>> getOffersForUsers() throws IllegalAccessException {
+        return new ResponseEntity<>(matchingService.getMockOffers(), HttpStatus.OK);
     }
 
     /**

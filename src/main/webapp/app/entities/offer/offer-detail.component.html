@@ -45,6 +45,16 @@
                 <dd>
                     {{offer.user?.login}}
                 </dd>
+
+                <dd>
+                    <ul *ngFor="let photo of offer.album?.onetomanies">
+
+                        <li>
+                            <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image" style="max-width: 100%;" alt="photo image"/>
+                        </li>
+                    </ul>
+
+                </dd>
             </dl>
 
             <button type="submit"

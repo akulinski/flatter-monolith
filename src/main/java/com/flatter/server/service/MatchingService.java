@@ -16,40 +16,44 @@ import java.util.List;
 @Service
 public class MatchingService {
 
-    private final FeignMatchClient feignMatchClient;
+  private final FeignMatchClient feignMatchClient;
 
-    private SecureRandom secureRandom;
+  private SecureRandom secureRandom;
 
-    private final OfferRepository offerRepository;
+  private final OfferRepository offerRepository;
 
-    private final JoiningService joiningService;
+  private final JoiningService joiningService;
 
-    @Autowired
-    public MatchingService(OfferRepository offerRepository, FeignMatchClient feignMatchClient, JoiningService joiningService) {
-        this.offerRepository = offerRepository;
-        this.secureRandom = new SecureRandom();
-        this.feignMatchClient = feignMatchClient;
-        this.joiningService = joiningService;
+  @Autowired
+  public MatchingService(
+      OfferRepository offerRepository,
+      FeignMatchClient feignMatchClient,
+      JoiningService joiningService) {
+    this.offerRepository = offerRepository;
+    this.secureRandom = new SecureRandom();
+    this.feignMatchClient = feignMatchClient;
+    this.joiningService = joiningService;
+  }
+
+  public List<Offer> getMockOffers() {
+
+    int limit = secureRandom.nextInt(10);
+    ArrayList<Offer> offers = (ArrayList<Offer>) offerRepository.findAll();
+
+    LinkedList<Offer> returnOffers = new LinkedList<>();
+
+    for (int i = 0; i < limit; i++) {
+      returnOffers.add(offers.get(secureRandom.nextInt(offers.size())));
     }
 
-    public List<Offer> getMockOffers(User user) {
-        int limit = secureRandom.nextInt(10);
-        ArrayList<Offer> offers = (ArrayList<Offer>) offerRepository.findAll();
-        LinkedList<Offer> returnOffers = new LinkedList<>();
+    return returnOffers;
+  }
 
-        for (int i = 0; i < limit; i++) {
-            returnOffers.add(offers.get(secureRandom.nextInt(offers.size())));
-        }
+  public List<QuestionnaireableOffer> getOffersOfUser(User user) {
+    return feignMatchClient.getMatchesOfUser(user.getLogin());
+  }
 
-        return returnOffers;
-    }
-
-    public List<QuestionnaireableOffer> getOffersOfUser(User user) {
-        return feignMatchClient.getMatchesOfUser(user.getLogin());
-    }
-
-    public void postJoiningRequest(String login) {
-        joiningService.postRequestForClusteringData(login);
-    }
-
+  public void postJoiningRequest(String login) {
+    joiningService.postRequestForClusteringData(login);
+  }
 }

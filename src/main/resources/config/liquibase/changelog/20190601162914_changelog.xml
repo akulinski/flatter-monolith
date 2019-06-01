@@ -1,0 +1,316 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="albert (generated)" id="1559406559061-1">
+        <createSequence sequenceName="sequence_generator"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-2">
+        <createTable tableName="address">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="addressPK"/>
+            </column>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="flat_number" type="VARCHAR(255)"/>
+            <column name="street" type="VARCHAR(255)"/>
+            <column name="zip_code" type="VARCHAR(255)"/>
+            <column name="offer_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-3">
+        <createTable tableName="album">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="albumPK"/>
+            </column>
+            <column name="created" type="TIMESTAMP"/>
+            <column name="description" type="CLOB"/>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offer_id" type="BIGINT"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-4">
+        <createTable tableName="conversation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="conversationPK"/>
+            </column>
+            <column name="reciver_id" type="BIGINT"/>
+            <column name="sender_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-5">
+        <createTable tableName="jhi_authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints primaryKey="true" primaryKeyName="jhi_authorityPK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-6">
+        <createTable tableName="jhi_persistent_audit_event">
+            <column autoIncrement="true" name="event_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_persistent_audit_eventPK"/>
+            </column>
+            <column name="event_date" type="TIMESTAMP"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="principal" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-7">
+        <createTable tableName="jhi_persistent_audit_evt_data">
+            <column name="event_id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-8">
+        <createTable tableName="jhi_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_userPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(254)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="image_url" type="VARCHAR(256)"/>
+            <column name="lang_key" type="VARCHAR(6)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reset_date" type="TIMESTAMP"/>
+            <column name="reset_key" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-9">
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-10">
+        <createTable tableName="match">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="matchPK"/>
+            </column>
+            <column name="approval_date" type="TIMESTAMP"/>
+            <column name="creation_date" type="TIMESTAMP"/>
+            <column name="is_approved" type="BOOLEAN"/>
+            <column name="offer_id" type="BIGINT"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-11">
+        <createTable tableName="message">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="messagePK"/>
+            </column>
+            <column name="content" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP"/>
+            <column name="is_seen" type="BOOLEAN"/>
+            <column name="conversation_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-12">
+        <createTable tableName="offer">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="offerPK"/>
+            </column>
+            <column name="construction_year" type="INT"/>
+            <column name="description" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_furnished" type="BOOLEAN"/>
+            <column name="pets" type="BOOLEAN"/>
+            <column name="room_amount" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="jhi_size" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="smoking_inside" type="BOOLEAN"/>
+            <column name="total_cost" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="jhi_type" type="VARCHAR(255)"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-13">
+        <createTable tableName="photo">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="photoPK"/>
+            </column>
+            <column name="description" type="CLOB"/>
+            <column name="height" type="INT"/>
+            <column name="image" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_content_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taken" type="TIMESTAMP"/>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uploaded" type="TIMESTAMP"/>
+            <column name="width" type="INT"/>
+            <column name="album_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-14">
+        <createTable tableName="profile_picture">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="profile_picturePK"/>
+            </column>
+            <column name="height" type="INT"/>
+            <column name="image" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_content_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taken" type="TIMESTAMP"/>
+            <column name="uploaded" type="TIMESTAMP"/>
+            <column name="width" type="INT"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-15">
+        <createTable tableName="questionnaire">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="questionnairePK"/>
+            </column>
+            <column name="construction_year_max" type="INT"/>
+            <column name="construction_year_min" type="INT"/>
+            <column name="is_furnished" type="BOOLEAN"/>
+            <column name="pets" type="BOOLEAN"/>
+            <column name="room_amount_max" type="INT"/>
+            <column name="room_amount_min" type="INT"/>
+            <column name="size_max" type="DOUBLE"/>
+            <column name="size_min" type="DOUBLE"/>
+            <column name="smoking_inside" type="BOOLEAN"/>
+            <column name="total_cost_max" type="DOUBLE"/>
+            <column name="total_cost_min" type="DOUBLE"/>
+            <column name="jhi_type" type="VARCHAR(255)"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-16">
+        <createTable tableName="review">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="reviewPK"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="rate" type="DOUBLE"/>
+            <column name="issuer_id" type="BIGINT"/>
+            <column name="receiver_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-17">
+        <addUniqueConstraint columnNames="offer_id" constraintName="UC_ADDRESSOFFER_ID_COL" tableName="address"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-18">
+        <addUniqueConstraint columnNames="offer_id" constraintName="UC_ALBUMOFFER_ID_COL" tableName="album"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-19">
+        <addUniqueConstraint columnNames="title" constraintName="UC_ALBUMTITLE_COL" tableName="album"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-20">
+        <addUniqueConstraint columnNames="reciver_id" constraintName="UC_CONVERSATIONRECIVER_ID_COL" tableName="conversation"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-21">
+        <addUniqueConstraint columnNames="sender_id" constraintName="UC_CONVERSATIONSENDER_ID_COL" tableName="conversation"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-22">
+        <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-23">
+        <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-24">
+        <addUniqueConstraint columnNames="offer_id" constraintName="UC_MATCHOFFER_ID_COL" tableName="match"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-25">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_MATCHUSER_ID_COL" tableName="match"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-26">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_PROFILE_PICTUREUSER_ID_COL" tableName="profile_picture"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-27">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_QUESTIONNAIREUSER_ID_COL" tableName="questionnaire"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-28">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-29">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FK2ehnyx2si4tjd2nt4q7y40v8m" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="jhi_persistent_audit_event" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-30">
+        <addForeignKeyConstraint baseColumnNames="receiver_id" baseTableName="review" constraintName="FK3y2y8q9in7jbu52lwd1opufx1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-31">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-32">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="offer" constraintName="FK59avs7698cofijeajg6e55hqq" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-33">
+        <addForeignKeyConstraint baseColumnNames="conversation_id" baseTableName="message" constraintName="FK6yskk3hxw5sklwgi25y6d5u1l" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="conversation" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-34">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="match" constraintName="FK7cbqkksiy1u9s44x4n93bw4ry" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-35">
+        <addForeignKeyConstraint baseColumnNames="sender_id" baseTableName="conversation" constraintName="FKayxj4ub5nhmrrjepy2iihs7xd" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-36">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="address" constraintName="FKf63t4d1y4wktqvnjqxg4fg2vx" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="offer" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-37">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="album" constraintName="FKgbbnpqwg4f3d8yk0mwo9hxy29" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="offer" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-38">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="album" constraintName="FKlr4cpuxkxraom3em9n9xyd4rn" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-39">
+        <addForeignKeyConstraint baseColumnNames="reciver_id" baseTableName="conversation" constraintName="FKmcd7yga9y0faq5k34uwco4n0p" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-40">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="questionnaire" constraintName="FKmlqc0o6v2gn6yjduib1lu92m2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-41">
+        <addForeignKeyConstraint baseColumnNames="album_id" baseTableName="photo" constraintName="FKpy64km2p72eoy5rwh31ria0vx" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="album" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-42">
+        <addForeignKeyConstraint baseColumnNames="issuer_id" baseTableName="review" constraintName="FKq0oy6uqx8lotxd3omjs4p41cg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-43">
+        <addForeignKeyConstraint baseColumnNames="offer_id" baseTableName="match" constraintName="FKrbvp3o8gb4h9uyu782imb03ni" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="offer" validate="true"/>
+    </changeSet>
+    <changeSet author="albert (generated)" id="1559406559061-44">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="profile_picture" constraintName="FKsxuq53sug2v9pl6l8yxc0rn60" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

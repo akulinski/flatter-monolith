@@ -6,7 +6,6 @@ import com.flatter.server.repository.AlbumRepository;
 import com.flatter.server.repository.PhotoRepository;
 import com.flatter.server.service.PictureService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
-
 import domain.PhotoDTO;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -17,11 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -87,7 +85,9 @@ public class PhotoResource {
      */
     @PutMapping("/photos")
     public ResponseEntity<Photo> updatePhoto(@Valid @RequestBody Photo photo) throws URISyntaxException {
+
         log.debug("REST request to update Photo : {}", photo);
+
         if (photo.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -101,9 +101,9 @@ public class PhotoResource {
 
     @PostMapping("/add-photo-by-album-title")
     public ResponseEntity<Photo> addPhotoByAlbumTitle(PhotoDTO photoDTO) throws IOException {
-        log.debug("REST request to upload photo: {}",photoDTO);
+        log.debug("REST request to upload photo: {}", photoDTO);
 
-        Album album = albumRepository.findByTitle(photoDTO.getAlbumTitle()).orElseThrow(()->new IllegalStateException("Album not found"));
+        Album album = albumRepository.findByTitle(photoDTO.getAlbumTitle()).orElseThrow(() -> new IllegalStateException("Album not found"));
 
         Photo photo = new Photo();
         photo.setAlbum(album);
@@ -119,6 +119,7 @@ public class PhotoResource {
 
         return ResponseEntity.ok(photo);
     }
+
     /**
      * {@code GET  /photos} : get all the photos.
      *

@@ -1,16 +1,14 @@
 package com.flatter.server.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
 
 /**
  * A Photo.
@@ -54,8 +52,9 @@ public class Photo implements Serializable {
     @Column(name = "uploaded")
     private Instant uploaded;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Album album;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
