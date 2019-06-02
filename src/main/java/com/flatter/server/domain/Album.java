@@ -6,11 +6,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Album.
@@ -21,14 +21,14 @@ import java.util.Objects;
 public class Album implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     @Lob
@@ -38,13 +38,18 @@ public class Album implements Serializable {
     @Column(name = "created")
     private Instant created;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
+    @JsonIgnoreProperties(value = {"album"})
     private Offer offer;
 
     @ManyToOne
     @JsonIgnoreProperties("albums")
     private User user;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Photo> photos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -119,6 +124,31 @@ public class Album implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Set<Photo> getPhotos() {
+        return photos;
+    }
+
+    public Album onetomanies(Set<Photo> photos) {
+        this.photos = photos;
+        return this;
+    }
+
+    public Album addOnetomany(Photo photo) {
+        this.photos.add(photo);
+        photo.setAlbum(this);
+        return this;
+    }
+
+    public Album removeOnetomany(Photo photo) {
+        this.photos.remove(photo);
+        photo.setAlbum(null);
+        return this;
+    }
+
+    public void setPhotos(Set<Photo> photos) {
+        this.photos = photos;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -126,19 +156,15 @@ public class Album implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Album)) {
             return false;
         }
-        Album album = (Album) o;
-        if (album.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), album.getId());
+        return id != null && id.equals(((Album) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

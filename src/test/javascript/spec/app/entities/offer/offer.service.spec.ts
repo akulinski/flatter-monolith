@@ -8,113 +8,120 @@ import { OfferService } from 'app/entities/offer/offer.service';
 import { IOffer, Offer } from 'app/shared/model/offer.model';
 
 describe('Service Tests', () => {
-    describe('Offer Service', () => {
-        let injector: TestBed;
-        let service: OfferService;
-        let httpMock: HttpTestingController;
-        let elemDefault: IOffer;
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [HttpClientTestingModule]
-            });
-            injector = getTestBed();
-            service = injector.get(OfferService);
-            httpMock = injector.get(HttpTestingController);
+  describe('Offer Service', () => {
+    let injector: TestBed;
+    let service: OfferService;
+    let httpMock: HttpTestingController;
+    let elemDefault: IOffer;
+    let expectedResult;
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule]
+      });
+      expectedResult = {};
+      injector = getTestBed();
+      service = injector.get(OfferService);
+      httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Offer(0, 'AAAAAAA', 0, 0, 0, 'AAAAAAA', 0, false, false, false);
-        });
-
-        describe('Service methods', async () => {
-            it('should find an element', async () => {
-                const returnedFromService = Object.assign({}, elemDefault);
-                service
-                    .find(123)
-                    .pipe(take(1))
-                    .subscribe(resp => expect(resp).toMatchObject({ body: elemDefault }));
-
-                const req = httpMock.expectOne({ method: 'GET' });
-                req.flush(JSON.stringify(returnedFromService));
-            });
-
-            it('should create a Offer', async () => {
-                const returnedFromService = Object.assign(
-                    {
-                        id: 0
-                    },
-                    elemDefault
-                );
-                const expected = Object.assign({}, returnedFromService);
-                service
-                    .create(new Offer(null))
-                    .pipe(take(1))
-                    .subscribe(resp => expect(resp).toMatchObject({ body: expected }));
-                const req = httpMock.expectOne({ method: 'POST' });
-                req.flush(JSON.stringify(returnedFromService));
-            });
-
-            it('should update a Offer', async () => {
-                const returnedFromService = Object.assign(
-                    {
-                        description: 'BBBBBB',
-                        totalCost: 1,
-                        roomAmount: 1,
-                        size: 1,
-                        type: 'BBBBBB',
-                        constructionYear: 1,
-                        pets: true,
-                        smokingInside: true,
-                        isFurnished: true
-                    },
-                    elemDefault
-                );
-
-                const expected = Object.assign({}, returnedFromService);
-                service
-                    .update(expected)
-                    .pipe(take(1))
-                    .subscribe(resp => expect(resp).toMatchObject({ body: expected }));
-                const req = httpMock.expectOne({ method: 'PUT' });
-                req.flush(JSON.stringify(returnedFromService));
-            });
-
-            it('should return a list of Offer', async () => {
-                const returnedFromService = Object.assign(
-                    {
-                        description: 'BBBBBB',
-                        totalCost: 1,
-                        roomAmount: 1,
-                        size: 1,
-                        type: 'BBBBBB',
-                        constructionYear: 1,
-                        pets: true,
-                        smokingInside: true,
-                        isFurnished: true
-                    },
-                    elemDefault
-                );
-                const expected = Object.assign({}, returnedFromService);
-                service
-                    .query(expected)
-                    .pipe(
-                        take(1),
-                        map(resp => resp.body)
-                    )
-                    .subscribe(body => expect(body).toContainEqual(expected));
-                const req = httpMock.expectOne({ method: 'GET' });
-                req.flush(JSON.stringify([returnedFromService]));
-                httpMock.verify();
-            });
-
-            it('should delete a Offer', async () => {
-                const rxPromise = service.delete(123).subscribe(resp => expect(resp.ok));
-
-                const req = httpMock.expectOne({ method: 'DELETE' });
-                req.flush({ status: 200 });
-            });
-        });
-
-        afterEach(() => {
-            httpMock.verify();
-        });
+      elemDefault = new Offer(0, 'AAAAAAA', 0, 0, 0, 'AAAAAAA', 0, false, false, false);
     });
+
+    describe('Service methods', () => {
+      it('should find an element', async () => {
+        const returnedFromService = Object.assign({}, elemDefault);
+        service
+          .find(123)
+          .pipe(take(1))
+          .subscribe(resp => (expectedResult = resp));
+
+        const req = httpMock.expectOne({ method: 'GET' });
+        req.flush(returnedFromService);
+        expect(expectedResult).toMatchObject({ body: elemDefault });
+      });
+
+      it('should create a Offer', async () => {
+        const returnedFromService = Object.assign(
+          {
+            id: 0
+          },
+          elemDefault
+        );
+        const expected = Object.assign({}, returnedFromService);
+        service
+          .create(new Offer(null))
+          .pipe(take(1))
+          .subscribe(resp => (expectedResult = resp));
+        const req = httpMock.expectOne({ method: 'POST' });
+        req.flush(returnedFromService);
+        expect(expectedResult).toMatchObject({ body: expected });
+      });
+
+      it('should update a Offer', async () => {
+        const returnedFromService = Object.assign(
+          {
+            description: 'BBBBBB',
+            totalCost: 1,
+            roomAmount: 1,
+            size: 1,
+            type: 'BBBBBB',
+            constructionYear: 1,
+            pets: true,
+            smokingInside: true,
+            isFurnished: true
+          },
+          elemDefault
+        );
+
+        const expected = Object.assign({}, returnedFromService);
+        service
+          .update(expected)
+          .pipe(take(1))
+          .subscribe(resp => (expectedResult = resp));
+        const req = httpMock.expectOne({ method: 'PUT' });
+        req.flush(returnedFromService);
+        expect(expectedResult).toMatchObject({ body: expected });
+      });
+
+      it('should return a list of Offer', async () => {
+        const returnedFromService = Object.assign(
+          {
+            description: 'BBBBBB',
+            totalCost: 1,
+            roomAmount: 1,
+            size: 1,
+            type: 'BBBBBB',
+            constructionYear: 1,
+            pets: true,
+            smokingInside: true,
+            isFurnished: true
+          },
+          elemDefault
+        );
+        const expected = Object.assign({}, returnedFromService);
+        service
+          .query(expected)
+          .pipe(
+            take(1),
+            map(resp => resp.body)
+          )
+          .subscribe(body => (expectedResult = body));
+        const req = httpMock.expectOne({ method: 'GET' });
+        req.flush([returnedFromService]);
+        httpMock.verify();
+        expect(expectedResult).toContainEqual(expected);
+      });
+
+      it('should delete a Offer', async () => {
+        const rxPromise = service.delete(123).subscribe(resp => (expectedResult = resp.ok));
+
+        const req = httpMock.expectOne({ method: 'DELETE' });
+        req.flush({ status: 200 });
+        expect(expectedResult);
+      });
+    });
+
+    afterEach(() => {
+      httpMock.verify();
+    });
+  });
 });

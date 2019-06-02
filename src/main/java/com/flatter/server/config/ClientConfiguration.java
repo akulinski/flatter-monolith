@@ -18,4 +18,7 @@ public class ClientConfiguration {
         ObjectFactory<HttpMessageConverters> objectFactory = () -> new HttpMessageConverters(jacksonConverter);
         return new SpringEncoder(objectFactory);
     }
+
+
+
 }

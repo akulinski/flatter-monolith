@@ -14,80 +14,80 @@ import { IMatch } from 'app/shared/model/match.model';
 
 @Injectable({ providedIn: 'root' })
 export class MatchResolve implements Resolve<IMatch> {
-    constructor(private service: MatchService) {}
+  constructor(private service: MatchService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IMatch> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Match>) => response.ok),
-                map((match: HttpResponse<Match>) => match.body)
-            );
-        }
-        return of(new Match());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IMatch> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Match>) => response.ok),
+        map((match: HttpResponse<Match>) => match.body)
+      );
     }
+    return of(new Match());
+  }
 }
 
 export const matchRoute: Routes = [
-    {
-        path: '',
-        component: MatchComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Matches'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: MatchComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Matches'
     },
-    {
-        path: ':id/view',
-        component: MatchDetailComponent,
-        resolve: {
-            match: MatchResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Matches'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: MatchDetailComponent,
+    resolve: {
+      match: MatchResolve
     },
-    {
-        path: 'new',
-        component: MatchUpdateComponent,
-        resolve: {
-            match: MatchResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Matches'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Matches'
     },
-    {
-        path: ':id/edit',
-        component: MatchUpdateComponent,
-        resolve: {
-            match: MatchResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Matches'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: MatchUpdateComponent,
+    resolve: {
+      match: MatchResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Matches'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: MatchUpdateComponent,
+    resolve: {
+      match: MatchResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Matches'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const matchPopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: MatchDeletePopupComponent,
-        resolve: {
-            match: MatchResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Matches'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: MatchDeletePopupComponent,
+    resolve: {
+      match: MatchResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Matches'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

@@ -18,7 +18,7 @@ import java.util.Objects;
 public class Questionnaire implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -248,19 +248,15 @@ public class Questionnaire implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Questionnaire)) {
             return false;
         }
-        Questionnaire questionnaire = (Questionnaire) o;
-        if (questionnaire.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), questionnaire.getId());
+        return id != null && id.equals(((Questionnaire) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

@@ -5,11 +5,13 @@ import com.flatter.server.domain.User;
 import com.flatter.server.repository.ReviewRepository;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
-import com.flatter.server.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Review.
+ * REST controller for managing {@link com.flatter.server.domain.Review}.
  */
 @RestController
 @RequestMapping("/api")
@@ -31,6 +33,9 @@ public class ReviewResource {
     private final Logger log = LoggerFactory.getLogger(ReviewResource.class);
 
     private static final String ENTITY_NAME = "review";
+
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
 
     private final ReviewRepository reviewRepository;
 
@@ -43,11 +48,11 @@ public class ReviewResource {
     }
 
     /**
-     * POST  /reviews : Create a new review.
+     * {@code POST  /reviews} : Create a new review.
      *
-     * @param review the review to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new review, or with status 400 (Bad Request) if the review has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param review the review to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new review, or with status {@code 400 (Bad Request)} if the review has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/reviews")
     public ResponseEntity<Review> createReview(@RequestBody Review review) throws URISyntaxException {
@@ -57,18 +62,18 @@ public class ReviewResource {
         }
         Review result = reviewRepository.save(review);
         return ResponseEntity.created(new URI("/api/reviews/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /reviews : Updates an existing review.
+     * {@code PUT  /reviews} : Updates an existing review.
      *
-     * @param review the review to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated review,
-     * or with status 400 (Bad Request) if the review is not valid,
-     * or with status 500 (Internal Server Error) if the review couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param review the review to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated review,
+     * or with status {@code 400 (Bad Request)} if the review is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the review couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/reviews")
     public ResponseEntity<Review> updateReview(@RequestBody Review review) throws URISyntaxException {
@@ -78,14 +83,14 @@ public class ReviewResource {
         }
         Review result = reviewRepository.save(review);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, review.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, review.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /reviews : get all the reviews.
+     * {@code GET  /reviews} : get all the reviews.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of reviews in body
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of reviews in body.
      */
     @GetMapping("/reviews")
     public List<Review> getAllReviews() {
@@ -94,10 +99,10 @@ public class ReviewResource {
     }
 
     /**
-     * GET  /reviews/:id : get the "id" review.
+     * {@code GET  /reviews/:id} : get the "id" review.
      *
-     * @param id the id of the review to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the review, or with status 404 (Not Found)
+     * @param id the id of the review to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the review, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/reviews/{id}")
     public ResponseEntity<Review> getReview(@PathVariable Long id) {
@@ -107,16 +112,16 @@ public class ReviewResource {
     }
 
     /**
-     * DELETE  /reviews/:id : delete the "id" review.
+     * {@code DELETE  /reviews/:id} : delete the "id" review.
      *
-     * @param id the id of the review to delete
-     * @return the ResponseEntity with status 200 (OK)
+     * @param id the id of the review to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/reviews/{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
         log.debug("REST request to delete Review : {}", id);
         reviewRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 
     /**
@@ -134,4 +139,6 @@ public class ReviewResource {
             return new ResponseEntity<>(new LinkedList<>(), HttpStatus.NOT_FOUND);
         }
     }
+
+
 }
