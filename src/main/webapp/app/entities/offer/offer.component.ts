@@ -1,18 +1,19 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks} from 'ng-jhipster';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
-import {IOffer} from 'app/shared/model/offer.model';
-import {AccountService} from 'app/core';
+import { IOffer } from 'app/shared/model/offer.model';
+import { AccountService } from 'app/core';
 
-import {ITEMS_PER_PAGE} from 'app/shared';
-import {OfferService} from './offer.service';
+import { ITEMS_PER_PAGE } from 'app/shared';
+import { OfferService } from './offer.service';
 
 @Component({
   selector: 'jhi-offer',
-  templateUrl: './offer.component.html'
+  templateUrl: './offer.component.html',
+  styleUrls: ['./offer.component.scss']
 })
 export class OfferComponent implements OnInit, OnDestroy {
   currentAccount: any;
