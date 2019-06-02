@@ -3,9 +3,10 @@ import { RouterModule } from '@angular/router';
 
 import { FlatterservermonolithSharedModule } from 'app/shared';
 import { HOME_ROUTE, HomeComponent } from './';
+import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 
 @NgModule({
-  imports: [FlatterservermonolithSharedModule, RouterModule.forChild([HOME_ROUTE])],
+  imports: [FlatterservermonolithSharedModule, RouterModule.forChild([HOME_ROUTE]), MatButtonModule, MatCheckboxModule],
   declarations: [HomeComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
