@@ -370,7 +370,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.flatter</groupId>
+            <groupId>com.github.akulinski</groupId>
             <artifactId>flatter-COMMON</artifactId>
             <version>0.0.5</version>
             <scope>compile</scope>
