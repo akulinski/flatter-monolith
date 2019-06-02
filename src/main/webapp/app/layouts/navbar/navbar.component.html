@@ -19,7 +19,7 @@
 
             <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
 
-            <a class="nav-link" routerLink="offer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+            <a class="nav-link" routerLink="offer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()" *ngIf="isAuthenticated()">
                 <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
                 <span>Offer</span>
             </a>

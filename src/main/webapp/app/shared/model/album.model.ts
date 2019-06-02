@@ -10,7 +10,7 @@ export interface IAlbum {
   created?: Moment;
   offer?: IOffer;
   user?: IUser;
-  onetomanies?: IPhoto[];
+  photos?: IPhoto[];
 }
 
 export class Album implements IAlbum {
@@ -21,6 +21,6 @@ export class Album implements IAlbum {
     public created?: Moment,
     public offer?: IOffer,
     public user?: IUser,
-    public onetomanies?: IPhoto[]
+    public photos?: IPhoto[]
   ) {}
 }

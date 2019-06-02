@@ -1,23 +1,25 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
 
-import { FlatterservermonolithSharedModule } from 'app/shared';
+import {FlatterservermonolithSharedModule} from 'app/shared';
 import {
   OfferComponent,
-  OfferDetailComponent,
-  OfferUpdateComponent,
-  OfferDeletePopupComponent,
   OfferDeleteDialogComponent,
+  OfferDeletePopupComponent,
+  OfferDetailComponent,
+  offerPopupRoute,
   offerRoute,
-  offerPopupRoute
+  OfferUpdateComponent
 } from './';
+import {MatGridListModule, MatTabsModule} from '@angular/material';
 
 const ENTITY_STATES = [...offerRoute, ...offerPopupRoute];
 
 @NgModule({
-  imports: [FlatterservermonolithSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [FlatterservermonolithSharedModule, RouterModule.forChild(ENTITY_STATES), MatGridListModule, MatTabsModule],
   declarations: [OfferComponent, OfferDetailComponent, OfferUpdateComponent, OfferDeleteDialogComponent, OfferDeletePopupComponent],
   entryComponents: [OfferComponent, OfferUpdateComponent, OfferDeleteDialogComponent, OfferDeletePopupComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class FlatterservermonolithOfferModule {}
+export class FlatterservermonolithOfferModule {
+}

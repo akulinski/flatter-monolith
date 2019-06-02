@@ -2,10 +2,8 @@ package com.flatter.server.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -55,6 +53,8 @@ public class Photo implements Serializable {
     private Instant uploaded;
 
     @ManyToOne
+    @JoinColumn
+    @JsonIgnoreProperties(value = "photos")
     private Album album;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

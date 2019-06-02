@@ -5,56 +5,58 @@
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
-                <dt><span>Description</span></dt>
-                <dd>
-                    <span>{{offer.description}}</span>
-                </dd>
-                <dt><span>Total Cost</span></dt>
-                <dd>
-                    <span>{{offer.totalCost}}</span>
-                </dd>
-                <dt><span>Room Amount</span></dt>
-                <dd>
-                    <span>{{offer.roomAmount}}</span>
-                </dd>
-                <dt><span>Size</span></dt>
-                <dd>
-                    <span>{{offer.size}}</span>
-                </dd>
-                <dt><span>Type</span></dt>
-                <dd>
-                    <span>{{offer.type}}</span>
-                </dd>
-                <dt><span>Construction Year</span></dt>
-                <dd>
-                    <span>{{offer.constructionYear}}</span>
-                </dd>
-                <dt><span>Pets</span></dt>
-                <dd>
-                    <span>{{offer.pets}}</span>
-                </dd>
-                <dt><span>Smoking Inside</span></dt>
-                <dd>
-                    <span>{{offer.smokingInside}}</span>
-                </dd>
-                <dt><span>Is Furnished</span></dt>
-                <dd>
-                    <span>{{offer.isFurnished}}</span>
-                </dd>
-                <dt><span>User</span></dt>
-                <dd>
-                    {{offer.user?.login}}
-                </dd>
+                <mat-card>
+                    <mat-grid-list cols="4" rowHeight="200px">
+                        <mat-grid-tile
+                            *ngFor="let photo of offer.album.photos"
+                            [colspan]="1"
+                            [rowspan]="1">
+                            <div class="img-container">
+                                <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image"
+                                     style="max-width: 100%;" alt="photo image"/>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
 
-                <dd>
-                    <ul *ngFor="let photo of offer.album?.onetomanies">
+                    <dt><span>Description</span></dt>
+                    <dd>
+                        <span>{{offer.description}}</span>
+                    </dd>
+                    <dt><span>Total Cost</span></dt>
+                    <dd>
+                        <span>{{offer.totalCost}}</span>
+                    </dd>
+                    <dt><span>Room Amount</span></dt>
+                    <dd>
+                        <span>{{offer.roomAmount}}</span>
+                    </dd>
+                    <dt><span>Size</span></dt>
+                    <dd>
+                        <span>{{offer.size}} m^2</span>
+                    </dd>
 
-                        <li>
-                            <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image" style="max-width: 100%;" alt="photo image"/>
-                        </li>
-                    </ul>
+                    <dt><span>Construction Year</span></dt>
+                    <dd>
+                        <span>{{offer.constructionYear}}</span>
+                    </dd>
+                    <dt><span>Pets</span></dt>
+                    <dd>
+                        <span *ngIf="offer.pets; else no">Yes</span>
+                    </dd>
+                    <dt><span>Smoking Inside</span></dt>
+                    <dd>
+                        <span *ngIf="offer.smokingInside; else no">Yes</span>
+                    </dd>
+                    <dt><span>Is Furnished</span></dt>
+                    <dd>
+                        <span *ngIf="offer.isFurnished; else no">Yes</span>
 
-                </dd>
+                    </dd>
+
+                    <ng-template #no>
+                        <span>No</span>
+                    </ng-template>
+                </mat-card>
             </dl>
 
             <button type="submit"
