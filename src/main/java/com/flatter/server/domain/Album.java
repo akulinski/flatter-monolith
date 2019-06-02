@@ -129,22 +129,6 @@ public class Album implements Serializable {
         return photos;
     }
 
-    public Album onetomanies(Set<Photo> photos) {
-        this.photos = photos;
-        return this;
-    }
-
-    public Album addOnetomany(Photo photo) {
-        this.photos.add(photo);
-        photo.setAlbum(this);
-        return this;
-    }
-
-    public Album removeOnetomany(Photo photo) {
-        this.photos.remove(photo);
-        photo.setAlbum(null);
-        return this;
-    }
 
     public void setPhotos(Set<Photo> photos) {
         this.photos = photos;
