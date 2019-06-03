@@ -108,6 +108,10 @@ export class OfferComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
+  isAuthenticated() {
+    return this.accountService.isAuthenticated();
+  }
+
   byteSize(field) {
     return this.dataUtils.byteSize(field);
   }
