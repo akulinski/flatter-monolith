@@ -10,6 +10,40 @@ Main page styles
   background-size: contain;
 }
 
+mat-grid-tile {
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+mat-grid-list {
+  padding-top: 100px;
+}
+
+
+.container {
+  width: 100%;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.container img {
+  object-fit: cover;
+}
+
+.bottom-left {
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
+}
+
+button {
+  position: absolute;
+  right: 20px;
+  bottom: 8px;
+}
+
+
 /* wait autoprefixer update to allow simple generation of high pixel density media query */
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
   only screen and (-moz-min-device-pixel-ratio: 2),
