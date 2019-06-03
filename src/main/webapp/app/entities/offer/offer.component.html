@@ -12,30 +12,36 @@
     <jhi-alert></jhi-alert>
     <br/>
 
-    <div class="main-div" *ngFor="let offer of offers">
-    <mat-card class="example-card" >
-        <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title>Shiba Inu</mat-card-title>
-            <mat-card-subtitle>Lublin, ul. Lenonarda 5</mat-card-subtitle>
-        </mat-card-header>
-        <img mat-card-image src="https://s-ec.bstatic.com/images/hotel/max1024x768/735/73580604.jpg" alt="Apartment">
-        <mat-card-content>
-            <p>
-                {{offer.description}}
-            </p>
-            <p>
-                {{offer.totalCost}} $
-            </p>
-        </mat-card-content>
-        <mat-card-actions>
-            <a [routerLink]="['/offer', offer.id, 'view' ]"><button mat-button>show</button></a>
-        </mat-card-actions>
-    </mat-card>
-</div>
+    <!---
+    <div class="cards">
+        <mat-card *jhiHasAnyAuthority="'ROLE_USER'" class="example-card" *ngFor="let offer of offers">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image" style="background-image: url()"></div>
+                <mat-card-title>{{offer.user.firstName}} {{offer.user.lastName}}</mat-card-title>
+                <mat-card-subtitle>{{offer.address.street}}, {{offer.address.city}}</mat-card-subtitle>
+            </mat-card-header>
+            <img mat-card-image src="https://s-ec.bstatic.com/images/hotel/max1024x768/735/73580604.jpg"
+                 alt="Apartment">
+            <mat-card-content>
+                <p>
+                    {{offer.description}}
+                </p>
+                <p>
+                    {{offer.totalCost}} $
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <a>
+                    <button mat-button [routerLink]="['/offer', offer.id, 'view' ]" >show</button>
+                </a>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    -->
 
-    <div class="table-responsive" *ngIf="offers">
-        <table class="table table-striped">
+
+    <div class="table-responsive" *ngIf="offers" >
+        <table *jhiHasAnyAuthority="'ROLE_ADMIN'" class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
                 <th jhiSortBy="id"><span>ID</span>
