@@ -35,40 +35,28 @@
                                         <div class="text-wrapper">
                                             <mat-divider class="thin"></mat-divider>
 
-                                            <mat-list>
-                                                <mat-list-item>
-                                                    <mat-icon class="list-element" svgIcon="rooms" aria-hidden="false"
-                                                              aria-label="rooms"></mat-icon>
-                                                    {{offer.roomAmount}}
+                                            <div class="offer-content">
+                                                <mat-icon class="list-element" svgIcon="date" aria-hidden="false"
+                                                          aria-label="date"></mat-icon>
 
-                                                </mat-list-item>
+                                                {{offer.constructionYear}}
 
-                                                <mat-list-item>
-                                                    <mat-icon class="list-element" svgIcon="area" aria-hidden="false"
-                                                              aria-label="area"></mat-icon>
+                                                <mat-icon class="list-element" svgIcon="money" aria-hidden="false"
+                                                          aria-label="money"></mat-icon>
 
-                                                    {{offer.size}} m2
+                                                {{offer.totalCost}}
 
-                                                </mat-list-item>
 
-                                                <mat-list-item>
-                                                    <mat-icon class="list-element" svgIcon="money" aria-hidden="false"
-                                                              aria-label="money"></mat-icon>
+                                                <mat-icon class="list-element" svgIcon="area" aria-hidden="false"
+                                                          aria-label="area"></mat-icon>
 
-                                                    {{offer.totalCost}}
+                                                {{offer.size}} m2
 
-                                                </mat-list-item>
+                                                <mat-icon class="list-element" svgIcon="rooms" aria-hidden="false"
+                                                          aria-label="rooms"></mat-icon>
+                                                {{offer.roomAmount}}
 
-                                                <mat-list-item>
-                                                    <mat-icon class="list-element" svgIcon="date" aria-hidden="false"
-                                                              aria-label="date"></mat-icon>
-
-                                                    {{offer.constructionYear}}
-
-                                                </mat-list-item>
-
-                                            </mat-list>
-
+                                            </div>
 
                                             <mat-divider class="thin"></mat-divider>
                                             <ng-template #no>

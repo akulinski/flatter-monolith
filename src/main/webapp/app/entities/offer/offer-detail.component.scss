@@ -1,69 +1,73 @@
-.img-card{
+.img-card {
   object-fit: cover;
-
 }
 
-.card-content{
+.offer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-content {
   padding-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.img-round{
+.img-round {
   border-radius: 20px;
-  box-shadow: 0 19px 38px rgba(0,0,0,0.30),
-  0 15px 12px rgba(0,0,0,0.22);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   max-height: 300px;
   max-width: 500px;
 }
 
-.bold{
+.bold {
   font-weight: bold;
   width: 100%;
   position: center;
 }
 
-.text-wrapper{
+.text-wrapper {
   width: 100%;
-
 }
 
-.next-button{
+.next-button {
   background-color: Transparent;
-  background-repeat:no-repeat;
+  background-repeat: no-repeat;
   border: none;
-  cursor:pointer;
+  cursor: pointer;
   overflow: hidden;
-  outline:none;
-
+  outline: none;
 }
 
-.prev-button{
+.prev-button {
   background-color: Transparent;
-  background-repeat:no-repeat;
+  background-repeat: no-repeat;
   border: none;
-  cursor:pointer;
+  cursor: pointer;
   overflow: hidden;
-  outline:none;
+  outline: none;
 }
-.list-element{
-  margin-right: 20px;
+.list-element {
+  margin-right: 4px;
+  margin-left: 7px;
 }
-.img-wrapper{
+.img-wrapper {
   display: flex;
   flex-direction: row;
 }
 
-.thin{
+.thin {
 }
 
 .text-wrapper {
   align-items: center;
 
-  .bold{
+  .bold {
     height: 50px;
     width: inherit;
     text-align: center;
     display: table-cell; // this says treat this element like a table cell
     vertical-align: middle; //now we can center vertically like in a TD
   }
-
 }
