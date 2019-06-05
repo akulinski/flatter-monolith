@@ -5,9 +5,7 @@ import com.flatter.server.domain.Message;
 import com.flatter.server.repository.ConversationRepository;
 import com.flatter.server.repository.MessageRepository;
 import com.flatter.server.repository.UserRepository;
-import com.flatter.server.service.kafka.MessageConsumerChannel;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -65,8 +63,6 @@ public class MessageResourceIT {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private MessageConsumerChannel messageProducerChannel;
 
     @Autowired
     private EntityManager em;
@@ -81,7 +77,7 @@ public class MessageResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final MessageResource messageResource = new MessageResource(messageRepository,conversationRepository,userRepository,messageProducerChannel);
+        final MessageResource messageResource = new MessageResource(messageRepository, conversationRepository, userRepository);
         this.restMessageMockMvc = MockMvcBuilders.standaloneSetup(messageResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -92,7 +88,7 @@ public class MessageResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -103,9 +99,10 @@ public class MessageResourceIT {
             .isSeen(DEFAULT_IS_SEEN);
         return message;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -177,7 +174,7 @@ public class MessageResourceIT {
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].isSeen").value(hasItem(DEFAULT_IS_SEEN.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getMessage() throws Exception {
