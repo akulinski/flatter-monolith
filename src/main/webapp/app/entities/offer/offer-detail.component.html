@@ -1,75 +1,98 @@
-<div class="row justify-content-center">
-    <div class="col-8">
-        <div *ngIf="offer">
-            <h2><span>Offer</span> {{offer.id}}</h2>
-            <hr>
-            <jhi-alert-error></jhi-alert-error>
-            <dl class="row-md jh-entity-details">
-                <mat-card>
-                    <mat-grid-list cols="4" rowHeight="200px">
-                        <mat-grid-tile
-                            *ngFor="let photo of offer.album.photos"
-                            [colspan]="1"
-                            [rowspan]="1">
-                            <div class="img-container">
-                                <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image"
-                                     style="max-width: 100%;" alt="photo image"/>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div *ngIf="offer">
+                <h2><span>Offer</span> {{offer.id}}</h2>
+                <hr>
+                <jhi-alert-error></jhi-alert-error>
+                <dl class="row-md jh-entity-details">
+
+                    <div class="row">
+
+                        <div class="col-sm">
+                            <div class="img-wrapper">
+
+                                <mat-card class="img-card">
+
+                                    <div class="img-wrapper">
+                                        <button mat-button class="next-button" (click)="prevPhoto()">
+
+                                            <mat-icon svgIcon="left" aria-hidden="false" aria-label="back"></mat-icon>
+
+                                        </button>
+                                        <img class="img-round"
+                                             [src]="'data:' + currentPhoto.imageContentType + ';base64,' + currentPhoto.image"
+                                             style="max-width: 100%;" alt="photo image"/>
+
+                                        <button mat-button class="prev-button" (click)="nextPhoto()">
+                                            <mat-icon svgIcon="right" aria-hidden="false"
+                                                      aria-label="forward"></mat-icon>
+                                        </button>
+
+                                    </div>
+                                    <mat-card-content class="card-content">
+
+                                        <div class="text-wrapper">
+                                            <mat-divider class="thin"></mat-divider>
+
+                                            <div class="offer-content">
+                                                <mat-icon class="list-element" svgIcon="date" aria-hidden="false"
+                                                          aria-label="date"></mat-icon>
+
+                                                {{offer.constructionYear}}
+
+                                                <mat-icon class="list-element" svgIcon="money" aria-hidden="false"
+                                                          aria-label="money"></mat-icon>
+
+                                                {{offer.totalCost}}
+
+
+                                                <mat-icon class="list-element" svgIcon="area" aria-hidden="false"
+                                                          aria-label="area"></mat-icon>
+
+                                                {{offer.size}} m2
+
+                                                <mat-icon class="list-element" svgIcon="rooms" aria-hidden="false"
+                                                          aria-label="rooms"></mat-icon>
+                                                {{offer.roomAmount}}
+
+                                            </div>
+
+                                            <mat-divider class="thin"></mat-divider>
+                                            <ng-template #no>
+                                                <span>No</span>
+                                            </ng-template>
+                                        </div>
+                                    </mat-card-content>
+
+
+                                    <mat-card-actions>
+                                        <button type="submit"
+                                                (click)="previousState()"
+                                                class="btn btn-info">
+                                            <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+                                        </button>
+
+                                        <button type="button" *jhiHasAnyAuthority="'ROLE_ADMIN'"
+                                                [routerLink]="['/offer', offer.id, 'edit']"
+                                                class="btn btn-primary">
+                                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+                                        </button>
+                                    </mat-card-actions>
+
+                                </mat-card>
+
+
                             </div>
-                        </mat-grid-tile>
-                    </mat-grid-list>
+                        </div>
 
-                    <dt><span>Description</span></dt>
-                    <dd>
-                        <span>{{offer.description}}</span>
-                    </dd>
-                    <dt><span>Total Cost</span></dt>
-                    <dd>
-                        <span>{{offer.totalCost}}</span>
-                    </dd>
-                    <dt><span>Room Amount</span></dt>
-                    <dd>
-                        <span>{{offer.roomAmount}}</span>
-                    </dd>
-                    <dt><span>Size</span></dt>
-                    <dd>
-                        <span>{{offer.size}} m^2</span>
-                    </dd>
 
-                    <dt><span>Construction Year</span></dt>
-                    <dd>
-                        <span>{{offer.constructionYear}}</span>
-                    </dd>
-                    <dt><span>Pets</span></dt>
-                    <dd>
-                        <span *ngIf="offer.pets; else no">Yes</span>
-                    </dd>
-                    <dt><span>Smoking Inside</span></dt>
-                    <dd>
-                        <span *ngIf="offer.smokingInside; else no">Yes</span>
-                    </dd>
-                    <dt><span>Is Furnished</span></dt>
-                    <dd>
-                        <span *ngIf="offer.isFurnished; else no">Yes</span>
+                    </div>
 
-                    </dd>
+                </dl>
 
-                    <ng-template #no>
-                        <span>No</span>
-                    </ng-template>
-                </mat-card>
-            </dl>
 
-            <button type="submit"
-                    (click)="previousState()"
-                    class="btn btn-info">
-                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
-            </button>
-
-            <button type="button"
-                    [routerLink]="['/offer', offer.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
-            </button>
+            </div>
         </div>
     </div>
 </div>
