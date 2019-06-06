@@ -5,9 +5,7 @@ import com.flatter.server.domain.Message;
 import com.flatter.server.repository.ConversationRepository;
 import com.flatter.server.repository.MessageRepository;
 import com.flatter.server.repository.UserRepository;
-import com.flatter.server.service.kafka.MessageConsumerChannel;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
-
 import domain.MessageDTO;
 import domain.events.MessageSentEvent;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -16,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,13 +43,11 @@ public class MessageResource {
 
     private final UserRepository userRepository;
 
-    private final MessageChannel messageChannel;
 
-    public MessageResource(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository, MessageConsumerChannel messageConsumerChannel) {
+    public MessageResource(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
-        this.messageChannel = messageConsumerChannel.anOutput();
     }
 
     /**
@@ -95,8 +89,6 @@ public class MessageResource {
 
         MessageSentEvent messageSentEvent = new MessageSentEvent();
         messageSentEvent.setMessageDTO(messageDTO);
-
-        messageChannel.send(MessageBuilder.withPayload(messageSentEvent).build());
 
         return ResponseEntity.ok(message);
     }
