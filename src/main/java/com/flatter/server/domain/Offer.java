@@ -61,7 +61,7 @@ public class Offer implements Serializable {
     @JsonIgnoreProperties(value = {"offers"})
     private User user;
 
-    @OneToOne(mappedBy = "offer")
+    @OneToOne(mappedBy = "offer", cascade =CascadeType.ALL)
     private Address address;
 
     @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
