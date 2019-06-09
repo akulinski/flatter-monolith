@@ -1,24 +1,21 @@
 package com.flatter.server.web.rest;
 
 import com.flatter.server.domain.Questionnaire;
-import com.flatter.server.domain.User;
 import com.flatter.server.repository.QuestionnaireRepository;
-import com.flatter.server.repository.UserRepository;
-import com.flatter.server.web.feign.FeignUserClient;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.Principal;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -38,15 +35,8 @@ public class QuestionnaireResource {
 
     private final QuestionnaireRepository questionnaireRepository;
 
-    private final UserRepository userRepository;
-
-    private final FeignUserClient feignUserClient;
-
-    @Autowired
-    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository, FeignUserClient feignUserClient) {
+    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository) {
         this.questionnaireRepository = questionnaireRepository;
-        this.userRepository = userRepository;
-        this.feignUserClient = feignUserClient;
     }
 
     /**
@@ -57,19 +47,12 @@ public class QuestionnaireResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/questionnaires")
-    public ResponseEntity<Questionnaire> createQuestionnaire(@RequestBody Questionnaire questionnaire, Principal principal) throws URISyntaxException {
+    public ResponseEntity<Questionnaire> createQuestionnaire(@Valid @RequestBody Questionnaire questionnaire) throws URISyntaxException {
         log.debug("REST request to save Questionnaire : {}", questionnaire);
         if (questionnaire.getId() != null) {
             throw new BadRequestAlertException("A new questionnaire cannot already have an ID", ENTITY_NAME, "idexists");
         }
-
-        Optional<User> user = userRepository.findOneByLogin(principal.getName());
-
-        user.ifPresent(questionnaire::setUser);
-
         Questionnaire result = questionnaireRepository.save(questionnaire);
-
-        feignUserClient.addUser(result);
         return ResponseEntity.created(new URI("/api/questionnaires/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -85,14 +68,12 @@ public class QuestionnaireResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/questionnaires")
-    public ResponseEntity<Questionnaire> updateQuestionnaire(@RequestBody Questionnaire questionnaire) throws URISyntaxException {
+    public ResponseEntity<Questionnaire> updateQuestionnaire(@Valid @RequestBody Questionnaire questionnaire) throws URISyntaxException {
         log.debug("REST request to update Questionnaire : {}", questionnaire);
         if (questionnaire.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-
         Questionnaire result = questionnaireRepository.save(questionnaire);
-
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, questionnaire.getId().toString()))
             .body(result);

@@ -43,6 +43,10 @@ import { RouterModule } from '@angular/router';
       {
         path: 'profile-picture',
         loadChildren: './profile-picture/profile-picture.module#FlatterservermonolithProfilePictureModule'
+      },
+      {
+        path: 'questionnaire',
+        loadChildren: './questionnaire/questionnaire.module#FlatterservermonolithQuestionnaireModule'
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

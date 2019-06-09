@@ -16,4 +16,5 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     @Query("select offer from Offer offer where offer.user.login = ?#{principal.username}")
     List<Offer> findByUserIsCurrentUser();
 
+    List<Offer> findByAddress_City(String city);
 }
