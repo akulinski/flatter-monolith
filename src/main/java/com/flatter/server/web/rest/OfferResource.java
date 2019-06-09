@@ -95,7 +95,7 @@ public class OfferResource {
 
         offer.getAlbum().setOffer(offer);
         offer.getAddress().setOffer(offer);
-        
+
         offer.setUser(user);
 
         Offer result = offerRepository.save(offer);
@@ -185,6 +185,11 @@ public class OfferResource {
     public ResponseEntity<Offer> getOffer(@PathVariable Long id) {
         log.debug("REST request to get Offer : {}", id);
         Optional<Offer> offer = offerRepository.findById(id);
+        if (offer.isPresent()) {
+            final Offer tmp = offer.get();
+            tmp.addView();
+            offerRepository.save(tmp);
+        }
         return ResponseUtil.wrapOrNotFound(offer);
     }
 
@@ -266,4 +271,22 @@ public class OfferResource {
         log.debug(String.format("Created offer %s", fullOfferDTO.toString()));
         return offer;
     }
+
+
+    /**
+     * Returns top 3 offers in city where user is located.
+     * User has to fill questionnaire first
+     *
+     * @param principal
+     * @return
+     */
+    @GetMapping("/offers/get-top-3")
+    public ResponseEntity getTopThree(Principal principal) {
+
+        User user = userRepository.findOneByLogin(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("Principal name not found in DB"));
+
+        return ResponseEntity.ok(matchingService.getTopViewedOffersInUsersCity(user));
+    }
+
+
 }

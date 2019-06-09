@@ -26,7 +26,6 @@ public class Offer implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-
     @Lob
     @Column(name = "description", nullable = false)
     private String description;
@@ -72,6 +71,9 @@ public class Offer implements Serializable {
     @OneToOne(mappedBy = "offer")
     @JsonIgnore
     private Match match;
+
+    @Column(name = "views")
+    private Long views = 0L;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -282,5 +284,17 @@ public class Offer implements Serializable {
             ", smokingInside='" + isSmokingInside() + "'" +
             ", isFurnished='" + isIsFurnished() + "'" +
             "}";
+    }
+
+    public Long getViews() {
+        return views;
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
+
+    public void addView(){
+        this.views++;
     }
 }

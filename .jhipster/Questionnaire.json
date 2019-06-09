@@ -1,5 +1,16 @@
 {
-    "name": "Questionnaire",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "questionnaire",
+            "relationshipName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
     "fields": [
         {
             "fieldName": "pets",
@@ -48,25 +59,21 @@
         {
             "fieldName": "totalCostMax",
             "fieldType": "Double"
-        }
-    ],
-    "relationships": [
+        },
         {
-            "relationshipType": "one-to-one",
-            "otherEntityName": "user",
-            "otherEntityRelationshipName": "questionnaire",
-            "relationshipName": "user",
-            "otherEntityField": "id",
-            "ownerSide": true
+            "fieldName": "city",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20190301104311",
-    "entityTableName": "questionnaire",
     "dto": "no",
-    "pagination": "no",
+    "searchEngine": false,
     "service": "no",
+    "entityTableName": "questionnaire",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "no"
 }

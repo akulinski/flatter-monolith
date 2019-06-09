@@ -14,6 +14,7 @@ export interface IQuestionnaire {
   type?: string;
   totalCostMin?: number;
   totalCostMax?: number;
+  city?: string;
   user?: IUser;
 }
 
@@ -32,6 +33,7 @@ export class Questionnaire implements IQuestionnaire {
     public type?: string,
     public totalCostMin?: number,
     public totalCostMax?: number,
+    public city?: string,
     public user?: IUser
   ) {
     this.pets = this.pets || false;
