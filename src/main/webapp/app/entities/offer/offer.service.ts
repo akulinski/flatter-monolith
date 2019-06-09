@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {SERVER_API_URL} from 'app/app.constants';
 import {createRequestOption} from 'app/shared';
 import {IOffer} from 'app/shared/model/offer.model';
+import {IFulllOfferModel} from "app/entities/offer/fulll-offer-model";
 
 type EntityResponseType = HttpResponse<IOffer>;
 type EntityArrayResponseType = HttpResponse<IOffer[]>;
@@ -20,6 +21,12 @@ export class OfferService {
 
   create(offer: IOffer): Observable<EntityResponseType> {
     return this.http.post<IOffer>(this.resourceUrl, offer, {observe: 'response'});
+  }
+
+
+  createFullOffer(fullOfferModel: IFulllOfferModel): Observable<EntityResponseType> {
+    console.log("Posting new http to full offer");
+    return this.http.post<IFulllOfferModel>(this.resourceUrl+'/create-full', fullOfferModel, {observe: 'response'});
   }
 
   update(offer: IOffer): Observable<EntityResponseType> {
@@ -38,4 +45,6 @@ export class OfferService {
   delete(id: number): Observable<HttpResponse<any>> {
     return this.http.delete<any>(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
+
+
 }

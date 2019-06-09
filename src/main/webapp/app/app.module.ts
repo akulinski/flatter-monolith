@@ -20,10 +20,14 @@ import {FlatterservermonolithEntityModule} from './entities/entity.module';
 import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {ErrorComponent, FooterComponent, JhiMainComponent, NavbarComponent, PageRibbonComponent} from './layouts';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {AngularFontAwesomeModule} from "angular-font-awesome";
 
 @NgModule({
   imports: [
+    AngularFontAwesomeModule,
     BrowserModule,
+    BrowserAnimationsModule,
     NgxWebstorageModule.forRoot({prefix: 'jhi', separator: '-'}),
     NgJhipsterModule.forRoot({
       // set below to true to make alerts look like toast

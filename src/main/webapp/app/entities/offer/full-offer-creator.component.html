@@ -1,0 +1,119 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper class="step-control">
+    <mat-step [stepControl]="firstFormGroup" class="step-control">
+        <form [formGroup]="firstFormGroup" class="form-group">
+
+            <ng-template matStepLabel>Basic information</ng-template>
+
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Description" formControlName="description" class="form-element"
+                       id="description" [(ngModel)]="offer.description" >
+            </mat-form-field>
+
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Total Cost" formControlName="totalCost" class="form-element" type="number"
+                       [(ngModel)]="offer.totalCost">
+            </mat-form-field>
+
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Total room amount" formControlName="roomAmount" type="number"
+                       class="form-element" [(ngModel)]="offer.roomAmount">
+            </mat-form-field>
+
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Total flat size" formControlName="size" class="form-element" type="number"
+                       [(ngModel)]="offer.size">
+
+            </mat-form-field>
+
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Building year" formControlName="constructionYear" type="number"
+                       class="form-element" [(ngModel)]="offer.constructionYear">
+            </mat-form-field>
+
+            <div class="flex-form">
+                <div class="input-with-label">
+                    <label>
+                        <h6>Pets Allowed ?</h6>
+                        <input placeholder="Pets allowed inside" type="checkbox" id="field_pets"
+                               formControlName="pets" class="form-control form-element" [(ngModel)]="offer.pets"/>
+                    </label>
+                </div>
+                <div class="input-with-label">
+                    <label>
+                        <h6>Smoking Allowed ?</h6>
+                        <input type="checkbox" placeholder="Is smoking allowed inside" name="smokingInside"
+                               formControlName="smokingInside" class="form-control form-element"
+                               [(ngModel)]="offer.smokingInside"/>
+                    </label>
+                </div>
+                <div class="input-with-label">
+                    <label>
+                        <h6>Is apartment furnished ?</h6>
+                        <input type="checkbox" placeholder="Is apartment furnished" class="form-control form-element"
+                               name="isFurnished"
+                               formControlName="isFurnished" [(ngModel)]="offer.isFurnished"/>
+                    </label>
+                </div>
+            </div>
+            <div>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" class="step-control">
+        <form [formGroup]="secondFormGroup" class="form-group">
+            <ng-template matStepLabel>Fill out your address</ng-template>
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="City" formControlName="city" [(ngModel)]="address.city">
+            </mat-form-field>
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Zip Code" formControlName="zipCode" [(ngModel)]="address.zipCode">
+            </mat-form-field>
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Street" formControlName="street" [(ngModel)]="address.street">
+            </mat-form-field>
+            <mat-form-field class="flex-form">
+                <input matInput placeholder="Flat Number" formControlName="flatNumber" [(ngModel)]="address.flatNumber">
+            </mat-form-field>
+
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+    </mat-step>
+
+    <mat-step [stepControl]="thirdFormGroup" class="step-control">
+        <form [formGroup]="secondFormGroup" class="form-group">
+            <mat-grid-list cols="2" rowHeight="2:1" id="photos-grid">
+
+                <ul>
+                    <li *ngFor="let photo of photos; let i = index">
+                        <mat-grid-tile>
+                            <img [src]="'data:' + photo.imageContentType + ';base64,' + photo.image" alt="photo image"
+                                 class="grid-img"/>
+                        </mat-grid-tile>
+                    </li>
+                </ul>
+
+            </mat-grid-list>
+
+            <input type="file" id="file_image" (change)="setFileData($event, 'image', true)" accept="image/*"/>
+
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+    </mat-step>
+
+    <mat-step class="form-group">
+        <ng-template matStepLabel>Done</ng-template>
+        You are now done.
+        <div>
+            <button mat-button (click)="submitOffer()">Submit</button>
+            <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+    </mat-step>
+</mat-horizontal-stepper>
+

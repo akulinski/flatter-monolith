@@ -1,0 +1,39 @@
+.form-element{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.input-with-label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex-form{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 30%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.grid-img{
+  max-height: inherit;
+  max-width: inherit;
+}
+
+
+.step-control{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.form-group{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}

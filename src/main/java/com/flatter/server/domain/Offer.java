@@ -3,6 +3,7 @@ package com.flatter.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,6 +33,7 @@ public class Offer implements Serializable {
 
     @NotNull
     @Column(name = "total_cost", nullable = false)
+    @JsonProperty("totalCost")
     private Double totalCost;
 
     @NotNull
@@ -61,7 +63,7 @@ public class Offer implements Serializable {
     @JsonIgnoreProperties(value = {"offers"})
     private User user;
 
-    @OneToOne(mappedBy = "offer", cascade =CascadeType.ALL)
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
     private Address address;
 
     @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
