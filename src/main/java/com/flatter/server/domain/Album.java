@@ -43,7 +43,7 @@ public class Album implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
-    @JsonIgnoreProperties(value = {"album"})
+    @JsonIgnoreProperties(value = {"album","address"})
     private Offer offer;
 
     @ManyToOne

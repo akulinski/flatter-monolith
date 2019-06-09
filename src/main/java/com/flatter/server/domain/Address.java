@@ -40,7 +40,7 @@ public class Address implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
-    @JsonIgnoreProperties(value = {"address"})
+    @JsonIgnoreProperties({"address","album"})
     private Offer offer;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

@@ -21,7 +21,12 @@
 
             <a class="nav-link" routerLink="offer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()" *ngIf="isAuthenticated()">
                 <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
-                <span>Offer</span>
+                <span>Propositions</span>
+            </a>
+
+            <a class="nav-link" routerLink="offer/new-offer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()" *ngIf="isAuthenticated()">
+                <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                <span>Add Offer</span>
             </a>
 
             <li  *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">

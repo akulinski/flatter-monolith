@@ -12,6 +12,7 @@ import { OfferDetailComponent } from './offer-detail.component';
 import { OfferUpdateComponent } from './offer-update.component';
 import { OfferDeletePopupComponent } from './offer-delete-dialog.component';
 import { IOffer } from 'app/shared/model/offer.model';
+import {FullOfferCreatorComponent} from "app/entities/offer/full-offer-creator.component";
 
 @Injectable({ providedIn: 'root' })
 export class OfferResolve implements Resolve<IOffer> {
@@ -40,6 +41,14 @@ export const offerRoute: Routes = [
       authorities: ['ROLE_USER'],
       defaultSort: 'id,asc',
       pageTitle: 'Offers'
+    },
+    canActivate: [UserRouteAccessService]
+  },{
+    path: 'new-offer',
+    component: FullOfferCreatorComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Add new offer'
     },
     canActivate: [UserRouteAccessService]
   },
