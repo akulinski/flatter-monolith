@@ -1,23 +1,37 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
 
-import { FlatterservermonolithSharedModule } from 'app/shared';
+import {FlatterservermonolithSharedModule} from 'app/shared';
 import {
   OfferComponent,
-  OfferDetailComponent,
-  OfferUpdateComponent,
-  OfferDeletePopupComponent,
   OfferDeleteDialogComponent,
+  OfferDeletePopupComponent,
+  OfferDetailComponent,
+  offerPopupRoute,
   offerRoute,
-  offerPopupRoute
+  OfferUpdateComponent
 } from './';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDividerModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatStepperModule,
+  MatTabsModule
+} from '@angular/material';
+import {FullOfferCreatorComponent} from "app/entities/offer/full-offer-creator.component";
+import {FormsModule} from "@angular/forms";
 
 const ENTITY_STATES = [...offerRoute, ...offerPopupRoute];
 
 @NgModule({
-  imports: [FlatterservermonolithSharedModule, RouterModule.forChild(ENTITY_STATES)],
-  declarations: [OfferComponent, OfferDetailComponent, OfferUpdateComponent, OfferDeleteDialogComponent, OfferDeletePopupComponent],
-  entryComponents: [OfferComponent, OfferUpdateComponent, OfferDeleteDialogComponent, OfferDeletePopupComponent],
+  imports: [FlatterservermonolithSharedModule, FormsModule, RouterModule.forChild(ENTITY_STATES), MatGridListModule, MatTabsModule, MatCardModule, MatDividerModule, MatButtonModule, MatIconModule, MatListModule, MatStepperModule, MatInputModule],
+  declarations: [OfferComponent, OfferDetailComponent, OfferUpdateComponent, OfferDeleteDialogComponent, OfferDeletePopupComponent, FullOfferCreatorComponent],
+  entryComponents: [OfferComponent, OfferUpdateComponent, OfferDeleteDialogComponent, OfferDeletePopupComponent, FullOfferCreatorComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class FlatterservermonolithOfferModule {}
+export class FlatterservermonolithOfferModule {
+}

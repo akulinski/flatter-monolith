@@ -135,8 +135,8 @@ export class AlbumUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const album = this.createFromForm();
-    for (let [key, value] of Object.entries(album)) {
-      console.log("Offer: "+key + ':' + value);
+    for (const [key, value] of Object.entries(album)) {
+      console.log('Offer: ' + key + ':' + value);
     }
     if (album.id !== undefined) {
       this.subscribeToSaveResponse(this.albumService.update(album));

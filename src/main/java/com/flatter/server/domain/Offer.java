@@ -3,6 +3,7 @@ package com.flatter.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -25,13 +26,13 @@ public class Offer implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-
     @Lob
     @Column(name = "description", nullable = false)
     private String description;
 
     @NotNull
     @Column(name = "total_cost", nullable = false)
+    @JsonProperty("totalCost")
     private Double totalCost;
 
     @NotNull
@@ -61,7 +62,7 @@ public class Offer implements Serializable {
     @JsonIgnoreProperties(value = {"offers"})
     private User user;
 
-    @OneToOne(mappedBy = "offer")
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
     private Address address;
 
     @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
@@ -70,6 +71,9 @@ public class Offer implements Serializable {
     @OneToOne(mappedBy = "offer")
     @JsonIgnore
     private Match match;
+
+    @Column(name = "views")
+    private Long views = 0L;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -280,5 +284,17 @@ public class Offer implements Serializable {
             ", smokingInside='" + isSmokingInside() + "'" +
             ", isFurnished='" + isIsFurnished() + "'" +
             "}";
+    }
+
+    public Long getViews() {
+        return views;
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
+
+    public void addView(){
+        this.views++;
     }
 }

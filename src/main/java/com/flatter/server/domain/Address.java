@@ -2,6 +2,7 @@ package com.flatter.server.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -37,9 +38,9 @@ public class Address implements Serializable {
     @Column(name = "flat_number")
     private String flatNumber;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
-    @JsonIgnore
+    @JsonIgnoreProperties({"address","album"})
     private Offer offer;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

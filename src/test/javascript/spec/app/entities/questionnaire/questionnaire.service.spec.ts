@@ -23,7 +23,7 @@ describe('Service Tests', () => {
       service = injector.get(QuestionnaireService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Questionnaire(0, false, false, false, 0, 0, 0, 0, 0, 0, 'AAAAAAA', 0, 0);
+      elemDefault = new Questionnaire(0, false, false, false, 0, 0, 0, 0, 0, 0, 'AAAAAAA', 0, 0, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -70,7 +70,8 @@ describe('Service Tests', () => {
             constructionYearMax: 1,
             type: 'BBBBBB',
             totalCostMin: 1,
-            totalCostMax: 1
+            totalCostMax: 1,
+            city: 'BBBBBB'
           },
           elemDefault
         );
@@ -99,7 +100,8 @@ describe('Service Tests', () => {
             constructionYearMax: 1,
             type: 'BBBBBB',
             totalCostMin: 1,
-            totalCostMax: 1
+            totalCostMax: 1,
+            city: 'BBBBBB'
           },
           elemDefault
         );

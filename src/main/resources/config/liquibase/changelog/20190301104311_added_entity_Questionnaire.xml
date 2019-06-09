@@ -62,6 +62,10 @@
             <column name="total_cost_max" type="double">
                 <constraints nullable="true" />
             </column>
+
+            <column name="city" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <column name="user_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_questionnaire_user_id" />
             </column>
@@ -97,6 +101,7 @@
             <column name="jhi_type" type="string"/>
             <column name="total_cost_min" type="numeric"/>
             <column name="total_cost_max" type="numeric"/>
+            <column name="city" type="string"/>
         </loadData>
     </changeSet>
 

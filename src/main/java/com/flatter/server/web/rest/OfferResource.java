@@ -2,6 +2,7 @@ package com.flatter.server.web.rest;
 
 import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.User;
+import com.flatter.server.domain.dto.FullOfferDTO;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.PhotoRepository;
 import com.flatter.server.repository.UserRepository;
@@ -74,13 +75,29 @@ public class OfferResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/offers")
-    public ResponseEntity<Offer> createOffer(@Valid @RequestBody Offer offer)
+    public ResponseEntity<Offer> createOffer(@Valid @RequestBody Offer offer, Principal principal)
         throws URISyntaxException {
         log.debug("REST request to save Offer : {}", offer);
         if (offer.getId() != null) {
             throw new BadRequestAlertException(
                 "A new offer cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        User user = userRepository.findOneByLogin(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("Principal name not found in DB"));
+
+
+        offer.getAlbum().getPhotos().forEach(photo -> {
+
+            photo.setTitle(offer.getAlbum().getTitle());
+            photo.setAlbum(offer.getAlbum());
+
+        });
+
+        offer.getAlbum().setOffer(offer);
+        offer.getAddress().setOffer(offer);
+
+        offer.setUser(user);
+
         Offer result = offerRepository.save(offer);
         return ResponseEntity.created(new URI("/api/offers/" + result.getId()))
             .headers(
@@ -168,6 +185,11 @@ public class OfferResource {
     public ResponseEntity<Offer> getOffer(@PathVariable Long id) {
         log.debug("REST request to get Offer : {}", id);
         Optional<Offer> offer = offerRepository.findById(id);
+        if (offer.isPresent()) {
+            final Offer tmp = offer.get();
+            tmp.addView();
+            offerRepository.save(tmp);
+        }
         return ResponseUtil.wrapOrNotFound(offer);
     }
 
@@ -222,4 +244,49 @@ public class OfferResource {
 
         return ResponseEntity.ok(matchingService.getOffersOfUser(user));
     }
+
+
+    @PostMapping("/offers/create-full")
+    public ResponseEntity creteFullOffer(@RequestBody FullOfferDTO fullOfferDTO, Principal principal) {
+        User user = userRepository.findOneByLogin(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("Principal name not found in DB"));
+
+        Offer offer = setUpOfferFromDTO(fullOfferDTO, user);
+
+        return ResponseEntity.ok(offer);
+    }
+
+    private Offer setUpOfferFromDTO(@RequestBody FullOfferDTO fullOfferDTO, User user) {
+        Offer offer = new Offer();
+        offer.setRoomAmount(fullOfferDTO.getOffer().getRoomAmount());
+        offer.setSize(fullOfferDTO.getOffer().getSize());
+        offer.setDescription(fullOfferDTO.getOffer().getDescription());
+        offer.setTotalCost(fullOfferDTO.getOffer().getTotalCost());
+        offer.setConstructionYear(fullOfferDTO.getOffer().getConstructionYear());
+        offer.setIsFurnished(fullOfferDTO.getOffer().isIsFurnished());
+        offer.setPets(fullOfferDTO.getOffer().isPets());
+        offer.setSmokingInside(fullOfferDTO.getOffer().isSmokingInside());
+        offer.setAlbum(fullOfferDTO.getAlbum());
+        offer.setAddress(fullOfferDTO.getAddress());
+        offer.setUser(user);
+        log.debug(String.format("Created offer %s", fullOfferDTO.toString()));
+        return offer;
+    }
+
+
+    /**
+     * Returns top 3 offers in city where user is located.
+     * User has to fill questionnaire first
+     *
+     * @param principal
+     * @return
+     */
+    @GetMapping("/offers/get-top-3")
+    public ResponseEntity getTopThree(Principal principal) {
+
+        User user = userRepository.findOneByLogin(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("Principal name not found in DB"));
+
+        return ResponseEntity.ok(matchingService.getTopViewedOffersInUsersCity(user));
+    }
+
+
 }

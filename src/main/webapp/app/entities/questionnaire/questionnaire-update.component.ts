@@ -33,6 +33,7 @@ export class QuestionnaireUpdateComponent implements OnInit {
     type: [],
     totalCostMin: [],
     totalCostMax: [],
+    city: [null, [Validators.required]],
     user: []
   });
 
@@ -74,6 +75,7 @@ export class QuestionnaireUpdateComponent implements OnInit {
       type: questionnaire.type,
       totalCostMin: questionnaire.totalCostMin,
       totalCostMax: questionnaire.totalCostMax,
+      city: questionnaire.city,
       user: questionnaire.user
     });
   }
@@ -108,6 +110,7 @@ export class QuestionnaireUpdateComponent implements OnInit {
       type: this.editForm.get(['type']).value,
       totalCostMin: this.editForm.get(['totalCostMin']).value,
       totalCostMax: this.editForm.get(['totalCostMax']).value,
+      city: this.editForm.get(['city']).value,
       user: this.editForm.get(['user']).value
     };
     return entity;
