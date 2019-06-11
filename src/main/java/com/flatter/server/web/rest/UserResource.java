@@ -6,6 +6,7 @@ import com.flatter.server.domain.ProfilePicture;
 import com.flatter.server.domain.Review;
 import com.flatter.server.domain.User;
 import com.flatter.server.domain.dto.ProfileWithReviewsDTO;
+import com.flatter.server.domain.dto.UserCheckDTO;
 import com.flatter.server.repository.ProfilePictureRepository;
 import com.flatter.server.repository.ReviewRepository;
 import com.flatter.server.repository.UserRepository;
@@ -17,7 +18,6 @@ import com.flatter.server.service.dto.UserDTO;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import com.flatter.server.web.rest.errors.EmailAlreadyUsedException;
 import com.flatter.server.web.rest.errors.LoginAlreadyUsedException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -109,7 +109,7 @@ public class UserResource {
      *
      * @param userDTO the user to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws URISyntaxException       if the Location URI syntax is incorrect.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
      */
     @PostMapping("/users")
@@ -128,7 +128,7 @@ public class UserResource {
             User newUser = userService.createUser(userDTO);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
-                .headers(HeaderUtil.createAlert(applicationName,  "A user is created with identifier " + newUser.getLogin(), newUser.getLogin()))
+                .headers(HeaderUtil.createAlert(applicationName, "A user is created with identifier " + newUser.getLogin(), newUser.getLogin()))
                 .body(newUser);
         }
     }
@@ -174,6 +174,7 @@ public class UserResource {
 
     /**
      * Gets a list of all roles.
+     *
      * @return a string list of all roles.
      */
     @GetMapping("/users/authorities")
@@ -207,13 +208,12 @@ public class UserResource {
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
-        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName,  "A user is deleted with identifier " + login, login)).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login)).build();
     }
 
     /**
      * Returns offers targeted to specific user
      *
-     * @param principal
      * @return
      * @throws IllegalAccessException
      */
@@ -263,4 +263,24 @@ public class UserResource {
         return new ResponseEntity<>(profileWithReviewsDTO, HttpStatus.OK);
     }
 
+    /**
+     * Returns check of User Information like whether questionnaire is filled
+     *
+     * @return
+     */
+
+    @GetMapping("/users/check")
+    public ResponseEntity checkUser() {
+        final Optional<User> userWithAuthoritiesByLogin = userService.getUserWithAuthorities();
+
+        UserCheckDTO userCheckDTO = new UserCheckDTO();
+
+        final User user = userWithAuthoritiesByLogin.orElseThrow(() -> new IllegalStateException("No User Found"));
+
+        final Boolean userFilledQuestionnaire = userService.checkIfUserFilledQuestionnaire(user);
+
+        userCheckDTO.setQuestionnaireFilled(userFilledQuestionnaire);
+
+        return ResponseEntity.ok(userCheckDTO);
+    }
 }
