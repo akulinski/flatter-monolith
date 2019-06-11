@@ -3,8 +3,8 @@ package com.flatter.server.web.rest;
 import com.flatter.server.FlatterservermonolithApp;
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.repository.QuestionnaireRepository;
+import com.flatter.server.repository.UserRepository;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -94,10 +94,13 @@ public class QuestionnaireResourceIT {
 
     private Questionnaire questionnaire;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository);
+        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository, userRepository);
         this.restQuestionnaireMockMvc = MockMvcBuilders.standaloneSetup(questionnaireResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -108,7 +111,7 @@ public class QuestionnaireResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -129,9 +132,10 @@ public class QuestionnaireResourceIT {
             .city(DEFAULT_CITY);
         return questionnaire;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -251,7 +255,7 @@ public class QuestionnaireResourceIT {
             .andExpect(jsonPath("$.[*].totalCostMax").value(hasItem(DEFAULT_TOTAL_COST_MAX.doubleValue())))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getQuestionnaire() throws Exception {

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
+import {Component, OnInit} from '@angular/core';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager} from 'ng-jhipster';
 
-import { LoginModalService, AccountService, Account } from 'app/core';
+import {Account, AccountService, LoginModalService} from 'app/core';
+import {UserCheckService} from 'app/home/user-check.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'jhi-home',
@@ -16,14 +18,23 @@ export class HomeComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private loginModalService: LoginModalService,
-    private eventManager: JhiEventManager
-  ) {}
+    private eventManager: JhiEventManager,
+    private userCheckService: UserCheckService,
+    private router: Router
+  ) {
+  }
 
   ngOnInit() {
     this.accountService.identity().then((account: Account) => {
       this.account = account;
     });
     this.registerAuthenticationSuccess();
+
+    this.userCheckService.check().subscribe(data => {
+      if (!data.body.questionnaireFilled) {
+        this.router.navigate(['/questionnaire/new', {outlets: {popup: null}}]);
+      }
+    })
   }
 
   registerAuthenticationSuccess() {
