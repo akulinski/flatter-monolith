@@ -170,3 +170,14 @@ jhipster:
 # ===================================================================
 
 # application:
+elasticsearch:
+    clustername: docker-cluster
+    host: localhost
+    port: 9300
+
+
+datamock:
+    count:
+        user: 10000
+        flat: 100
+

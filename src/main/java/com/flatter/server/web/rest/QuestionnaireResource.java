@@ -1,10 +1,14 @@
 package com.flatter.server.web.rest;
 
+import com.flatter.server.domain.ClusteringDocument;
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.repository.elastic.ClusteringDocumentRepository;
+import com.flatter.server.service.CopyService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
+import domain.QuestionnaireableUser;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -38,10 +42,14 @@ public class QuestionnaireResource {
     private final QuestionnaireRepository questionnaireRepository;
 
     private final UserRepository userRepository;
+    private final CopyService copyService;
+    private final ClusteringDocumentRepository clusteringDocumentRepository;
 
-    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository) {
+    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository, CopyService copyService, ClusteringDocumentRepository clusteringDocumentRepository) {
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
+        this.copyService = copyService;
+        this.clusteringDocumentRepository = clusteringDocumentRepository;
     }
 
     /**
@@ -58,11 +66,19 @@ public class QuestionnaireResource {
             throw new BadRequestAlertException("A new questionnaire cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
+
         if (questionnaire.getUser() == null) {
             final Optional<User> oneByLogin = userRepository.findOneByLogin(principal.getName());
             final User user = oneByLogin.orElseThrow(() -> new UsernameNotFoundException("No User found"));
             questionnaire.setUser(user);
         }
+
+
+        QuestionnaireableUser questionnaireableUser = copyService.createUserFromDTO(questionnaire);
+
+        ClusteringDocument clusteringDocument = new ClusteringDocument();
+        clusteringDocument.setQuestionnaireable(questionnaireableUser);
+        clusteringDocumentRepository.save(clusteringDocument);
 
         Questionnaire result = questionnaireRepository.save(questionnaire);
         return ResponseEntity.created(new URI("/api/questionnaires/" + result.getId()))

@@ -6,17 +6,18 @@ import com.flatter.server.domain.User;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.web.feign.FeignMatchClient;
+import com.google.common.cache.Cache;
+import domain.Questionnaireable;
 import domain.QuestionnaireableOffer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.ml.clustering.CentroidCluster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -30,11 +31,18 @@ public class MatchingService {
 
     private final QuestionnaireRepository questionnaireRepository;
 
+    private final Cache<Questionnaireable, CentroidCluster<Questionnaireable>> questionnaireableCentroidClusterCache;
+
+    private final Cache<String, Questionnaireable> loginQuestionnaireableCache;
+
     @Autowired
     public MatchingService(
         OfferRepository offerRepository,
-        FeignMatchClient feignMatchClient, QuestionnaireRepository questionnaireRepository) {
+        FeignMatchClient feignMatchClient, QuestionnaireRepository questionnaireRepository, Cache<Questionnaireable,
+        CentroidCluster<Questionnaireable>> questionnaireableCentroidClusterCache, Cache<String, Questionnaireable> loginQuestionnaireableCache) {
         this.offerRepository = offerRepository;
+        this.questionnaireableCentroidClusterCache = questionnaireableCentroidClusterCache;
+        this.loginQuestionnaireableCache = loginQuestionnaireableCache;
         this.secureRandom = new SecureRandom();
         this.feignMatchClient = feignMatchClient;
         this.questionnaireRepository = questionnaireRepository;
@@ -78,4 +86,26 @@ public class MatchingService {
         return offers;
     }
 
+
+    public Stream<Map.Entry<Questionnaireable, Double>> getSortedMatches(String login) {
+
+        Questionnaireable questionnaireable = loginQuestionnaireableCache.getIfPresent(login);
+
+        CentroidCluster<Questionnaireable> questionnaireableCentroidCluster = questionnaireableCentroidClusterCache.getIfPresent(questionnaireable);
+
+        HashMap<Questionnaireable, Double> differnceBettwenPointAndCurrentUser = new HashMap<>();
+
+        final List<Questionnaireable> offers = questionnaireableCentroidCluster.getPoints().stream().filter(questionnaireable1 -> questionnaireable1.getName().equals("offer")).collect(Collectors.toList());
+
+        offers.forEach(offer -> {
+            try {
+                differnceBettwenPointAndCurrentUser.put(offer, questionnaireable.getSumOfPoints() - offer.getSumOfPoints());
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return differnceBettwenPointAndCurrentUser.entrySet().stream()
+            .sorted(Map.Entry.comparingByValue());
+    }
 }
