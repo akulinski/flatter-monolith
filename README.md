@@ -1,5 +1,12 @@
 # JHipster generated kubernetes configuration
 
+You need to export environment variables for email sender:
+
+```
+export FLATTER_EMAIL_LOGIN=email@email.com
+export FLATTER_EMAIL_PASSWORD=password
+```
+
 This application was generated using JHipster 6.0.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.0.1](https://www.jhipster.tech/documentation-archive/v6.0.1).
 
 You will need to push your image to a registry. If you have not done so, use the following commands to tag and push the images:
@@ -19,7 +26,6 @@ You can deploy all your apps by running the below bash command:
 ```
 
 ## Exploring your services
-
 
 Use these commands to find your application's IP addresses:
 
@@ -44,7 +50,9 @@ Service workers are commented by default, to enable them please uncomment the fo
   }
 </script>
 ```
-$ kubectl get svc flatterservermonolith
+
+\$ kubectl get svc flatterservermonolith
+
 ```
 
 ## Scaling your deployments
@@ -52,7 +60,9 @@ $ kubectl get svc flatterservermonolith
 You can scale your apps using
 
 ```
-$ kubectl scale deployment <app-name> --replicas <replica-count>
+
+\$ kubectl scale deployment <app-name> --replicas <replica-count>
+
 ```
 
 ## zero-downtime deployments
@@ -60,7 +70,9 @@ $ kubectl scale deployment <app-name> --replicas <replica-count>
 The default way to update a running app in kubernetes, is to deploy a new image tag to your docker registry and then deploy it using
 
 ```
-$ kubectl set image deployment/<app-name>-app <app-name>=<new-image> 
+
+\$ kubectl set image deployment/<app-name>-app <app-name>=<new-image>
+
 ```
 
 Using livenessProbes and readinessProbe allows you to tell kubernetes about the state of your apps, in order to ensure availablity of your services. You will need minimum 2 replicas for every app deployment, you want to have zero-downtime deployed. This is because the rolling upgrade strategy first kills a running replica in order to place a new. Running only one replica, will cause a short downtime during upgrades.
@@ -71,7 +83,9 @@ Using livenessProbes and readinessProbe allows you to tell kubernetes about the 
 
 Your application logs can be found in JHipster console (powered by Kibana). You can find its service details by
 ```
-$ kubectl get svc jhipster-console
+
+\$ kubectl get svc jhipster-console
+
 ```
 
 * If you have chosen *Ingress*, then you should be able to access Kibana using the given ingress domain.
@@ -83,7 +97,9 @@ $ kubectl get svc jhipster-console
 The registry is deployed using a headless service in kubernetes, so the primary service has no IP address, and cannot get a node port. You can create a secondary service for any type, using:
 
 ```
-$ kubectl expose service jhipster-registry --type=NodePort --name=exposed-registry
+
+\$ kubectl expose service jhipster-registry --type=NodePort --name=exposed-registry
+
 ```
 
 and explore the details using
@@ -128,7 +144,9 @@ For more information, refer to the [Running tests page][].
 Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
 
 ```
-$ kubectl get svc exposed-registry
+
+\$ kubectl get svc exposed-registry
+
 ```
 
 You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
@@ -136,13 +154,17 @@ You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqu
 Then, run a Sonar analysis:
 
 ```
+
 ./mvnw -Pprod clean verify sonar:sonar
+
 ```
 
 If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
 
 ```
+
 ./mvnw initialize sonar:sonar
+
 ```
 
 or
@@ -194,3 +216,4 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [protractor]: https://angular.github.io/protractor/
 [leaflet]: http://leafletjs.com/
 [definitelytyped]: http://definitelytyped.org/
+```
