@@ -1,11 +1,14 @@
 package com.flatter.server.web.rest;
 
+import com.flatter.server.domain.ClusteringDocument;
 import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.User;
 import com.flatter.server.domain.dto.FullOfferDTO;
+import com.flatter.server.domain.elastic.QuestionnaireableOffer;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.PhotoRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.repository.elastic.ClusteringDocumentRepository;
 import com.flatter.server.service.MatchingService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -56,14 +59,18 @@ public class OfferResource {
 
     private final UserRepository userRepository;
 
+    private final ClusteringDocumentRepository clusteringDocumentRepository;
+
+
     public OfferResource(
         OfferRepository offerRepository,
         PhotoRepository photoRepository,
-        MatchingService matchingService, UserRepository userRepository) {
+        MatchingService matchingService, UserRepository userRepository, ClusteringDocumentRepository clusteringDocumentRepository) {
         this.offerRepository = offerRepository;
         this.photoRepository = photoRepository;
         this.matchingService = matchingService;
         this.userRepository = userRepository;
+        this.clusteringDocumentRepository = clusteringDocumentRepository;
     }
 
     /**
@@ -98,12 +105,37 @@ public class OfferResource {
 
         offer.setUser(user);
 
+
+        ClusteringDocument clusteringDocument = new ClusteringDocument();
+        QuestionnaireableOffer questionnaireableOffer = setUpOfferFromDTO(offer);
+        clusteringDocument.setQuestionnaireable(questionnaireableOffer);
+        clusteringDocumentRepository.save(clusteringDocument);
+
         Offer result = offerRepository.save(offer);
         return ResponseEntity.created(new URI("/api/offers/" + result.getId()))
             .headers(
                 HeaderUtil.createEntityCreationAlert(
                     applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    private QuestionnaireableOffer setUpOfferFromDTO(@RequestBody @Valid Offer offer) {
+        QuestionnaireableOffer questionnaireableOffer = new QuestionnaireableOffer();
+        questionnaireableOffer.setDescription(offer.getDescription());
+        questionnaireableOffer.setConstructionYearMax(offer.getConstructionYear());
+        questionnaireableOffer.setConstructionYearMin(offer.getConstructionYear());
+        questionnaireableOffer.setFurnished(offer.isIsFurnished());
+        questionnaireableOffer.setName("offer");
+        questionnaireableOffer.setPets(offer.isPets());
+        questionnaireableOffer.setRoomAmountMax(offer.getRoomAmount());
+        questionnaireableOffer.setRoomAmountMin(offer.getRoomAmount());
+        questionnaireableOffer.setSmokingInside(offer.isSmokingInside());
+        questionnaireableOffer.setSizeMax(offer.getSize());
+        questionnaireableOffer.setSizeMin(offer.getSize());
+        questionnaireableOffer.setTotalCostMax(offer.getTotalCost());
+        questionnaireableOffer.setTotalCostMin(offer.getTotalCost());
+        questionnaireableOffer.setType(offer.getType());
+        return questionnaireableOffer;
     }
 
     /**
@@ -236,13 +268,13 @@ public class OfferResource {
      * @return the {@link ResponseEntity} with List of Offers {@code 200}
      */
     @GetMapping("/my-offers")
-    public ResponseEntity getMyOffers(Principal principal) {
+    public ResponseEntity getMyOffers(Principal principal) throws IllegalAccessException {
 
         log.debug("REST request to get my offers");
 
         User user = userRepository.findOneByLogin(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("Principal name not found in DB"));
 
-        return ResponseEntity.ok(matchingService.getOffersOfUser(user));
+        return ResponseEntity.ok(matchingService.getOffers(user));
     }
 
 

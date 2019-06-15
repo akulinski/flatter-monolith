@@ -5,11 +5,15 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public interface ClusteringDocumentRepository extends ElasticsearchRepository<ClusteringDocument, String> {
-    List<ClusteringDocument> findByQuestionnaireable_Name(String name);
 
-    Integer countAllByQuestionnaireable_Name(String name);
+    Optional<ClusteringDocument> findByQuestionnaireable_User_Login(String user);
+
+
+    List<ClusteringDocument> findAllByQuestionnaireable_Offer_Address_CityAndQuestionnaireable_SumOfPoints(String city, double sumOfPoints);
 
 }

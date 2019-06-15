@@ -1,10 +1,11 @@
 package com.flatter.server.config;
 
 import com.flatter.server.domain.ClusteringDocument;
+import com.flatter.server.domain.elastic.QuestionnaireableOffer;
+import com.flatter.server.domain.elastic.QuestionnaireableUser;
 import com.flatter.server.repository.elastic.ClusteringDocumentRepository;
 import com.github.javafaker.Faker;
-import domain.QuestionnaireableOffer;
-import domain.QuestionnaireableUser;
+
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

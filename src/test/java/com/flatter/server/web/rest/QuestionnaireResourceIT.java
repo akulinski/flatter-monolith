@@ -4,12 +4,15 @@ import com.flatter.server.FlatterservermonolithApp;
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.repository.elastic.ClusteringDocumentRepository;
+import com.flatter.server.service.CopyService;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -97,10 +100,16 @@ public class QuestionnaireResourceIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ClusteringDocumentRepository clusteringDocumentRepository;
+    @Autowired
+    private CopyService copyService;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository, userRepository);
+        final QuestionnaireResource questionnaireResource = new QuestionnaireResource(questionnaireRepository, userRepository, copyService, clusteringDocumentRepository,applicationEventPublisher);
         this.restQuestionnaireMockMvc = MockMvcBuilders.standaloneSetup(questionnaireResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

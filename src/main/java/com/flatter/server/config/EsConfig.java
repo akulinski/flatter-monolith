@@ -29,7 +29,6 @@ public class EsConfig {
     @Bean
     public Client client() throws Exception {
 
-
         Settings settings = Settings.builder()
                 .put("cluster.name", esClusterName).build();
 

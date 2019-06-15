@@ -178,6 +178,6 @@ elasticsearch:
 
 datamock:
     count:
-        user: 10000
-        flat: 100
+        user: 100
+        flat: 1000
 

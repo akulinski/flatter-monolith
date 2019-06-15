@@ -5,6 +5,7 @@ import com.flatter.server.domain.Offer;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.PhotoRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.repository.elastic.ClusteringDocumentRepository;
 import com.flatter.server.service.MatchingService;
 import com.flatter.server.web.rest.errors.ExceptionTranslator;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,12 +92,14 @@ public class OfferResourceIT {
     private MatchingService matchingService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ClusteringDocumentRepository clusteringDocumentRepository;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final OfferResource offerResource =
-            new OfferResource(offerRepository, photoRepository, matchingService, userRepository);
+            new OfferResource(offerRepository, photoRepository, matchingService, userRepository, clusteringDocumentRepository);
         this.restOfferMockMvc =
             MockMvcBuilders.standaloneSetup(offerResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)

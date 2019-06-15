@@ -2,7 +2,7 @@ package com.flatter.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import domain.Questionnaireable;
+import com.flatter.server.domain.elastic.Questionnaireable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
