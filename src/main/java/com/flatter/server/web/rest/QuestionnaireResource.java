@@ -1,15 +1,21 @@
 package com.flatter.server.web.rest;
 
+import com.flatter.server.domain.ClusterEvent;
+import com.flatter.server.domain.ClusteringDocument;
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.domain.User;
+import com.flatter.server.domain.elastic.QuestionnaireableUser;
 import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.repository.UserRepository;
+import com.flatter.server.repository.elastic.ClusteringDocumentRepository;
+import com.flatter.server.service.CopyService;
 import com.flatter.server.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +44,16 @@ public class QuestionnaireResource {
     private final QuestionnaireRepository questionnaireRepository;
 
     private final UserRepository userRepository;
+    private final CopyService copyService;
+    private final ClusteringDocumentRepository clusteringDocumentRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository) {
+    public QuestionnaireResource(QuestionnaireRepository questionnaireRepository, UserRepository userRepository, CopyService copyService, ClusteringDocumentRepository clusteringDocumentRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
+        this.copyService = copyService;
+        this.clusteringDocumentRepository = clusteringDocumentRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     /**
@@ -58,13 +70,25 @@ public class QuestionnaireResource {
             throw new BadRequestAlertException("A new questionnaire cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
+
         if (questionnaire.getUser() == null) {
             final Optional<User> oneByLogin = userRepository.findOneByLogin(principal.getName());
             final User user = oneByLogin.orElseThrow(() -> new UsernameNotFoundException("No User found"));
             questionnaire.setUser(user);
         }
 
+        QuestionnaireableUser questionnaireableUser = copyService.createUserFromDTO(questionnaire);
+        questionnaireableUser.setUser(questionnaire.getUser());
+
+        ClusteringDocument clusteringDocument = new ClusteringDocument();
+
+        clusteringDocument.setQuestionnaireable(questionnaireableUser);
+
+        applicationEventPublisher.publishEvent(new ClusterEvent(this));
+        clusteringDocumentRepository.save(clusteringDocument);
+
         Questionnaire result = questionnaireRepository.save(questionnaire);
+
         return ResponseEntity.created(new URI("/api/questionnaires/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);

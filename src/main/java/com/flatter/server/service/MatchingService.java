@@ -1,14 +1,15 @@
 package com.flatter.server.service;
 
+import com.flatter.server.domain.ClusteringDocument;
 import com.flatter.server.domain.Offer;
 import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.OfferRepository;
 import com.flatter.server.repository.QuestionnaireRepository;
-import com.flatter.server.web.feign.FeignMatchClient;
-import domain.QuestionnaireableOffer;
+import com.flatter.server.repository.elastic.ClusteringDocumentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -22,25 +23,40 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MatchingService {
 
-    private final FeignMatchClient feignMatchClient;
-
     private SecureRandom secureRandom;
 
     private final OfferRepository offerRepository;
 
     private final QuestionnaireRepository questionnaireRepository;
 
+    private final ClusteringDocumentRepository clusteringDocumentRepository;
+
+
     @Autowired
     public MatchingService(
         OfferRepository offerRepository,
-        FeignMatchClient feignMatchClient, QuestionnaireRepository questionnaireRepository) {
+        QuestionnaireRepository questionnaireRepository, ClusteringDocumentRepository clusteringDocumentRepository) {
         this.offerRepository = offerRepository;
         this.secureRandom = new SecureRandom();
-        this.feignMatchClient = feignMatchClient;
         this.questionnaireRepository = questionnaireRepository;
+        this.clusteringDocumentRepository = clusteringDocumentRepository;
+    }
+
+
+    public List<Offer> getOffers(User user) {
+
+        final ClusteringDocument clusteringDocument = clusteringDocumentRepository.findByQuestionnaireable_User_Login(user.getLogin()).orElseThrow(() -> new IllegalStateException("No user found in search engine"));
+
+        final Questionnaire questionnaire = questionnaireRepository.findByUser(user).orElseThrow(() -> new IllegalStateException("No questionare found"));
+
+        List<ClusteringDocument> clusteringDocuments = clusteringDocumentRepository.findAllByQuestionnaireable_Offer_Address_CityAndQuestionnaireable_SumOfPoints(questionnaire.getCity(), clusteringDocument.getQuestionnaireable().calcSumOfPoints());
+
+        return clusteringDocuments.stream().map(el -> el.getQuestionnaireable().getOffer()).collect(Collectors.toList());
+
     }
 
     public List<Offer> getMockOffers() {
+
 
         int limit = secureRandom.nextInt(10);
         ArrayList<Offer> offers = (ArrayList<Offer>) offerRepository.findAll();
@@ -53,11 +69,6 @@ public class MatchingService {
 
         return returnOffers;
     }
-
-    public List<QuestionnaireableOffer> getOffersOfUser(User user) {
-        return feignMatchClient.getMatchesOfUser(user.getLogin());
-    }
-
 
     public List<Offer> getTopViewedOffersInUsersCity(User user) {
         Questionnaire questionnaire = questionnaireRepository.findByUser(user).orElseThrow(() -> new IllegalArgumentException("No questionnaire found for user"));
@@ -77,5 +88,16 @@ public class MatchingService {
 
         return offers;
     }
+
+
+    @Scheduled(fixedRate = 1000)
+    public void calcSumOfPointsForAll() {
+
+        clusteringDocumentRepository.findAll().forEach(clusteringDocument -> {
+            clusteringDocument.getQuestionnaireable().calcSumOfPoints();
+            clusteringDocumentRepository.save(clusteringDocument);
+        });
+    }
+
 
 }

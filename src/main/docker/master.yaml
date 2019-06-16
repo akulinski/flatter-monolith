@@ -1,0 +1,8 @@
+node.name: master
+node.master: true
+cluster.name: madexuan
+network.host: _site_
+cluster.initial_master_nodes:
+    - master
+discovery.seed_hosts:
+    - 127.0.0.1:9300
