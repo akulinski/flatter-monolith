@@ -76,6 +76,18 @@ entity Photo {
     uploaded Instant
 }
 
+entity ProfilePicture{
+	image ImageBlob required,
+    height Integer,
+    width Integer,
+    taken Instant,
+    uploaded Instant
+}
+
+relationship OneToOne{
+	ProfilePicture{user(login)} to User
+}
+
 relationship ManyToOne {
     Album{user(login)} to User,
     Photo{album(title)} to Album

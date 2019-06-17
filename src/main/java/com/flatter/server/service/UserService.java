@@ -2,15 +2,18 @@ package com.flatter.server.service;
 
 import com.flatter.server.config.Constants;
 import com.flatter.server.domain.Authority;
+import com.flatter.server.domain.Questionnaire;
 import com.flatter.server.domain.User;
 import com.flatter.server.repository.AuthorityRepository;
+import com.flatter.server.repository.QuestionnaireRepository;
 import com.flatter.server.repository.UserRepository;
 import com.flatter.server.security.AuthoritiesConstants;
 import com.flatter.server.security.SecurityUtils;
 import com.flatter.server.service.dto.UserDTO;
 import com.flatter.server.service.util.RandomUtil;
-import com.flatter.server.web.rest.errors.*;
-
+import com.flatter.server.web.rest.errors.EmailAlreadyUsedException;
+import com.flatter.server.web.rest.errors.InvalidPasswordException;
+import com.flatter.server.web.rest.errors.LoginAlreadyUsedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -43,11 +46,14 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    private final QuestionnaireRepository questionnaireRepository;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager, QuestionnaireRepository questionnaireRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.questionnaireRepository = questionnaireRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -123,9 +129,9 @@ public class UserService {
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(User existingUser){
+    private boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.getActivated()) {
-             return false;
+            return false;
         }
         userRepository.delete(existingUser);
         userRepository.flush();
@@ -167,11 +173,11 @@ public class UserService {
     /**
      * Update basic information (first name, last name, email, language) for the current user.
      *
-     * @param firstName first name of user
-     * @param lastName last name of user
-     * @param email email id of user
-     * @param langKey language key
-     * @param imageUrl image URL of user
+     * @param firstName first name of user.
+     * @param lastName  last name of user.
+     * @param email     email id of user.
+     * @param langKey   language key.
+     * @param imageUrl  image URL of user.
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils.getCurrentUserLogin()
@@ -190,8 +196,8 @@ public class UserService {
     /**
      * Update all information for a specific user, and return the modified user.
      *
-     * @param userDTO user to update
-     * @return updated user
+     * @param userDTO user to update.
+     * @return updated user.
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository
@@ -280,8 +286,21 @@ public class UserService {
             });
     }
 
+    public Boolean checkIfUserFilledQuestionnaire(User user) {
+
+        final Optional<Questionnaire> optionalQuestionnaire = questionnaireRepository.findByUser(user);
+
+        if (optionalQuestionnaire.isPresent()) {
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+    }
+
     /**
-     * @return a list of all the authorities
+     * Gets a list of all the authorities.
+     *
+     * @return a list of all the authorities.
      */
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());

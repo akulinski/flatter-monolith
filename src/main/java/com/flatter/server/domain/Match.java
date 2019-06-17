@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Match implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -122,19 +122,15 @@ public class Match implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Match)) {
             return false;
         }
-        Match match = (Match) o;
-        if (match.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), match.getId());
+        return id != null && id.equals(((Match) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

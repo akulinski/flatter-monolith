@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { IMatch } from 'app/shared/model/match.model';
 
 @Component({
-    selector: 'jhi-match-detail',
-    templateUrl: './match-detail.component.html'
+  selector: 'jhi-match-detail',
+  templateUrl: './match-detail.component.html'
 })
 export class MatchDetailComponent implements OnInit {
-    match: IMatch;
+  match: IMatch;
 
-    constructor(protected activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ match }) => {
-            this.match = match;
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ match }) => {
+      this.match = match;
+    });
+  }
 
-    previousState() {
-        window.history.back();
-    }
+  previousState() {
+    window.history.back();
+  }
 }

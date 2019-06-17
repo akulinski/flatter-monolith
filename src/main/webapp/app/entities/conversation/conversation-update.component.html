@@ -1,27 +1,27 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-conversation-heading">Create or edit a Conversation</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
                 <div class="form-group" [hidden]="!conversation.id">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="conversation.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_sender">Sender</label>
-                    <select class="form-control" id="field_sender" name="sender" [(ngModel)]="conversation.sender" >
+                    <select class="form-control" id="field_sender" name="sender" formControlName="sender">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === conversation.sender?.id ? conversation.sender : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                        <option [ngValue]="userOption.id === editForm.get('sender').value?.id ? editForm.get('sender').value : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_reciver">Reciver</label>
-                    <select class="form-control" id="field_reciver" name="reciver" [(ngModel)]="conversation.reciver" >
+                    <select class="form-control" id="field_reciver" name="reciver" formControlName="reciver">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === conversation.reciver?.id ? conversation.reciver : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                        <option [ngValue]="userOption.id === editForm.get('reciver').value?.id ? editForm.get('reciver').value : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
                     </select>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

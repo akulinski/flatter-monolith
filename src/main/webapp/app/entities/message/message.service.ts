@@ -14,61 +14,61 @@ type EntityArrayResponseType = HttpResponse<IMessage[]>;
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
-    public resourceUrl = SERVER_API_URL + 'api/messages';
+  public resourceUrl = SERVER_API_URL + 'api/messages';
 
-    constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) {}
 
-    create(message: IMessage): Observable<EntityResponseType> {
-        const copy = this.convertDateFromClient(message);
-        return this.http
-            .post<IMessage>(this.resourceUrl, copy, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  create(message: IMessage): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(message);
+    return this.http
+      .post<IMessage>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  update(message: IMessage): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(message);
+    return this.http
+      .put<IMessage>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  find(id: number): Observable<EntityResponseType> {
+    return this.http
+      .get<IMessage>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  query(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<IMessage[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+  }
+
+  delete(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  protected convertDateFromClient(message: IMessage): IMessage {
+    const copy: IMessage = Object.assign({}, message, {
+      creationDate: message.creationDate != null && message.creationDate.isValid() ? message.creationDate.toJSON() : null
+    });
+    return copy;
+  }
+
+  protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
+    if (res.body) {
+      res.body.creationDate = res.body.creationDate != null ? moment(res.body.creationDate) : null;
     }
+    return res;
+  }
 
-    update(message: IMessage): Observable<EntityResponseType> {
-        const copy = this.convertDateFromClient(message);
-        return this.http
-            .put<IMessage>(this.resourceUrl, copy, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach((message: IMessage) => {
+        message.creationDate = message.creationDate != null ? moment(message.creationDate) : null;
+      });
     }
-
-    find(id: number): Observable<EntityResponseType> {
-        return this.http
-            .get<IMessage>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
-    }
-
-    query(req?: any): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(req);
-        return this.http
-            .get<IMessage[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
-    }
-
-    delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
-    }
-
-    protected convertDateFromClient(message: IMessage): IMessage {
-        const copy: IMessage = Object.assign({}, message, {
-            creationDate: message.creationDate != null && message.creationDate.isValid() ? message.creationDate.toJSON() : null
-        });
-        return copy;
-    }
-
-    protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
-        if (res.body) {
-            res.body.creationDate = res.body.creationDate != null ? moment(res.body.creationDate) : null;
-        }
-        return res;
-    }
-
-    protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
-        if (res.body) {
-            res.body.forEach((message: IMessage) => {
-                message.creationDate = message.creationDate != null ? moment(message.creationDate) : null;
-            });
-        }
-        return res;
-    }
+    return res;
+  }
 }

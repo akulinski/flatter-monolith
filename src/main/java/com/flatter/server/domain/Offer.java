@@ -3,14 +3,13 @@ package com.flatter.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Offer.
@@ -21,19 +20,19 @@ import java.util.Objects;
 public class Offer implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    
     @Lob
     @Column(name = "description", nullable = false)
     private String description;
 
     @NotNull
     @Column(name = "total_cost", nullable = false)
+    @JsonProperty("totalCost")
     private Double totalCost;
 
     @NotNull
@@ -60,20 +59,21 @@ public class Offer implements Serializable {
     private Boolean isFurnished;
 
     @ManyToOne
-    @JsonIgnoreProperties("offers")
+    @JsonIgnoreProperties(value = {"offers"})
     private User user;
 
-    @OneToOne(mappedBy = "offer")
-    @JsonIgnore
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
     private Address address;
 
-    @OneToOne(mappedBy = "offer")
-    @JsonIgnore
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
     private Album album;
 
     @OneToOne(mappedBy = "offer")
     @JsonIgnore
     private Match match;
+
+    @Column(name = "views")
+    private Long views = 0L;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -259,19 +259,15 @@ public class Offer implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Offer)) {
             return false;
         }
-        Offer offer = (Offer) o;
-        if (offer.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), offer.getId());
+        return id != null && id.equals(((Offer) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
@@ -288,5 +284,17 @@ public class Offer implements Serializable {
             ", smokingInside='" + isSmokingInside() + "'" +
             ", isFurnished='" + isIsFurnished() + "'" +
             "}";
+    }
+
+    public Long getViews() {
+        return views;
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
+
+    public void addView(){
+        this.views++;
     }
 }

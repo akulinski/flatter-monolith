@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flatterservermonolith-postgresql
+  namespace: default
+  labels:
+    app: flatterservermonolith-postgresql
+type: Opaque
+data:
+  postgres-password: cHg1NTc2a2I=
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: flatterservermonolith-postgresql
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flatterservermonolith-postgresql
+    spec:
+      volumes:
+      - name: data
+        emptyDir: {}
+      containers:
+      - name: postgres
+        image: postgres:10.4
+        env:
+        - name: POSTGRES_USER
+          value: flatterservermonolith
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: flatterservermonolith-postgresql
+              key: postgres-password
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flatterservermonolith-postgresql
+  namespace: default
+spec:
+  selector:
+    app: flatterservermonolith-postgresql
+  ports:
+  - port: 5432

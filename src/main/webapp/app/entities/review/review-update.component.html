@@ -1,37 +1,37 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-review-heading">Create or edit a Review</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
                 <div class="form-group" [hidden]="!review.id">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="review.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_rate">Rate</label>
                     <input type="number" class="form-control" name="rate" id="field_rate"
-                        [(ngModel)]="review.rate" />
+                           formControlName="rate"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_description">Description</label>
                     <input type="text" class="form-control" name="description" id="field_description"
-                        [(ngModel)]="review.description" />
+                           formControlName="description"/>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_issuer">Issuer</label>
-                    <select class="form-control" id="field_issuer" name="issuer" [(ngModel)]="review.issuer" >
+                    <select class="form-control" id="field_issuer" name="issuer" formControlName="issuer">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === review.issuer?.id ? review.issuer : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                        <option [ngValue]="userOption.id === editForm.get('issuer').value?.id ? editForm.get('issuer').value : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_receiver">Receiver</label>
-                    <select class="form-control" id="field_receiver" name="receiver" [(ngModel)]="review.receiver" >
+                    <select class="form-control" id="field_receiver" name="receiver" formControlName="receiver">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === review.receiver?.id ? review.receiver : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                        <option [ngValue]="userOption.id === editForm.get('receiver').value?.id ? editForm.get('receiver').value : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
                     </select>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

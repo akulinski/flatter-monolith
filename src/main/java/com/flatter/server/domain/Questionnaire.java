@@ -5,9 +5,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A Questionnaire.
@@ -18,7 +18,7 @@ import java.util.Objects;
 public class Questionnaire implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -59,6 +59,10 @@ public class Questionnaire implements Serializable {
 
     @Column(name = "total_cost_max")
     private Double totalCostMax;
+
+    @NotNull
+    @Column(name = "city", nullable = false)
+    private String city;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -229,6 +233,19 @@ public class Questionnaire implements Serializable {
         this.totalCostMax = totalCostMax;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public Questionnaire city(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public User getUser() {
         return user;
     }
@@ -248,19 +265,15 @@ public class Questionnaire implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Questionnaire)) {
             return false;
         }
-        Questionnaire questionnaire = (Questionnaire) o;
-        if (questionnaire.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), questionnaire.getId());
+        return id != null && id.equals(((Questionnaire) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override
@@ -279,6 +292,7 @@ public class Questionnaire implements Serializable {
             ", type='" + getType() + "'" +
             ", totalCostMin=" + getTotalCostMin() +
             ", totalCostMax=" + getTotalCostMax() +
+            ", city='" + getCity() + "'" +
             "}";
     }
 }

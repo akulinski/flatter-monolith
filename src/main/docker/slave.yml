@@ -1,0 +1,5 @@
+cluster.name: madexuan
+node.name: slave01
+network.host: _site_
+discovery.seed_hosts:
+    - es01:9300

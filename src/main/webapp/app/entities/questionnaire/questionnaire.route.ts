@@ -14,80 +14,80 @@ import { IQuestionnaire } from 'app/shared/model/questionnaire.model';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionnaireResolve implements Resolve<IQuestionnaire> {
-    constructor(private service: QuestionnaireService) {}
+  constructor(private service: QuestionnaireService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IQuestionnaire> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Questionnaire>) => response.ok),
-                map((questionnaire: HttpResponse<Questionnaire>) => questionnaire.body)
-            );
-        }
-        return of(new Questionnaire());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IQuestionnaire> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Questionnaire>) => response.ok),
+        map((questionnaire: HttpResponse<Questionnaire>) => questionnaire.body)
+      );
     }
+    return of(new Questionnaire());
+  }
 }
 
 export const questionnaireRoute: Routes = [
-    {
-        path: '',
-        component: QuestionnaireComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Questionnaires'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: QuestionnaireComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Questionnaires'
     },
-    {
-        path: ':id/view',
-        component: QuestionnaireDetailComponent,
-        resolve: {
-            questionnaire: QuestionnaireResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Questionnaires'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: QuestionnaireDetailComponent,
+    resolve: {
+      questionnaire: QuestionnaireResolve
     },
-    {
-        path: 'new',
-        component: QuestionnaireUpdateComponent,
-        resolve: {
-            questionnaire: QuestionnaireResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Questionnaires'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Questionnaires'
     },
-    {
-        path: ':id/edit',
-        component: QuestionnaireUpdateComponent,
-        resolve: {
-            questionnaire: QuestionnaireResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Questionnaires'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: QuestionnaireUpdateComponent,
+    resolve: {
+      questionnaire: QuestionnaireResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Questionnaires'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: QuestionnaireUpdateComponent,
+    resolve: {
+      questionnaire: QuestionnaireResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Questionnaires'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const questionnairePopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: QuestionnaireDeletePopupComponent,
-        resolve: {
-            questionnaire: QuestionnaireResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Questionnaires'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: QuestionnaireDeletePopupComponent,
+    resolve: {
+      questionnaire: QuestionnaireResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Questionnaires'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

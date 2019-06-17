@@ -9,43 +9,43 @@ import { QuestionnaireService } from 'app/entities/questionnaire/questionnaire.s
 import { Questionnaire } from 'app/shared/model/questionnaire.model';
 
 describe('Component Tests', () => {
-    describe('Questionnaire Management Component', () => {
-        let comp: QuestionnaireComponent;
-        let fixture: ComponentFixture<QuestionnaireComponent>;
-        let service: QuestionnaireService;
+  describe('Questionnaire Management Component', () => {
+    let comp: QuestionnaireComponent;
+    let fixture: ComponentFixture<QuestionnaireComponent>;
+    let service: QuestionnaireService;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FlatterservermonolithTestModule],
-                declarations: [QuestionnaireComponent],
-                providers: []
-            })
-                .overrideTemplate(QuestionnaireComponent, '')
-                .compileComponents();
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [FlatterservermonolithTestModule],
+        declarations: [QuestionnaireComponent],
+        providers: []
+      })
+        .overrideTemplate(QuestionnaireComponent, '')
+        .compileComponents();
 
-            fixture = TestBed.createComponent(QuestionnaireComponent);
-            comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(QuestionnaireService);
-        });
-
-        it('Should call load all on init', () => {
-            // GIVEN
-            const headers = new HttpHeaders().append('link', 'link;link');
-            spyOn(service, 'query').and.returnValue(
-                of(
-                    new HttpResponse({
-                        body: [new Questionnaire(123)],
-                        headers
-                    })
-                )
-            );
-
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.query).toHaveBeenCalled();
-            expect(comp.questionnaires[0]).toEqual(jasmine.objectContaining({ id: 123 }));
-        });
+      fixture = TestBed.createComponent(QuestionnaireComponent);
+      comp = fixture.componentInstance;
+      service = fixture.debugElement.injector.get(QuestionnaireService);
     });
+
+    it('Should call load all on init', () => {
+      // GIVEN
+      const headers = new HttpHeaders().append('link', 'link;link');
+      spyOn(service, 'query').and.returnValue(
+        of(
+          new HttpResponse({
+            body: [new Questionnaire(123)],
+            headers
+          })
+        )
+      );
+
+      // WHEN
+      comp.ngOnInit();
+
+      // THEN
+      expect(service.query).toHaveBeenCalled();
+      expect(comp.questionnaires[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+    });
+  });
 });

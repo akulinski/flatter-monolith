@@ -1,44 +1,55 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
+import {Component, OnInit} from '@angular/core';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager} from 'ng-jhipster';
 
-import { LoginModalService, AccountService, Account } from 'app/core';
+import {Account, AccountService, LoginModalService} from 'app/core';
+import {UserCheckService} from 'app/home/user-check.service';
+import {Router} from '@angular/router';
 
 @Component({
-    selector: 'jhi-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['home.css']
+  selector: 'jhi-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['home.scss']
 })
 export class HomeComponent implements OnInit {
-    account: Account;
-    modalRef: NgbModalRef;
+  account: Account;
+  modalRef: NgbModalRef;
 
-    constructor(
-        private accountService: AccountService,
-        private loginModalService: LoginModalService,
-        private eventManager: JhiEventManager
-    ) {}
+  constructor(
+    private accountService: AccountService,
+    private loginModalService: LoginModalService,
+    private eventManager: JhiEventManager,
+    private userCheckService: UserCheckService,
+    private router: Router
+  ) {
+  }
 
-    ngOnInit() {
-        this.accountService.identity().then((account: Account) => {
-            this.account = account;
-        });
-        this.registerAuthenticationSuccess();
-    }
+  ngOnInit() {
+    this.accountService.identity().then((account: Account) => {
+      this.account = account;
+    });
+    this.registerAuthenticationSuccess();
 
-    registerAuthenticationSuccess() {
-        this.eventManager.subscribe('authenticationSuccess', message => {
-            this.accountService.identity().then(account => {
-                this.account = account;
-            });
-        });
-    }
+    this.userCheckService.check().subscribe(data => {
+      if (!data.body.questionnaireFilled) {
+        this.router.navigate(['/questionnaire/new', {outlets: {popup: null}}]);
+      }
+    })
+  }
 
-    isAuthenticated() {
-        return this.accountService.isAuthenticated();
-    }
+  registerAuthenticationSuccess() {
+    this.eventManager.subscribe('authenticationSuccess', message => {
+      this.accountService.identity().then(account => {
+        this.account = account;
+      });
+    });
+  }
 
-    login() {
-        this.modalRef = this.loginModalService.open();
-    }
+  isAuthenticated() {
+    return this.accountService.isAuthenticated();
+  }
+
+  login() {
+    this.modalRef = this.loginModalService.open();
+  }
 }

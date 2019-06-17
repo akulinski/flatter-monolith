@@ -8,58 +8,58 @@ import { IPhoto } from 'app/shared/model/photo.model';
 import { PhotoService } from './photo.service';
 
 @Component({
-    selector: 'jhi-photo-delete-dialog',
-    templateUrl: './photo-delete-dialog.component.html'
+  selector: 'jhi-photo-delete-dialog',
+  templateUrl: './photo-delete-dialog.component.html'
 })
 export class PhotoDeleteDialogComponent {
-    photo: IPhoto;
+  photo: IPhoto;
 
-    constructor(protected photoService: PhotoService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
+  constructor(protected photoService: PhotoService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.photoService.delete(id).subscribe(response => {
-            this.eventManager.broadcast({
-                name: 'photoListModification',
-                content: 'Deleted an photo'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.photoService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'photoListModification',
+        content: 'Deleted an photo'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-photo-delete-popup',
-    template: ''
+  selector: 'jhi-photo-delete-popup',
+  template: ''
 })
 export class PhotoDeletePopupComponent implements OnInit, OnDestroy {
-    protected ngbModalRef: NgbModalRef;
+  protected ngbModalRef: NgbModalRef;
 
-    constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    ngOnInit() {
-        this.activatedRoute.data.subscribe(({ photo }) => {
-            setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(PhotoDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
-                this.ngbModalRef.componentInstance.photo = photo;
-                this.ngbModalRef.result.then(
-                    result => {
-                        this.router.navigate(['/photo', { outlets: { popup: null } }]);
-                        this.ngbModalRef = null;
-                    },
-                    reason => {
-                        this.router.navigate(['/photo', { outlets: { popup: null } }]);
-                        this.ngbModalRef = null;
-                    }
-                );
-            }, 0);
-        });
-    }
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ photo }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(PhotoDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.photo = photo;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/photo', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/photo', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnDestroy() {
-        this.ngbModalRef = null;
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

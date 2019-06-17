@@ -1,6 +1,7 @@
 /* tslint:disable max-line-length */
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 
 import { FlatterservermonolithTestModule } from '../../../test.module';
@@ -9,52 +10,53 @@ import { MessageService } from 'app/entities/message/message.service';
 import { Message } from 'app/shared/model/message.model';
 
 describe('Component Tests', () => {
-    describe('Message Management Update Component', () => {
-        let comp: MessageUpdateComponent;
-        let fixture: ComponentFixture<MessageUpdateComponent>;
-        let service: MessageService;
+  describe('Message Management Update Component', () => {
+    let comp: MessageUpdateComponent;
+    let fixture: ComponentFixture<MessageUpdateComponent>;
+    let service: MessageService;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FlatterservermonolithTestModule],
-                declarations: [MessageUpdateComponent]
-            })
-                .overrideTemplate(MessageUpdateComponent, '')
-                .compileComponents();
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [FlatterservermonolithTestModule],
+        declarations: [MessageUpdateComponent],
+        providers: [FormBuilder]
+      })
+        .overrideTemplate(MessageUpdateComponent, '')
+        .compileComponents();
 
-            fixture = TestBed.createComponent(MessageUpdateComponent);
-            comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(MessageService);
-        });
-
-        describe('save', () => {
-            it('Should call update service on save for existing entity', fakeAsync(() => {
-                // GIVEN
-                const entity = new Message(123);
-                spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
-                comp.message = entity;
-                // WHEN
-                comp.save();
-                tick(); // simulate async
-
-                // THEN
-                expect(service.update).toHaveBeenCalledWith(entity);
-                expect(comp.isSaving).toEqual(false);
-            }));
-
-            it('Should call create service on save for new entity', fakeAsync(() => {
-                // GIVEN
-                const entity = new Message();
-                spyOn(service, 'create').and.returnValue(of(new HttpResponse({ body: entity })));
-                comp.message = entity;
-                // WHEN
-                comp.save();
-                tick(); // simulate async
-
-                // THEN
-                expect(service.create).toHaveBeenCalledWith(entity);
-                expect(comp.isSaving).toEqual(false);
-            }));
-        });
+      fixture = TestBed.createComponent(MessageUpdateComponent);
+      comp = fixture.componentInstance;
+      service = fixture.debugElement.injector.get(MessageService);
     });
+
+    describe('save', () => {
+      it('Should call update service on save for existing entity', fakeAsync(() => {
+        // GIVEN
+        const entity = new Message(123);
+        spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
+        comp.updateForm(entity);
+        // WHEN
+        comp.save();
+        tick(); // simulate async
+
+        // THEN
+        expect(service.update).toHaveBeenCalledWith(entity);
+        expect(comp.isSaving).toEqual(false);
+      }));
+
+      it('Should call create service on save for new entity', fakeAsync(() => {
+        // GIVEN
+        const entity = new Message();
+        spyOn(service, 'create').and.returnValue(of(new HttpResponse({ body: entity })));
+        comp.updateForm(entity);
+        // WHEN
+        comp.save();
+        tick(); // simulate async
+
+        // THEN
+        expect(service.create).toHaveBeenCalledWith(entity);
+        expect(comp.isSaving).toEqual(false);
+      }));
+    });
+  });
 });

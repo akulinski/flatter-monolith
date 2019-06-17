@@ -1,88 +1,103 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-questionnaire-heading">Create or edit a Questionnaire</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
                 <div class="form-group" [hidden]="!questionnaire.id">
                     <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="questionnaire.id" readonly />
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                           readonly/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_pets">Pets</label>
                     <input type="checkbox" class="form-control" name="pets" id="field_pets"
-                        [(ngModel)]="questionnaire.pets" />
+                           formControlName="pets"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_smokingInside">Smoking Inside</label>
                     <input type="checkbox" class="form-control" name="smokingInside" id="field_smokingInside"
-                        [(ngModel)]="questionnaire.smokingInside" />
+                           formControlName="smokingInside"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_isFurnished">Is Furnished</label>
                     <input type="checkbox" class="form-control" name="isFurnished" id="field_isFurnished"
-                        [(ngModel)]="questionnaire.isFurnished" />
+                           formControlName="isFurnished"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_roomAmountMin">Room Amount Min</label>
                     <input type="number" class="form-control" name="roomAmountMin" id="field_roomAmountMin"
-                        [(ngModel)]="questionnaire.roomAmountMin" />
+                           formControlName="roomAmountMin"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_roomAmountMax">Room Amount Max</label>
                     <input type="number" class="form-control" name="roomAmountMax" id="field_roomAmountMax"
-                        [(ngModel)]="questionnaire.roomAmountMax" />
+                           formControlName="roomAmountMax"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_sizeMin">Size Min</label>
                     <input type="number" class="form-control" name="sizeMin" id="field_sizeMin"
-                        [(ngModel)]="questionnaire.sizeMin" />
+                           formControlName="sizeMin"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_sizeMax">Size Max</label>
                     <input type="number" class="form-control" name="sizeMax" id="field_sizeMax"
-                        [(ngModel)]="questionnaire.sizeMax" />
+                           formControlName="sizeMax"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_constructionYearMin">Construction Year Min</label>
                     <input type="number" class="form-control" name="constructionYearMin" id="field_constructionYearMin"
-                        [(ngModel)]="questionnaire.constructionYearMin" />
+                           formControlName="constructionYearMin"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_constructionYearMax">Construction Year Max</label>
                     <input type="number" class="form-control" name="constructionYearMax" id="field_constructionYearMax"
-                        [(ngModel)]="questionnaire.constructionYearMax" />
+                           formControlName="constructionYearMax"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_type">Type</label>
                     <input type="text" class="form-control" name="type" id="field_type"
-                        [(ngModel)]="questionnaire.type" />
+                           formControlName="type"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_totalCostMin">Total Cost Min</label>
                     <input type="number" class="form-control" name="totalCostMin" id="field_totalCostMin"
-                        [(ngModel)]="questionnaire.totalCostMin" />
+                           formControlName="totalCostMin"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_totalCostMax">Total Cost Max</label>
                     <input type="number" class="form-control" name="totalCostMax" id="field_totalCostMax"
-                        [(ngModel)]="questionnaire.totalCostMax" />
+                           formControlName="totalCostMax"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_city">City</label>
+                    <input type="text" class="form-control" name="city" id="field_city"
+                           formControlName="city"/>
+                    <div
+                        *ngIf="editForm.get('city').invalid && (editForm.get('city').dirty || editForm.get('city').touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('city').errors.required">
+                            This field is required.
+                        </small>
+                    </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" *jhiHasAnyAuthority="'ROLE_ADMIN'">
                     <label class="form-control-label" for="field_user">User</label>
-                    <select class="form-control" id="field_user" name="user" [(ngModel)]="questionnaire.user" >
+                    <select class="form-control" id="field_user" name="user" formControlName="user">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === questionnaire.user?.id ? questionnaire.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                        <option
+                            [ngValue]="userOption.id === editForm.get('user').value?.id ? editForm.get('user').value : userOption"
+                            *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
                     </select>
                 </div>
             </div>
             <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving"
+                        class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
                 </button>
             </div>

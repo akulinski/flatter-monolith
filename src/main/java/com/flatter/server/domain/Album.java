@@ -3,14 +3,17 @@ package com.flatter.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.*;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Album.
@@ -21,14 +24,14 @@ import java.util.Objects;
 public class Album implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     @Lob
@@ -38,13 +41,20 @@ public class Album implements Serializable {
     @Column(name = "created")
     private Instant created;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
+    @JsonIgnoreProperties(value = {"album","address"})
     private Offer offer;
 
     @ManyToOne
     @JsonIgnoreProperties("albums")
     private User user;
+
+    @Fetch(FetchMode.SELECT)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Photo> photos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -119,6 +129,15 @@ public class Album implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Set<Photo> getPhotos() {
+        return photos;
+    }
+
+
+    public void setPhotos(Set<Photo> photos) {
+        this.photos = photos;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -126,19 +145,15 @@ public class Album implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Album)) {
             return false;
         }
-        Album album = (Album) o;
-        if (album.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), album.getId());
+        return id != null && id.equals(((Album) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
     @Override

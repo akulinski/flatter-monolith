@@ -14,80 +14,80 @@ import { IAddress } from 'app/shared/model/address.model';
 
 @Injectable({ providedIn: 'root' })
 export class AddressResolve implements Resolve<IAddress> {
-    constructor(private service: AddressService) {}
+  constructor(private service: AddressService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IAddress> {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(
-                filter((response: HttpResponse<Address>) => response.ok),
-                map((address: HttpResponse<Address>) => address.body)
-            );
-        }
-        return of(new Address());
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IAddress> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Address>) => response.ok),
+        map((address: HttpResponse<Address>) => address.body)
+      );
     }
+    return of(new Address());
+  }
 }
 
 export const addressRoute: Routes = [
-    {
-        path: '',
-        component: AddressComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Addresses'
-        },
-        canActivate: [UserRouteAccessService]
+  {
+    path: '',
+    component: AddressComponent,
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Addresses'
     },
-    {
-        path: ':id/view',
-        component: AddressDetailComponent,
-        resolve: {
-            address: AddressResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Addresses'
-        },
-        canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: AddressDetailComponent,
+    resolve: {
+      address: AddressResolve
     },
-    {
-        path: 'new',
-        component: AddressUpdateComponent,
-        resolve: {
-            address: AddressResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Addresses'
-        },
-        canActivate: [UserRouteAccessService]
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Addresses'
     },
-    {
-        path: ':id/edit',
-        component: AddressUpdateComponent,
-        resolve: {
-            address: AddressResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Addresses'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: AddressUpdateComponent,
+    resolve: {
+      address: AddressResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Addresses'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: AddressUpdateComponent,
+    resolve: {
+      address: AddressResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Addresses'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const addressPopupRoute: Routes = [
-    {
-        path: ':id/delete',
-        component: AddressDeletePopupComponent,
-        resolve: {
-            address: AddressResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Addresses'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+  {
+    path: ':id/delete',
+    component: AddressDeletePopupComponent,
+    resolve: {
+      address: AddressResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'Addresses'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];
