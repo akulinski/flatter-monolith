@@ -5,10 +5,13 @@ import { Subscription } from 'rxjs';
 import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
 import { IOffer } from 'app/shared/model/offer.model';
-import { AccountService } from 'app/core';
+import { Account, AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { OfferService } from './offer.service';
+import { log } from 'util';
+import { MatIconRegistry } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'jhi-offer',
@@ -17,6 +20,7 @@ import { OfferService } from './offer.service';
 })
 export class OfferComponent implements OnInit, OnDestroy {
   currentAccount: any;
+  account: Account;
   offers: IOffer[];
   error: any;
   success: any;
@@ -38,7 +42,9 @@ export class OfferComponent implements OnInit, OnDestroy {
     protected activatedRoute: ActivatedRoute,
     protected dataUtils: JhiDataUtils,
     protected router: Router,
-    protected eventManager: JhiEventManager
+    protected eventManager: JhiEventManager,
+    protected iconRegistry: MatIconRegistry,
+    protected sanitizer: DomSanitizer
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -47,6 +53,16 @@ export class OfferComponent implements OnInit, OnDestroy {
       this.reverse = data.pagingParams.ascending;
       this.predicate = data.pagingParams.predicate;
     });
+
+    iconRegistry.addSvgIcon('date', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-date_range-24px.svg'));
+
+    iconRegistry.addSvgIcon('area', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-border_outer-24px.svg'));
+
+    iconRegistry.addSvgIcon('info', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-info-24px.svg'));
+
+    iconRegistry.addSvgIcon('id', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-perm_identity-24px.svg'));
+
+    iconRegistry.addSvgIcon('money', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-attach_money-24px.svg'));
   }
 
   loadAll() {
@@ -97,7 +113,24 @@ export class OfferComponent implements OnInit, OnDestroy {
     this.accountService.identity().then(account => {
       this.currentAccount = account;
     });
+
+    this.accountService.identity().then((account: Account) => {
+      this.account = account;
+    });
     this.registerChangeInOffers();
+    this.registerAuthenticationSuccess();
+  }
+
+  registerAuthenticationSuccess() {
+    this.eventManager.subscribe('authenticationSuccess', message => {
+      this.accountService.identity().then(account => {
+        this.account = account;
+      });
+    });
+  }
+
+  getCorrectURL(item: IOffer) {
+    return 'https://ui-avatars.com/api/?name=' + item.user.firstName + '+' + item.user.lastName;
   }
 
   ngOnDestroy() {
@@ -110,6 +143,20 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   isAuthenticated() {
     return this.accountService.isAuthenticated();
+  }
+
+  checkisOfferValid(item: IOffer) {
+    console.log('New user: ');
+    console.log('User: ' + item.user.firstName + ' ' + item.user.lastName);
+    console.log('Address: ' + item.address.city + ' ' + item.address.street + ' ' + item.address.zipCode);
+    return true;
+  }
+
+  checkIfItIsYourOfferOrYouAreAdmin(item: IOffer) {
+    console.log(this.account.login);
+    console.log(item.user.login);
+
+    return this.account.login == item.user.login;
   }
 
   byteSize(field) {
