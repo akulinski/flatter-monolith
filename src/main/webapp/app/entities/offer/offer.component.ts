@@ -153,8 +153,9 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   checkIfItIsYourOfferOrYouAreAdmin(item: IOffer) {
-    console.log(this.account.login);
-    console.log(item.user.login);
+    // when someone has 2 authorities he is a admin because all admins has two roles: user and admin.
+    if (this.account.authorities.length == 2) return true;
+    if (item.user == null) return false;
 
     return this.account.login == item.user.login;
   }
