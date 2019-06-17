@@ -1,21 +1,26 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks} from 'ng-jhipster';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
-import {IOffer} from 'app/shared/model/offer.model';
-import {AccountService} from 'app/core';
+import { IOffer } from 'app/shared/model/offer.model';
+import { Account, AccountService } from 'app/core';
 
-import {ITEMS_PER_PAGE} from 'app/shared';
-import {OfferService} from './offer.service';
+import { ITEMS_PER_PAGE } from 'app/shared';
+import { OfferService } from './offer.service';
+import { log } from 'util';
+import { MatIconRegistry } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'jhi-offer',
-  templateUrl: './offer.component.html'
+  templateUrl: './offer.component.html',
+  styleUrls: ['./offer.component.scss']
 })
 export class OfferComponent implements OnInit, OnDestroy {
   currentAccount: any;
+  account: Account;
   offers: IOffer[];
   error: any;
   success: any;
@@ -37,7 +42,9 @@ export class OfferComponent implements OnInit, OnDestroy {
     protected activatedRoute: ActivatedRoute,
     protected dataUtils: JhiDataUtils,
     protected router: Router,
-    protected eventManager: JhiEventManager
+    protected eventManager: JhiEventManager,
+    protected iconRegistry: MatIconRegistry,
+    protected sanitizer: DomSanitizer
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -46,6 +53,16 @@ export class OfferComponent implements OnInit, OnDestroy {
       this.reverse = data.pagingParams.ascending;
       this.predicate = data.pagingParams.predicate;
     });
+
+    iconRegistry.addSvgIcon('date', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-date_range-24px.svg'));
+
+    iconRegistry.addSvgIcon('area', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-border_outer-24px.svg'));
+
+    iconRegistry.addSvgIcon('info', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-info-24px.svg'));
+
+    iconRegistry.addSvgIcon('id', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-perm_identity-24px.svg'));
+
+    iconRegistry.addSvgIcon('money', sanitizer.bypassSecurityTrustResourceUrl('/content/assets/img/baseline-attach_money-24px.svg'));
   }
 
   loadAll() {
@@ -96,7 +113,24 @@ export class OfferComponent implements OnInit, OnDestroy {
     this.accountService.identity().then(account => {
       this.currentAccount = account;
     });
+
+    this.accountService.identity().then((account: Account) => {
+      this.account = account;
+    });
     this.registerChangeInOffers();
+    this.registerAuthenticationSuccess();
+  }
+
+  registerAuthenticationSuccess() {
+    this.eventManager.subscribe('authenticationSuccess', message => {
+      this.accountService.identity().then(account => {
+        this.account = account;
+      });
+    });
+  }
+
+  getCorrectURL(item: IOffer) {
+    return 'https://ui-avatars.com/api/?name=' + item.user.firstName + '+' + item.user.lastName;
   }
 
   ngOnDestroy() {
@@ -105,6 +139,25 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   trackId(index: number, item: IOffer) {
     return item.id;
+  }
+
+  isAuthenticated() {
+    return this.accountService.isAuthenticated();
+  }
+
+  checkisOfferValid(item: IOffer) {
+    console.log('New user: ');
+    console.log('User: ' + item.user.firstName + ' ' + item.user.lastName);
+    console.log('Address: ' + item.address.city + ' ' + item.address.street + ' ' + item.address.zipCode);
+    return true;
+  }
+
+  checkIfItIsYourOfferOrYouAreAdmin(item: IOffer) {
+    // when someone has 2 authorities he is a admin because all admins has two roles: user and admin.
+    if (this.account.authorities.length == 2) return true;
+    if (item.user == null) return false;
+
+    return this.account.login == item.user.login;
   }
 
   byteSize(field) {
