@@ -5,6 +5,8 @@ import {JhiEventManager} from 'ng-jhipster';
 import {Account, AccountService, LoginModalService} from 'app/core';
 import {UserCheckService} from 'app/home/user-check.service';
 import {Router} from '@angular/router';
+import {OfferService} from "app/entities/offer";
+import {IOffer} from "app/shared/model/offer.model";
 
 @Component({
   selector: 'jhi-home',
@@ -14,8 +16,10 @@ import {Router} from '@angular/router';
 export class HomeComponent implements OnInit {
   account: Account;
   modalRef: NgbModalRef;
+  offers: IOffer[];
 
   constructor(
+    private offerService: OfferService,
     private accountService: AccountService,
     private loginModalService: LoginModalService,
     private eventManager: JhiEventManager,
@@ -28,6 +32,12 @@ export class HomeComponent implements OnInit {
     this.accountService.identity().then((account: Account) => {
       this.account = account;
     });
+
+    this.offerService.getTopOffers().subscribe(data => {
+      this.offers = data.body;
+      console.log(this.offers)
+    });
+
     this.registerAuthenticationSuccess();
 
     this.userCheckService.check().subscribe(data => {

@@ -18,31 +18,20 @@
 
 
         <div *ngSwitchCase="true">
-            <mat-grid-list cols="3" rowHeight="5:3" [gutterSize]="'40px'">
-                <mat-grid-tile>
+            <mat-grid-list cols="3" rowHeight="5:3" [gutterSize]="'40px'" *ngFor="let offer of offers">
+
+                <mat-grid-tile [routerLink]="['/offer', offer.id, 'view' ]">
                     <div class="container">
-                        <img src="https://pmcvariety.files.wordpress.com/2018/07/bradybunchhouse_sc11.jpg">
+                        <img mat-card-image class="card-image-offer"
+                             [src]="'data:' + offer.album.photos[0].imageContentType + ';base64,' + offer.album.photos[0].image"
+                             style="max-width: 100%;"
+                             alt="Apartment" *ngIf="offer.user">
                         <div class="bottom-left">
-                            <h3>Lublin, Ochotnicza</h3>
+                            <h3>{{offer.address.city}}, {{offer.address.street}}</h3>
                         </div>
                     </div>
                 </mat-grid-tile>
-                <mat-grid-tile>
-                    <div class="container">
-                        <img src="https://pmcvariety.files.wordpress.com/2018/07/bradybunchhouse_sc11.jpg">
-                        <div class="bottom-left">
-                            <h3>Lublin, Ochotnicza</h3>
-                        </div>
-                    </div>
-                </mat-grid-tile>
-                <mat-grid-tile>
-                    <div class="container">
-                        <img src="https://pmcvariety.files.wordpress.com/2018/07/bradybunchhouse_sc11.jpg">
-                        <div class="bottom-left">
-                            <h3>Lublin, Ochotnicza</h3>
-                        </div>
-                    </div>
-                </mat-grid-tile>
+
             </mat-grid-list>
 
             <div class="alert alert-warning" *ngSwitchCase="false">
