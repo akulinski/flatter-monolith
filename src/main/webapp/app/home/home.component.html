@@ -18,9 +18,11 @@
 
 
         <div *ngSwitchCase="true">
-            <mat-grid-list cols="3" rowHeight="5:3" [gutterSize]="'40px'" *ngFor="let offer of offers">
 
-                <mat-grid-tile [routerLink]="['/offer', offer.id, 'view' ]">
+          <mat-grid-list cols="3" rowHeight="5:3" [gutterSize]="'40px'">
+            
+                <mat-grid-tile *ngFor="let offer of offers" [routerLink]="['/offer', offer.id, 'view' ]">
+                  
                     <div class="container">
                         <img mat-card-image class="card-image-offer"
                              [src]="'data:' + offer.album.photos[0].imageContentType + ';base64,' + offer.album.photos[0].image"
