@@ -14,6 +14,8 @@ type EntityArrayResponseType = HttpResponse<IOffer[]>;
 export class OfferService {
   public resourceUrl = SERVER_API_URL + 'api/offers';
 
+  public  topOffers = SERVER_API_URL + 'api/offers/get-top-3';
+
   public myMatchesUrl = isDevMode() ? SERVER_API_URL + 'api/mock-my-offers' : SERVER_API_URL + 'api/my-offers';
 
   constructor(protected http: HttpClient) {
@@ -44,6 +46,11 @@ export class OfferService {
 
   delete(id: number): Observable<HttpResponse<any>> {
     return this.http.delete<any>(`${this.resourceUrl}/${id}`, {observe: 'response'});
+  }
+
+  getTopOffers(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<IOffer[]>(this.topOffers, {params: options, observe: 'response'});
   }
 
 

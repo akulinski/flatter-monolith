@@ -1,21 +1,46 @@
-<div class="row">
-    <div class="col-md-3">
-        <span class="hipster img-fluid rounded"></span>
-    </div>
-    <div class="col-md-9">
-        <h1 class="display-4">Welcome, Flatter!</h1>
-        <p class="lead">This is your homepage</p>
+<div [ngSwitch]="isAuthenticated()">
+    <h1 *ngSwitchCase="false" class="display-4">Flatter</h1>
+    <h1 *ngSwitchCase="true" class="display-4">Top apartments recommended for you</h1>
 
-        <div [ngSwitch]="isAuthenticated()">
-            <div class="alert alert-success" *ngSwitchCase="true">
+
+    <div>
+
+        <!--
+        <div class="alert alert-success" *ngSwitchCase="true">
                 <span id="home-logged-message" *ngIf="account"
-                   > You are logged in as user "{{account.login}}". </span>
-            </div>
+                > You are logged in as user "{{account.login}}". </span>
+        </div>
+        -->
+        <div class="alert alert-warning" *ngSwitchCase="false">
+            <span>You don't have an account yet?</span>&nbsp;
+            <a class="alert-link" routerLink="register">Register a new account</a>
+        </div>
+
+
+        <div *ngSwitchCase="true">
+            <mat-grid-list cols="3" rowHeight="5:3" [gutterSize]="'40px'" *ngFor="let offer of offers">
+
+                <mat-grid-tile [routerLink]="['/offer', offer.id, 'view' ]">
+                    <div class="container">
+                        <img mat-card-image class="card-image-offer"
+                             [src]="'data:' + offer.album.photos[0].imageContentType + ';base64,' + offer.album.photos[0].image"
+                             style="max-width: 100%;"
+                             alt="Apartment" *ngIf="offer.user">
+                        <div class="bottom-left">
+                            <h3>{{offer.address.city}}, {{offer.address.street}}</h3>
+                        </div>
+                    </div>
+                </mat-grid-tile>
+
+            </mat-grid-list>
 
             <div class="alert alert-warning" *ngSwitchCase="false">
                 <span>You don't have an account yet?</span>&nbsp;
                 <a class="alert-link" routerLink="register">Register a new account</a>
             </div>
+
         </div>
+        <button mat-button *ngSwitchCase="false">hej</button>
     </div>
+
 </div>
