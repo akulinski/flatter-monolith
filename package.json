@@ -31,7 +31,7 @@
     "core-js": "2.6.5",
     "font-awesome": "^4.7.0",
     "glyphicons": "^0.2.0",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "ng-jhipster": "0.9.3",
     "ngx-cookie": "4.0.2",
     "ngx-infinite-scroll": "7.1.0",
